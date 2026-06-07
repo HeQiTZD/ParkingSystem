@@ -21,7 +21,7 @@
  * 5. 初始化停车场数据
  * 6. 创建触发器和定时任务
  */
-class MySQLInit :public QObject
+class MySQLInit : public QObject
 {
     Q_OBJECT
 public:
@@ -138,7 +138,7 @@ private:
      * @param description 描述（用于日志）
      * @return 是否成功
      */
-    bool execteSql(const QString &sql, const QString &description);
+    bool executeSql(const QString &sql, const QString &description);
 };
 
 #endif // MYSQLINIT_H

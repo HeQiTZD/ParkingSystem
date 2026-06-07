@@ -1,5 +1,4 @@
 ﻿#include "mysqlinit.h"
-#include <QStringLiteral>
 //构造函数
 MySQLInit::MySQLInit(DatabaseManager *dbManager, QObject *parent)
     :QObject(parent), m_dbManager(dbManager) {}
@@ -71,14 +70,14 @@ bool MySQLInit::createUserTable()
             password VARCHAR(64) NOT NULL COMMENT '密码(SHA256)',
             telephone VARCHAR(11) DEFAULT '' COMMENT '手机号',
             truename VARCHAR(50) DEFAULT '' COMMENT '真实姓名',
-            role VARCHAR(10) DEFAULT '' COMMENT '角色(admin/user)'，
+            role VARCHAR(10) DEFAULT '' COMMENT '角色(admin/user)',
             create_at DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-            update_at DATETIME DEFAULT CURRENT_TIMESTAMP NO UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
             INDEX idx_username(username)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户表'
     )";
 
-    return execteSql(sql,"创建用户表");
+    return executeSql(sql,"创建用户表");
 }
 
 bool MySQLInit::createCarTable()
@@ -86,19 +85,19 @@ bool MySQLInit::createCarTable()
     QString sql = R"(
         CREATE TABLE IF NOT EXISTS CAR(
             id INT PRIMARY KEY AUTO_INCREMENT,
-            license_plate CARCHAR(20) NOT NULL COMMENT '车牌号',
-            check_in_time DATATIME NOT NULL COMMENT '入库时间',
-            chekc_out_time DATATIME NOT NULL COMMENT '出库时间'，
-            fee DECIMAL(10,2) DEFAULT NOT NULL COMMENT '停车费用',
+            license_plate VARCHAR(20) NOT NULL COMMENT '车牌号',
+            check_in_time DATETIME NOT NULL COMMENT '入库时间',
+            check_out_time DATETIME DEFAULT NULL COMMENT '出库时间',
+            fee DECIMAL(10,2) DEFAULT NULL COMMENT '停车费用',
             location VARCHAR(50) NOT NULL COMMENT '停车位置',
             create_at DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '记录创建时间',
             INDEX idx_license_plate (license_plate),
             INDEX idx_check_in_time (check_in_time),
             INDEX idx_location (location)
-        ) ENGINE=InnoDB DEFAULT CAHRSET=utf8mb4 COMMENT='车辆记录表'
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='车辆记录表'
     )";
 
-    return execteSql(sql,"创建车辆记录表");
+    return executeSql(sql,"创建车辆记录表");
 }
 
 bool MySQLInit::createParkingTable()
@@ -110,13 +109,12 @@ bool MySQLInit::createParkingTable()
     P_now_count INT DEFAULT 0 COMMENT '现有车辆数',
     P_reserve_count INT DEFAULT 0 COMMENT '预约车辆数',
     P_all_count INT NOT NULL COMMENT '总车位数',
-    P_fee DECIMAL(10,,2) NOT NULL COMMENT '每小时费用',
-    create_at DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    INDEX idx_p_name (P_name)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb6 COMMENT='停车场记录表'
+    P_fee DECIMAL(10,2) NOT NULL COMMENT '每小时费用',
+    create_at DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='停车场记录表'
     )";
 
-    return execteSql(sql,"创建停车场表");
+    return executeSql(sql,"创建停车场表");
 }
 
 bool MySQLInit::createReservationTable()
@@ -125,13 +123,13 @@ bool MySQLInit::createReservationTable()
         CREATE TABLE IF NOT EXISTS reservations(
         id INT PRIMARY KEY AUTO_INCREMENT,
         license_plate VARCHAR(20) NOT NULL COMMENT '车牌号',
-        P_namae VARCHAR(100) NOT NULL COMMENT '停车场名称',
+        P_name VARCHAR(100) NOT NULL COMMENT '停车场名称',
         create_at DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '预约时间',
         UNIQUE INDEX idx_license_plate (license_plate)
-        ) ENGINE=InnoDB DEFAULT=utf8mb6 COMMENT='预约表'
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='预约表'
     )";
 
-    return execteSql(sql, "创建预约表");
+    return executeSql(sql, "创建预约表");
 }
 
 bool MySQLInit::initParkingData(const QString &parkingName, int totalSpace, double fee)
@@ -141,7 +139,7 @@ bool MySQLInit::initParkingData(const QString &parkingName, int totalSpace, doub
     checkQuery.prepare("SELECT COUNT(*) FROM PARKING WHERE P_name = :name");
     checkQuery.bindValue(":name", parkingName);
 
-    if(!checkQuery.exec() || checkQuery.next()){
+    if(!checkQuery.exec() || !checkQuery.next()){
         qDebug() << QStringLiteral("检查停车场数据失败") << checkQuery.lastError().text();
         return false;
     }
@@ -154,7 +152,7 @@ bool MySQLInit::initParkingData(const QString &parkingName, int totalSpace, doub
     //插入初始数据
     QSqlQuery inserQuery;
     inserQuery.prepare(R"(
-        INSERT INTO PARKING (P_name, p_now_count, P_reserve_count, P_all_count, P_fee)
+        INSERT INTO PARKING (P_name, P_now_count, P_reserve_count, P_all_count, P_fee)
         VALUES (:name, 0, 0, :all_count, :fee)
     )");
 
@@ -176,33 +174,33 @@ bool MySQLInit::createTriggers()
     bool success = true;
 
     // 1.开启事件调度器
-    success &= execteSql("SET GLOBAL event_scheduler = ON", "开启事件调度器");
+    success &= executeSql("SET GLOBAL event_scheduler = ON", "开启事件调度器");
 
     // 2. 创建定时清理过期预约的任务（每分钟执行，清理30分钟前的预约）
-    success &= execteSql(R"(
-        CREATE EVENT IF NOT EXISTS clean__reservations
+    success &= executeSql(R"(
+        CREATE EVENT IF NOT EXISTS clean_reservations
         ON SCHEDULE EVERY 1 MINUTE
         DO DELETE FROM reservations WHERE TIMESTAMPDIFF(MINUTE, create_at, NOW()) >30
         )", "创建定时清理过期预约任务");
 
     // 3. 创建预约时插入触发器（预约数+1）
-    success &= execteSql(R"(
+    success &= executeSql(R"(
         CREATE TRIGGER IF NOT EXISTS trg_reservation_insert
         AFTER INSERT ON reservations
         FOR EACH ROW
         BEGIN
             UPDATE PARKING SET P_reserve_count = P_reserve_count +1
-            WHERE p_name = NEW.P_name;
+            WHERE P_name = NEW.P_name;
             END
         )", "创建预约插入触发器");
 
     // 4. 创建预约删除触发器（预约数-1）
-    success &= execteSql(R"(
+    success &= executeSql(R"(
         CREATE TRIGGER IF NOT EXISTS trg_reservation_delete
         AFTER DELETE ON reservations
         FOR EACH ROW
         BEGIN
-            UPDATE PARKGING SET P_reserve_count = P_reserve_count -1
+            UPDATE PARKING SET P_reserve_count = P_reserve_count -1
             WHERE P_name = OLD.P_name;
             END
         )", "创建预约删除触发器");
@@ -222,7 +220,7 @@ bool MySQLInit::isTableExists(const QString &tableName)
     return false;
 }
 
-bool MySQLInit::execteSql(const QString &sql, const QString &description)
+bool MySQLInit::executeSql(const QString &sql, const QString &description)
 {
     QSqlQuery query;
     if(!query.exec(sql)){

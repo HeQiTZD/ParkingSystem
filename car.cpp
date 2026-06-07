@@ -41,7 +41,7 @@ Car &Car::operator=(const Car &other)
 
 Car::~Car() {}
 
-bool Car::isParked()
+bool Car::isParked() const
 {
     // 入库时间有效且出库时间无效表示车辆在场
     return m_checkInTime.isValid() && !m_checkOutTime.isValid();
@@ -79,7 +79,7 @@ bool Car::isValidLicensePlate(const QString &plate)
     return regex.match(plate).hasMatch();
 }
 
-double Car::calculateFee(double houlyRate) const
+double Car::calculateFee(double hourlyRate) const
 {
     double duration = getParkingDuration();
 
@@ -90,7 +90,7 @@ double Car::calculateFee(double houlyRate) const
 
     // 向上取整计算费用
     int hours = static_cast<int>(duration) + (duration > static_cast<int>(duration) ? 1 : 0);
-    return hours * houlyRate;
+    return hours * hourlyRate;
 }
 
 QVariantMap Car::toMap() const
@@ -122,8 +122,8 @@ QString Car::toString() const
     return QString("Car[id=%1, plate=%2, in=%3, out=%4, fee=%5, location=%6]")
         .arg(m_id)
         .arg(m_licensePlate)
-        .arg(m_checkInTime.toString("yyyy--MM--dd hh:mm:ss"))
-        .arg(m_checkOutTime.isValid() ? m_checkOutTime.toString("yyyy--MM--dd hh::mm:ss") : "未出库")
+        .arg(m_checkInTime.toString("yyyy-MM-dd hh:mm:ss"))
+        .arg(m_checkOutTime.isValid() ? m_checkOutTime.toString("yyyy-MM-dd hh:mm:ss") : "未出库")
         .arg(m_fee, 0, 'f', 2)
         .arg(m_location);
 }

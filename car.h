@@ -49,7 +49,7 @@ public:
     ~Car();
 
     // ========== Getter方法 ==========
-    int getId() const {return m_id;};
+    int getId() const {return m_id;}
     QString getLicensePlate() const {return m_licensePlate;}
     QDateTime getCheckInTime() const {return m_checkInTime;}
     QDateTime getCheckOutTime() const {return m_checkOutTime;}
@@ -68,7 +68,7 @@ public:
      * @brief 检查车辆是否在场
      * @return 是否在场（已入库未出库）
      */
-    bool isParked();
+    bool isParked() const;
 
     /**
      * @brief 计算停车时长（小时）
@@ -94,7 +94,7 @@ public:
      * @param hourlyRate 每小时费率
      * @return 费用
      */
-    double calculateFee(double houlyRate) const;
+    double calculateFee(double hourlyRate) const;
 
     /**
      * @brief 转换为QVariantMap（用于数据库操作）
