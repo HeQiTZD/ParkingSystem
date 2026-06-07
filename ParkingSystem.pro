@@ -72,6 +72,7 @@ SOURCES += \
 
 HEADERS += \
     # ==================== 业务模块（已实现） ====================
+    camerathread.h \
     car.h \
     initfile.h \
     mainwindow.h \

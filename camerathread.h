@@ -27,6 +27,7 @@
  */
 class CameraThread : public QThread
 {
+    Q_OBJECT
 public:
     /**
      * @brief 构造函数
