@@ -171,7 +171,64 @@ bool MySQLInit::initParkingData(const QString &parkingName, int totalSpace, doub
     return true;
 }
 
+bool MySQLInit::createTriggers()
+{
+    bool success = true;
 
+    // 1.开启事件调度器
+    success &= execteSql("SET GLOBAL event_scheduler = ON", "开启事件调度器");
 
+    // 2. 创建定时清理过期预约的任务（每分钟执行，清理30分钟前的预约）
+    success &= execteSql(R"(
+        CREATE EVENT IF NOT EXISTS clean__reservations
+        ON SCHEDULE EVERY 1 MINUTE
+        DO DELETE FROM reservations WHERE TIMESTAMPDIFF(MINUTE, create_at, NOW()) >30
+        )", "创建定时清理过期预约任务");
 
+    // 3. 创建预约时插入触发器（预约数+1）
+    success &= execteSql(R"(
+        CREATE TRIGGER IF NOT EXISTS trg_reservation_insert
+        AFTER INSERT ON reservations
+        FOR EACH ROW
+        BEGIN
+            UPDATE PARKING SET P_reserve_count = P_reserve_count +1
+            WHERE p_name = NEW.P_name;
+            END
+        )", "创建预约插入触发器");
 
+    // 4. 创建预约删除触发器（预约数-1）
+    success &= execteSql(R"(
+        CREATE TRIGGER IF NOT EXISTS trg_reservation_delete
+        AFTER DELETE ON reservations
+        FOR EACH ROW
+        BEGIN
+            UPDATE PARKGING SET P_reserve_count = P_reserve_count -1
+            WHERE P_name = OLD.P_name;
+            END
+        )", "创建预约删除触发器");
+
+    return success;
+}
+
+bool MySQLInit::isTableExists(const QString &tableName)
+{
+    QSqlQuery query;
+    query.prepare("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = :name");
+    query.bindValue(":name", tableName);
+
+    if(query.exec() && query.next()){
+        return query.value(0).toInt() >0;
+    }
+    return false;
+}
+
+bool MySQLInit::execteSql(const QString &sql, const QString &description)
+{
+    QSqlQuery query;
+    if(!query.exec(sql)){
+        qDebug() << description << QStringLiteral("失败") << query.lastError().text();
+        return false;
+    }
+    qDebug() << description << QStringLiteral("成功");
+    return true;
+}

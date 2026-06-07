@@ -38,6 +38,7 @@ LIBS += -lmsvcrt -lole32 -luuid
 
 SOURCES += \
     # ==================== 业务模块（已实现） ====================
+    car.cpp \
     initfile.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -70,6 +71,7 @@ SOURCES += \
 
 HEADERS += \
     # ==================== 业务模块（已实现） ====================
+    car.h \
     initfile.h \
     mainwindow.h \
     mysqlinit.h \
