@@ -38,6 +38,7 @@ LIBS += -lmsvcrt -lole32 -luuid
 
 SOURCES += \
     # ==================== 业务模块（已实现） ====================
+    camerathread.cpp \
     car.cpp \
     initfile.cpp \
     main.cpp \
