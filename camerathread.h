@@ -25,7 +25,7 @@
  * - 生产者-消费者模式
  * - 观察者模式（信号槽）
  */
-class CameraThread : public QObject
+class CameraThread : public QThread
 {
 public:
     /**
@@ -33,7 +33,7 @@ public:
      * @param cameraIndex 摄像头索引（默认为0，即第一个摄像头）
      * @param parent 父对象
      */
-    explicit CameraThread(QObject *parent = nullptr,int cameraIndex = 0);
+    explicit CameraThread(int cameraIndex = 0, QObject *parent = nullptr);
 
     /**
      * @brief 析构函数
@@ -49,7 +49,7 @@ public:
     /**
      * @brief 获取摄像头是否正在运行
      */
-    bool isRunning() const {return m_running;}
+    bool isCapturing() const {return m_running;}
 
     /**
      * @brief 设置目标帧率
@@ -66,6 +66,11 @@ public:
      * @brief 暂停捕获
      */
     void pause();
+
+    /**
+     * @brief 恢复捕获
+     */
+     void resume();
 
     /**
      * @brief 获取最新一帧（线程安全）
@@ -126,7 +131,7 @@ private:
      * @param image QImage图像
      * @return cv::Mat图像
      */
-    static cv::Mat QImageToMat(const QImage &inage);
+    static cv::Mat QImageToMat(const QImage &image);
 
     /**
      * @brief cv::Mat转QImage
