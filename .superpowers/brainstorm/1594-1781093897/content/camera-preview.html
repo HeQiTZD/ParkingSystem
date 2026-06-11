@@ -1,0 +1,53 @@
+<h2>摄像头页面预览</h2>
+<p class="subtitle">Page 3 - 摄像头设置和实时预览</p>
+
+<div class="mockup">
+  <div class="mockup-header">摄像头页面</div>
+  <div class="mockup-body" style="height: 500px; display: flex; background: #f5f7fa;">
+    <!-- 左侧导航栏 -->
+    <div style="width: 60px; background: #2C3E50; display: flex; flex-direction: column; align-items: center; padding-top: 20px;">
+      <div style="width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; opacity: 0.7;">
+        <span style="font-size: 18px;">🏠</span>
+      </div>
+      <div style="width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; opacity: 0.7;">
+        <span style="font-size: 18px;">🚗</span>
+      </div>
+      <div style="width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; opacity: 0.7;">
+        <span style="font-size: 18px;">👥</span>
+      </div>
+      <div style="width: 40px; height: 40px; background: #34495E; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; border-left: 3px solid #4A90E2;">
+        <span style="font-size: 18px;">📷</span>
+      </div>
+    </div>
+    <!-- 右侧内容区域 -->
+    <div style="flex: 1; padding: 20px; display: flex; flex-direction: column;">
+      <!-- 摄像头大画面 -->
+      <div style="flex: 1; background: #e0e0e0; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; min-height: 350px;">
+        <div style="text-align: center; color: #999;">
+          <div style="font-size: 64px; margin-bottom: 15px;">📹</div>
+          <div style="font-size: 16px;">摄像头大画面 (611×511)</div>
+          <div style="font-size: 14px; margin-top: 5px; opacity: 0.7;">实时预览区域</div>
+        </div>
+      </div>
+      <!-- 控制栏 -->
+      <div style="background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+        <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 15px;">
+          <button class="mock-button" style="height: 40px; padding: 0 20px; background: #4A90E2; color: white; border-radius: 6px;">初始化</button>
+          <select style="height: 40px; padding: 0 15px; border: 1px solid #e0e0e0; border-radius: 6px; background: white; min-width: 150px;">
+            <option>摄像头 0</option>
+            <option>摄像头 1</option>
+            <option>摄像头 2</option>
+          </select>
+          <button class="mock-button" style="height: 40px; padding: 0 20px; background: #00AA7F; color: white; border-radius: 6px;">开始</button>
+          <button class="mock-button" style="height: 40px; padding: 0 20px; background: #FF8500; color: white; border-radius: 6px;">暂停</button>
+          <button class="mock-button" style="height: 40px; padding: 0 20px; background: #E74C3C; color: white; border-radius: 6px;">释放资源</button>
+        </div>
+        <div style="display: flex; gap: 30px; font-size: 13px; color: #666;">
+          <span>状态：<span style="color: #00AA7F; font-weight: 600;">已连接</span></span>
+          <span>帧率：<span style="color: #4A90E2; font-weight: 600;">30 FPS</span></span>
+          <span>分辨率：<span style="color: #333; font-weight: 600;">1280×720</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,70 @@
+<h2>管理页面预览</h2>
+<p class="subtitle">Page 2 - 用户管理（管理员可见）</p>
+
+<div class="mockup">
+  <div class="mockup-header">管理页面</div>
+  <div class="mockup-body" style="height: 500px; display: flex; background: #f5f7fa;">
+    <!-- 左侧导航栏 -->
+    <div style="width: 60px; background: #2C3E50; display: flex; flex-direction: column; align-items: center; padding-top: 20px;">
+      <div style="width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; opacity: 0.7;">
+        <span style="font-size: 18px;">🏠</span>
+      </div>
+      <div style="width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; opacity: 0.7;">
+        <span style="font-size: 18px;">🚗</span>
+      </div>
+      <div style="width: 40px; height: 40px; background: #34495E; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; border-left: 3px solid #4A90E2;">
+        <span style="font-size: 18px;">👥</span>
+      </div>
+      <div style="width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; opacity: 0.7;">
+        <span style="font-size: 18px;">📷</span>
+      </div>
+    </div>
+    <!-- 右侧内容区域 -->
+    <div style="flex: 1; padding: 20px; display: flex; flex-direction: column;">
+      <div style="font-size: 20px; font-weight: bold; color: #333; margin-bottom: 20px;">用户管理</div>
+      <!-- 表格区域 -->
+      <div style="flex: 1; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+        <table style="width: 100%; border-collapse: collapse;">
+          <thead>
+            <tr style="background: #f5f7fa;">
+              <th style="padding: 12px 15px; text-align: left; font-weight: 600; color: #333; border-bottom: 1px solid #e0e0e0;">ID</th>
+              <th style="padding: 12px 15px; text-align: left; font-weight: 600; color: #333; border-bottom: 1px solid #e0e0e0;">用户名</th>
+              <th style="padding: 12px 15px; text-align: left; font-weight: 600; color: #333; border-bottom: 1px solid #e0e0e0;">手机号</th>
+              <th style="padding: 12px 15px; text-align: left; font-weight: 600; color: #333; border-bottom: 1px solid #e0e0e0;">角色</th>
+              <th style="padding: 12px 15px; text-align: left; font-weight: 600; color: #333; border-bottom: 1px solid #e0e0e0;">状态</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="background: #e8f0fe;">
+              <td style="padding: 12px 15px; border-bottom: 1px solid #e0e0e0;">1</td>
+              <td style="padding: 12px 15px; border-bottom: 1px solid #e0e0e0;">admin</td>
+              <td style="padding: 12px 15px; border-bottom: 1px solid #e0e0e0;">138****8888</td>
+              <td style="padding: 12px 15px; border-bottom: 1px solid #e0e0e0;"><span style="background: #4A90E2; color: white; padding: 2px 8px; border-radius: 4px; font-size: 12px;">管理员</span></td>
+              <td style="padding: 12px 15px; border-bottom: 1px solid #e0e0e0;"><span style="background: #00AA7F; color: white; padding: 2px 8px; border-radius: 4px; font-size: 12px;">正常</span></td>
+            </tr>
+            <tr>
+              <td style="padding: 12px 15px; border-bottom: 1px solid #e0e0e0;">2</td>
+              <td style="padding: 12px 15px; border-bottom: 1px solid #e0e0e0;">user1</td>
+              <td style="padding: 12px 15px; border-bottom: 1px solid #e0e0e0;">139****9999</td>
+              <td style="padding: 12px 15px; border-bottom: 1px solid #e0e0e0;"><span style="background: #999; color: white; padding: 2px 8px; border-radius: 4px; font-size: 12px;">普通用户</span></td>
+              <td style="padding: 12px 15px; border-bottom: 1px solid #e0e0e0;"><span style="background: #00AA7F; color: white; padding: 2px 8px; border-radius: 4px; font-size: 12px;">正常</span></td>
+            </tr>
+            <tr>
+              <td style="padding: 12px 15px; border-bottom: 1px solid #e0e0e0;">3</td>
+              <td style="padding: 12px 15px; border-bottom: 1px solid #e0e0e0;">user2</td>
+              <td style="padding: 12px 15px; border-bottom: 1px solid #e0e0e0;">137****7777</td>
+              <td style="padding: 12px 15px; border-bottom: 1px solid #e0e0e0;"><span style="background: #999; color: white; padding: 2px 8px; border-radius: 4px; font-size: 12px;">普通用户</span></td>
+              <td style="padding: 12px 15px; border-bottom: 1px solid #e0e0e0;"><span style="background: #FF8500; color: white; padding: 2px 8px; border-radius: 4px; font-size: 12px;">禁用</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- 操作栏 -->
+      <div style="margin-top: 15px; display: flex; justify-content: center; gap: 15px;">
+        <button class="mock-button" style="height: 40px; padding: 0 20px; background: #4A90E2; color: white; border-radius: 6px;">添加用户</button>
+        <button class="mock-button" style="height: 40px; padding: 0 20px; background: #4A90E2; color: white; border-radius: 6px;">编辑选中</button>
+        <button class="mock-button" style="height: 40px; padding: 0 20px; background: #E74C3C; color: white; border-radius: 6px;">删除选中</button>
+      </div>
+    </div>
+  </div>
+</div>

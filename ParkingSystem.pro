@@ -45,6 +45,7 @@ SOURCES += \
     mainwindow.cpp \
     mysqlinit.cpp \
     platerecognize.cpp \
+    pthreadpool.cpp \
     registerwindow.cpp \
     databasemanager.cpp \
     # ==================== EasyPR 核心识别库（第三方库） ====================
@@ -78,6 +79,7 @@ HEADERS += \
     mainwindow.h \
     mysqlinit.h \
     platerecognize.h \
+    pthreadpool.h \
     registerwindow.h \
     databasemanager.h \
     # ==================== EasyPR 核心头文件（第三方库） ====================
