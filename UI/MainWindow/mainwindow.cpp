@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent)
     setWindowTitle("车牌识别系统");
     resize(1200, 800);
     updateSidebar();
+    switchPage(0);
 }
 
 MainWindow::~MainWindow()
@@ -36,6 +37,20 @@ void MainWindow::updateSidebar()
 
 void MainWindow::switchPage(int index)
 {
+    // 取消所有导航按钮选中
+    ui->btnHome->setChecked(false);
+    ui->btnVehicleInfo->setChecked(false);
+    ui->btnManage->setChecked(false);
+    ui->btnCamera->setChecked(false);
+
+    // 选中对应按钮
+    switch(index) {
+        case 0: ui->btnHome->setChecked(true); break;
+        case 1: ui->btnVehicleInfo->setChecked(true); break;
+        case 2: ui->btnManage->setChecked(true); break;
+        case 3: ui->btnCamera->setChecked(true); break;
+    }
+
     ui->stackedWidget->setCurrentIndex(index);
 }
 
