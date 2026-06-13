@@ -38,6 +38,7 @@ LIBS += -lmsvcrt -lole32 -luuid
 
 SOURCES += \
     # ==================== 核心业务模块 ====================
+    UI/HomePage/homepage.cpp \
     UI/Login/logindialog.cpp \
     UI/MainWindow/mainwindow.cpp \
     UI/Register/registerdialog.cpp \
@@ -74,6 +75,7 @@ SOURCES += \
 
 HEADERS += \
     # ==================== 核心业务模块 ====================
+    UI/HomePage/homepage.h \
     UI/Login/logindialog.h \
     UI/MainWindow/mainwindow.h \
     UI/Register/registerdialog.h \
@@ -134,6 +136,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 FORMS += \
+    UI/HomePage/homepage.ui \
     UI/Login/logindialog.ui \
     UI/MainWindow/mainwindow.ui \
     UI/Register/registerdialog.ui

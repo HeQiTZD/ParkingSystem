@@ -4,11 +4,21 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+    , m_homePage(nullptr)
     , m_sidebarExpanded(true)
 {
     ui->setupUi(this);
     setWindowTitle("车牌识别系统");
     resize(1200, 800);
+
+    // 移除占位页面并添加主页
+    QWidget *placeholder = ui->stackedWidget->widget(0);
+    ui->stackedWidget->removeWidget(placeholder);
+    delete placeholder;
+
+    m_homePage = new HomePage(this);
+    ui->stackedWidget->insertWidget(0, m_homePage);
+
     updateSidebar();
     switchPage(0);
 }
