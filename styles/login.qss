@@ -1,0 +1,180 @@
+﻿/* ==================== LoginPanel 样式 ==================== */
+
+/* loginPanel 容器背景 */
+#loginPanel {
+    background-color: #ffffff;
+}
+
+/* -------------------- 标题样式 -------------------- */
+#titleLabel {
+    color: #1a1a2e;
+    font-size: 24pt;
+    font-weight: bold;
+    padding: 5px 0;
+}
+
+/* -------------------- 输入框标签 -------------------- */
+#usernameLabel,
+#passwordLabel {
+    color: #555555;
+    font-size: 10pt;
+    font-weight: 600;
+    padding-bottom: 4px;
+}
+
+/* -------------------- 输入框样式 -------------------- */
+#usernameEdit,
+#passwordEdit {
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 11pt;
+    color: #333333;
+    background-color: #f8f9fa;
+    selection-background-color: #4a90d9;
+}
+
+#usernameEdit:hover,
+#passwordEdit:hover {
+    border-color: #b0b0b0;
+    background-color: #ffffff;
+}
+
+#usernameEdit:focus,
+#passwordEdit:focus {
+    border-color: #4a90d9;
+    background-color: #ffffff;
+    outline: none;
+}
+
+#usernameEdit::placeholder,
+#passwordEdit::placeholder {
+    color: #aaaaaa;
+    font-style: italic;
+}
+
+/* -------------------- 复选框样式 -------------------- */
+#rememberMeCheckBox {
+    color: #666666;
+    font-size: 9pt;
+    spacing: 6px;
+}
+
+#rememberMeCheckBox::indicator {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    border: 2px solid #cccccc;
+    background-color: #ffffff;
+}
+
+#rememberMeCheckBox::indicator:hover {
+    border-color: #4a90d9;
+}
+
+#rememberMeCheckBox::indicator:checked {
+    background-color: #4a90d9;
+    border-color: #4a90d9;
+    image: url(:/new/prefix1/checkmark);
+}
+
+/* -------------------- 忘记密码链接样式 -------------------- */
+#forgotPasswordLabel {
+    color: #4a90d9;
+    font-size: 9pt;
+}
+
+#forgotPasswordLabel:hover {
+    color: #2d7acc;
+    text-decoration: underline;
+}
+
+/* -------------------- 登录按钮样式 -------------------- */
+#loginButton {
+    background-color: #4a90d9;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 14px 24px;
+    font-size: 12pt;
+    font-weight: bold;
+    min-height: 50px;
+}
+
+#loginButton:hover {
+    background-color: #3a7bc8;
+}
+
+#loginButton:pressed {
+    background-color: #2d6cb5;
+    padding-top: 16px;
+}
+
+#loginButton:disabled {
+    background-color: #b0d4f1;
+    color: #ffffff;
+}
+
+/* -------------------- 注册按钮样式 -------------------- */
+#registerButton {
+    background-color: transparent;
+    color: #4a90d9;
+    border: 2px solid #4a90d9;
+    border-radius: 8px;
+    padding: 14px 24px;
+    font-size: 12pt;
+    font-weight: 600;
+    min-height: 50px;
+}
+
+#registerButton:hover {
+    background-color: #f0f7ff;
+    border-color: #3a7bc8;
+    color: #3a7bc8;
+}
+
+#registerButton:pressed {
+    background-color: #e0efff;
+    border-color: #2d6cb5;
+    color: #2d6cb5;
+}
+
+/* -------------------- 分隔线样式 -------------------- */
+#separatorContainer {
+    background-color: transparent;
+}
+
+#leftSeparatorLine,
+#rightSeparatorLine {
+    color: #e0e0e0;
+    max-height: 1px;
+}
+
+#orLabel {
+    color: #999999;
+    font-size: 9pt;
+    padding: 0 8px;
+}
+
+/* -------------------- 底部面板样式 -------------------- */
+#footerPanel {
+    background-color: transparent;
+    border-top: 1px solid #f0f0f0;
+}
+
+#copyrightLabel {
+    color: #999999;
+    font-size: 8pt;
+}
+
+#termsLabel,
+#privacyLabel {
+    color: #4a90d9;
+    font-size: 8pt;
+}
+
+#termsLabel:hover,
+#privacyLabel:hover {
+    color: #2d7acc;
+    text-decoration: underline;
+}

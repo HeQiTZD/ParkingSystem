@@ -37,16 +37,15 @@ LIBS += -lmsvcrt -lole32 -luuid
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    # ==================== 业务模块（已实现） ====================
+    # ==================== 核心业务模块 ====================
+    UI/Login/logindialog.cpp \
     camerathread.cpp \
     car.cpp \
     initfile.cpp \
     main.cpp \
-    mainwindow.cpp \
     mysqlinit.cpp \
     platerecognize.cpp \
     pthreadpool.cpp \
-    registerwindow.cpp \
     databasemanager.cpp \
     # ==================== EasyPR 核心识别库（第三方库） ====================
     src/core/chars_identify.cpp \
@@ -72,16 +71,16 @@ SOURCES += \
     thirdparty/xmlParser/xmlParser.cpp
 
 HEADERS += \
-    # ==================== 业务模块（已实现） ====================
+    # ==================== 核心业务模块 ====================
+    UI/Login/logindialog.h \
     camerathread.h \
     car.h \
     initfile.h \
-    mainwindow.h \
     mysqlinit.h \
     platerecognize.h \
     pthreadpool.h \
-    registerwindow.h \
     databasemanager.h \
+    utils.h \
     # ==================== EasyPR 核心头文件（第三方库） ====================
     include/easypr/core/character.hpp \
     include/easypr/core/chars_identify.h \
@@ -110,21 +109,29 @@ HEADERS += \
     thirdparty/mser/mser2.hpp \
     thirdparty/svm/precomp.hpp \
     thirdparty/textDetect/erfilter.hpp \
-    thirdparty/xmlParser/xmlParser.h \
-    utils.h
+    thirdparty/xmlParser/xmlParser.h
 
-FORMS += \
-    mainwindow.ui \
-    registerwindow.ui
+# ==================== 资源文件 ====================
+# RESOURCES += \
+#     UI/resources/resources.qrc
 
 # ==================== OpenCV 库配置 ====================
 # 【重要】修改为本机的OpenCV安装路径
 INCLUDEPATH += C:\OpenCV-MinGW-Build-OpenCV-3.4.8-x64\include \
                C:\OpenCV-MinGW-Build-OpenCV-3.4.8-x64\include\opencv2 \
-               C:\OpenCV-MinGW-Build-OpenCV-3.4.8-x64\include\opencv
+               C:\OpenCV-MinGW-Build-OpenCV-3.4.8-x64\include\opencv \
+               UI
+
 LIBS += -L C:\OpenCV-MinGW-Build-OpenCV-3.4.8-x64\x64\mingw\lib\libopencv_*.a
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+FORMS += \
+    UI/Login/logindialog.ui
+
+RESOURCES += \
+    UI/imageQrc/image.qrc \
+    styles/styles.qrc
