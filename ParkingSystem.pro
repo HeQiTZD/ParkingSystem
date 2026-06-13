@@ -39,6 +39,7 @@ LIBS += -lmsvcrt -lole32 -luuid
 SOURCES += \
     # ==================== 核心业务模块 ====================
     UI/Login/logindialog.cpp \
+    UI/Register/registerdialog.cpp \
     camerathread.cpp \
     car.cpp \
     initfile.cpp \
@@ -73,6 +74,7 @@ SOURCES += \
 HEADERS += \
     # ==================== 核心业务模块 ====================
     UI/Login/logindialog.h \
+    UI/Register/registerdialog.h \
     camerathread.h \
     car.h \
     initfile.h \
@@ -130,7 +132,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 FORMS += \
-    UI/Login/logindialog.ui
+    UI/Login/logindialog.ui \
+    UI/Register/registerdialog.ui
 
 RESOURCES += \
     UI/imageQrc/image.qrc \
