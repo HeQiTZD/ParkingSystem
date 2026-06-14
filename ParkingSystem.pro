@@ -42,6 +42,7 @@ SOURCES += \
     UI/Login/logindialog.cpp \
     UI/MainWindow/mainwindow.cpp \
     UI/Register/registerdialog.cpp \
+    UI/VehicleInfo/vehicleinfopage.cpp \
     camerathread.cpp \
     car.cpp \
     initfile.cpp \
@@ -79,6 +80,7 @@ HEADERS += \
     UI/Login/logindialog.h \
     UI/MainWindow/mainwindow.h \
     UI/Register/registerdialog.h \
+    UI/VehicleInfo/vehicleinfopage.h \
     camerathread.h \
     car.h \
     initfile.h \
@@ -139,7 +141,8 @@ FORMS += \
     UI/HomePage/homepage.ui \
     UI/Login/logindialog.ui \
     UI/MainWindow/mainwindow.ui \
-    UI/Register/registerdialog.ui
+    UI/Register/registerdialog.ui \
+    UI/VehicleInfo/vehicleinfopage.ui
 
 RESOURCES += \
     UI/imageQrc/image.qrc \
