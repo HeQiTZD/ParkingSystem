@@ -1,0 +1,102 @@
+/* ==================== ConfigInitDialog 样式 ==================== */
+
+/* 对话框容器 */
+QDialog {
+    background-color: #ffffff;
+}
+
+/* -------------------- 标题样式 -------------------- */
+QLabel#titleLabel {
+    color: #1a1a2e;
+    font-size: 18pt;
+    font-weight: bold;
+    padding: 10px 0;
+}
+
+/* -------------------- 分组标题 -------------------- */
+QLabel#dbSectionLabel,
+QLabel#parkingSectionLabel {
+    color: #1a1a2e;
+    font-size: 12pt;
+    font-weight: 600;
+    padding: 8px 0;
+    border-bottom: 2px solid #3b82f6;
+    margin-top: 10px;
+}
+
+/* -------------------- 标签样式 -------------------- */
+QLabel#lblIP,
+QLabel#lblPort,
+QLabel#lblDBName,
+QLabel#lblUsername,
+QLabel#lblPassword,
+QLabel#lblParkingName,
+QLabel#lblPrice,
+QLabel#lblCapacity {
+    color: #475569;
+    font-size: 14px;
+    min-width: 80px;
+    max-width: 80px;
+}
+
+/* -------------------- 输入框样式 -------------------- */
+QLineEdit {
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 14px;
+    color: #1e293b;
+    background-color: #f8fafc;
+    min-height: 20px;
+}
+
+QLineEdit:hover {
+    border-color: #94a3b8;
+}
+
+QLineEdit:focus {
+    border-color: #3b82f6;
+    background-color: #ffffff;
+    border-width: 2px;
+    padding: 9px 13px;
+}
+
+/* -------------------- 提交按钮 -------------------- */
+QPushButton#btnSubmit {
+    background-color: #3b82f6;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 24px;
+    font-size: 14px;
+    font-weight: 600;
+    min-height: 20px;
+}
+
+QPushButton#btnSubmit:hover {
+    background-color: #2563eb;
+}
+
+QPushButton#btnSubmit:pressed {
+    background-color: #1d4ed8;
+}
+
+/* -------------------- 取消按钮 -------------------- */
+QPushButton#btnCancel {
+    background-color: #ffffff;
+    color: #475569;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 10px 24px;
+    font-size: 14px;
+    min-height: 20px;
+}
+
+QPushButton#btnCancel:hover {
+    background-color: #f8fafc;
+    border-color: #94a3b8;
+}
+
+QPushButton#btnCancel:pressed {
+    background-color: #f1f5f9;
+}
