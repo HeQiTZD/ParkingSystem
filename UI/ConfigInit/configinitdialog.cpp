@@ -9,7 +9,7 @@ ConfigInitDialog::ConfigInitDialog(QWidget *parent) :
     ui(new Ui::ConfigInitDialog)
 {
     ui->setupUi(this);
-    setFixedSize(500, 600);
+    setFixedSize(700, 700);
     setWindowTitle("停车场数据初始化");
 
     // 加载配置窗口样式
