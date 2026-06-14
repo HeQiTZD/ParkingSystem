@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/new/prefix1">
+        <file alias="brandImage">login.png</file>
+        <file alias="config.qss">../../styles/config.qss</file>
+    </qresource>
+</RCC>
