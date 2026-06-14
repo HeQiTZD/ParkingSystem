@@ -120,7 +120,7 @@
             <cursorShape>PointingHandCursor</cursorShape>
            </property>
            <property name="text">
-            <string>-</string>
+            <string>─</string>
            </property>
           </widget>
          </item>
@@ -142,7 +142,7 @@
             <cursorShape>PointingHandCursor</cursorShape>
            </property>
            <property name="text">
-            <string>x</string>
+            <string>×</string>
            </property>
           </widget>
          </item>
