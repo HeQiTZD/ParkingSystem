@@ -17,16 +17,33 @@ int main(int argc, char *argv[])
         styleFile.close();
     }
 
-    // 检查是否需要初始化配置
-    // TODO: 检查配置文件是否存在
+    // // 创建InitFile实例检查配置文件
+    // InitFile initfile;
 
-    // 显示登录对话框
+    // // 检查配置文件是否存在
+    // if(initfile.isConfigExists()){
+    //     LoginDialog loginDialog;
+    //     if(loginDialog.exec() == QDialog::Accepted){
+    //         MainWindow mainWindow;
+    //         mainWindow.show();
+    //         return app.exec();
+    //     }
+    // }else{
+    //     ConfigInitDialog configDialog;
+    //     if(configDialog.exec() == QDialog::Accepted){
+    //         LoginDialog loginDialog;
+    //         if(loginDialog.exec() == QDialog::Accepted){
+    //             MainWindow mainWindow;
+    //             mainWindow.show();
+    //             return app.exec();
+    //         }
+    //     }else{
+    //         return 0;
+    //     }
+    // }
+
     LoginDialog loginDialog;
-    if (loginDialog.exec() == QDialog::Accepted) {
-        MainWindow mainWindow;
-        mainWindow.show();
-        return app.exec();
-    }
+    loginDialog.exec();
 
     return 0;
 }
