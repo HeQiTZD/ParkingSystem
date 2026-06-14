@@ -143,6 +143,33 @@ void InitFile::setDbConfig(const QString &host, const int port, const QString &n
     qDebug() << QStringLiteral("数据库配置已更新");
 }
 
+//获取停车场配置
+QString InitFile::getParkingName() const
+{
+    return configData["parking"].toObject()["name"].toString();
+}
+
+double InitFile::getParkingPrice() const
+{
+    return configData["parking"].toObject()["price"].toDouble();
+}
+
+int InitFile::getParkingCapacity() const
+{
+    return configData["parking"].toObject()["capacity"].toInt();
+}
+
+void InitFile::setParkingConfig(const QString &name, double price, int capacity)
+{
+    QJsonObject parkingConfig;
+    parkingConfig["name"] = name;
+    parkingConfig["price"] = price;
+    parkingConfig["capacity"] = capacity;
+
+    configData["parking"] = parkingConfig;
+    qDebug() << QStringLiteral("停车场配置已更新");
+}
+
 //获取摄像头配置
 int InitFile::getCameraIndex() const
 {
@@ -269,6 +296,13 @@ QJsonObject InitFile::getDefaultConfig() const
     recognitionConfig["confidenceThreshold"] = 0.7;
     defaultConfig["recognition"] = recognitionConfig;
 
+    //停车场默认配置
+    QJsonObject parkingConfig;
+    parkingConfig["name"] = "";
+    parkingConfig["price"] = 0.0;
+    parkingConfig["capacity"] = 0;
+    defaultConfig["parking"] = parkingConfig;
+
     //系统默认配置
     QJsonObject systemConfig;
     systemConfig["appName"] = "停车场管理系统";
@@ -283,7 +317,7 @@ QJsonObject InitFile::getDefaultConfig() const
 bool InitFile::validateConfig(const QJsonObject &config) const
 {
     //检查必要的配置节是否存在
-    QStringList requiredSections = {"database", "camera", "recognition", "system"};
+    QStringList requiredSections = {"database", "camera", "recognition", "parking", "system"};
     for(const QString &section : requiredSections){
         if(!config.contains(section)){
             qDebug() << QStringLiteral("配置缺少必要的配置节:") <<section;
@@ -305,6 +339,14 @@ bool InitFile::validateConfig(const QJsonObject &config) const
     if(!cameraConfig.contains("index") || !cameraConfig.contains("width")||
         !cameraConfig.contains("height") || !cameraConfig.contains("fps")){
         qDebug() << QStringLiteral("摄像头配置不完整");
+        return false;
+    }
+
+    //检查停车场配置
+    QJsonObject parkingConfig = config["parking"].toObject();
+    if(!parkingConfig.contains("name") || !parkingConfig.contains("price") ||
+       !parkingConfig.contains("capacity")){
+        qDebug() << QStringLiteral("停车场配置不完整");
         return false;
     }
     return true;

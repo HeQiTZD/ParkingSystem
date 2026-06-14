@@ -1,5 +1,6 @@
 #include "configinitdialog.h"
 #include "ui_configinitdialog.h"
+#include "initfile.h"
 #include <QMessageBox>
 
 ConfigInitDialog::ConfigInitDialog(QWidget *parent) :
@@ -55,7 +56,22 @@ bool ConfigInitDialog::validateInputs()
 
 void ConfigInitDialog::saveConfig()
 {
-    // TODO: 保存配置到文件或数据库
+    InitFile initFile;
+    initFile.loadConfig();
+
+    // 保存数据库配置
+    initFile.setDbConfig(ui->txtIP->text(),
+                         ui->txtPort->text().toInt(),
+                         ui->txtDBName->text(),
+                         ui->txtUsername->text(),
+                         ui->txtPassword->text());
+
+    // 保存停车场配置
+    initFile.setParkingConfig(ui->txtParkingName->text(),
+                              ui->txtPrice->text().toDouble(),
+                              ui->txtCapacity->text().toInt());
+
+    initFile.saveConfig();
 }
 
 void ConfigInitDialog::on_btnSubmit_clicked()

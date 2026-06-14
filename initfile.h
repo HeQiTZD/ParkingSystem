@@ -41,6 +41,12 @@ public:
     int getCameraFps() const;//获取摄像头的帧率（Frames Per Second，每秒帧数）
     void setCameraConfig(int index, int width, int height, int fps);
 
+    //停车场配置
+    QString getParkingName() const;//获取停车场名称
+    double getParkingPrice() const;//获取停车价格（每小时）
+    int getParkingCapacity() const;//获取停车场容量
+    void setParkingConfig(const QString &name, double price, int capacity);
+
     //识别配置
     QString getModelPath() const;//获取当前使用的识别模型文件路径。
     double getConfidenceThreshold() const;//获取识别结果的置信度阈值（confidence threshold）
