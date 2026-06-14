@@ -244,19 +244,19 @@
          </property>
          <layout class="QVBoxLayout" name="loginPanelLayout">
           <property name="spacing">
-           <number>15</number>
+           <number>24</number>
           </property>
           <property name="leftMargin">
-           <number>30</number>
+           <number>40</number>
           </property>
           <property name="topMargin">
-           <number>20</number>
-          </property>
-          <property name="rightMargin">
            <number>30</number>
           </property>
+          <property name="rightMargin">
+           <number>40</number>
+          </property>
           <property name="bottomMargin">
-           <number>20</number>
+           <number>30</number>
           </property>
           <item>
            <widget class="QLabel" name="titleLabel">
@@ -281,14 +281,14 @@
              <widget class="QLineEdit" name="usernameEdit">
               <property name="minimumSize">
                <size>
-                <width>500</width>
-                <height>50</height>
+                <width>420</width>
+                <height>48</height>
                </size>
               </property>
               <property name="maximumSize">
                <size>
-                <width>500</width>
-                <height>50</height>
+                <width>420</width>
+                <height>48</height>
                </size>
               </property>
              </widget>
@@ -304,14 +304,14 @@
              <widget class="QLineEdit" name="passwordEdit">
               <property name="minimumSize">
                <size>
-                <width>500</width>
-                <height>50</height>
+                <width>420</width>
+                <height>48</height>
                </size>
               </property>
               <property name="maximumSize">
                <size>
-                <width>500</width>
-                <height>50</height>
+                <width>420</width>
+                <height>48</height>
                </size>
               </property>
              </widget>
@@ -356,14 +356,14 @@
            <widget class="QPushButton" name="loginButton">
             <property name="minimumSize">
              <size>
-              <width>500</width>
-              <height>50</height>
+              <width>420</width>
+              <height>48</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>500</width>
-              <height>50</height>
+              <width>420</width>
+              <height>48</height>
              </size>
             </property>
             <property name="text">
@@ -414,14 +414,14 @@
            <widget class="QPushButton" name="registerButton">
             <property name="minimumSize">
              <size>
-              <width>500</width>
-              <height>50</height>
+              <width>420</width>
+              <height>48</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>500</width>
-              <height>50</height>
+              <width>420</width>
+              <height>48</height>
              </size>
             </property>
             <property name="text">
