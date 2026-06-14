@@ -5,6 +5,7 @@
 #include "UI/HomePage/homepage.h"
 #include "UI/ManagePage/managepage.h"
 #include "UI/VehicleInfo/vehicleinfopage.h"
+#include "UI/CameraPage/camerapage.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -30,6 +31,7 @@ private:
     HomePage *m_homePage;
     ManagePage *m_managePage;
     VehicleInfoPage *m_vehicleInfoPage;
+    CameraPage *m_cameraPage;
     bool m_sidebarExpanded;
     void updateSidebar();
     void switchPage(int index);

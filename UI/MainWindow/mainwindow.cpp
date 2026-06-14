@@ -7,6 +7,7 @@ MainWindow::MainWindow(QWidget *parent)
     , m_homePage(nullptr)
     , m_managePage(nullptr)
     , m_vehicleInfoPage(nullptr)
+    , m_cameraPage(nullptr)
     , m_sidebarExpanded(true)
 {
     ui->setupUi(this);
@@ -26,6 +27,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     m_managePage = new ManagePage(this);
     ui->stackedWidget->insertWidget(2, m_managePage);
+
+    m_cameraPage = new CameraPage(this);
+    ui->stackedWidget->insertWidget(3, m_cameraPage);
 
     updateSidebar();
     switchPage(0);
