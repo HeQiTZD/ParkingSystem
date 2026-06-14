@@ -6,10 +6,13 @@
 #include <QPalette>
 #include <QFile>
 #include <QDebug>
+#include <QGraphicsDropShadowEffect>
+#include <QMouseEvent>
 
 LoginDialog::LoginDialog(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::LoginDialog)
+    , m_dragging(false)
 {
     ui->setupUi(this);
 
@@ -17,6 +20,11 @@ LoginDialog::LoginDialog(QWidget *parent)
     ui->passwordEdit->setEchoMode(QLineEdit::Password);
     ui->passwordEdit->setPlaceholderText("请输入密码");
     ui->usernameEdit->setPlaceholderText("请输入用户名");
+
+    // 设置无边框窗口
+    setupWindowFlags();
+    setupShadow();
+    setupTitleBar();
 
     // 加载登录界面样式表
     QFile styleFile(":/styles/login.qss");
@@ -71,4 +79,70 @@ void LoginDialog::updateBrandPanelBackground()
     QPalette palette;
     palette.setBrush(ui->brandPanel->backgroundRole(), QBrush(background));
     ui->brandPanel->setPalette(palette);
+}
+
+void LoginDialog::setupWindowFlags()
+{
+    setWindowFlags(Qt::FramelessWindowHint | Qt::WindowMinimizeButtonHint);
+    setAttribute(Qt::WA_TranslucentBackground);
+}
+
+void LoginDialog::setupShadow()
+{
+    QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect(this);
+    shadow->setBlurRadius(20);
+    shadow->setColor(QColor(0, 0, 0, 80));
+    shadow->setOffset(0, 0);
+    ui->mainContainer->setGraphicsEffect(shadow);
+}
+
+void LoginDialog::setupTitleBar()
+{
+    ui->titleBar->installEventFilter(this);
+}
+
+bool LoginDialog::eventFilter(QObject *obj, QEvent *event)
+{
+    if (obj == ui->titleBar) {
+        QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+
+        switch (event->type()) {
+        case QEvent::MouseButtonPress:
+            if (mouseEvent->button() == Qt::LeftButton) {
+                m_dragging = true;
+                m_dragPosition = mouseEvent->globalPos() - frameGeometry().topLeft();
+                return true;
+            }
+            break;
+
+        case QEvent::MouseMove:
+            if (m_dragging && (mouseEvent->buttons() & Qt::LeftButton)) {
+                move(mouseEvent->globalPos() - m_dragPosition);
+                return true;
+            }
+            break;
+
+        case QEvent::MouseButtonRelease:
+            if (mouseEvent->button() == Qt::LeftButton) {
+                m_dragging = false;
+                return true;
+            }
+            break;
+
+        default:
+            break;
+        }
+    }
+
+    return QDialog::eventFilter(obj, event);
+}
+
+void LoginDialog::on_btnMinimize_clicked()
+{
+    showMinimized();
+}
+
+void LoginDialog::on_btnClose_clicked()
+{
+    close();
 }

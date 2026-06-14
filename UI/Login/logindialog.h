@@ -2,6 +2,7 @@
 #define LOGINDIALOG_H
 
 #include <QDialog>
+#include <QPoint>
 
 namespace Ui {
 class LoginDialog;
@@ -16,10 +17,21 @@ public:
     ~LoginDialog();
 
 protected:
+    bool eventFilter(QObject *obj, QEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;
+
+private slots:
+    void on_btnMinimize_clicked();
+    void on_btnClose_clicked();
 
 private:
     Ui::LoginDialog *ui;
+    bool m_dragging;
+    QPoint m_dragPosition;
+
+    void setupWindowFlags();
+    void setupShadow();
+    void setupTitleBar();
     void updateBrandPanelBackground();
 };
 
