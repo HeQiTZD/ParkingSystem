@@ -1,20 +1,32 @@
-﻿#include "mainwindow.h"
-#include "initfile.h"
+﻿#include "initfile.h"
+#include "UI/Login/logindialog.h"
+#include "UI/MainWindow/mainwindow.h"
+#include "UI/ConfigInit/configinitdialog.h"
 #include <QApplication>
+#include <QFile>
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+    QApplication app(argc, argv);
 
-    //初始化配置文件
-    InitFile config;
-    if(!config.loadConfig()){
-        qDebug() << QStringLiteral("配置文件加载失败");
+    // 加载全局样式
+    QFile styleFile(":/styles/global.qss");
+    if (styleFile.open(QFile::ReadOnly)) {
+        QString style = styleFile.readAll();
+        app.setStyleSheet(style);
+        styleFile.close();
     }
 
-    //将配置传递给MainWindow
-    MainWindow *w = new MainWindow(&config); // 传递配置指针
-    w->setAttribute(Qt::WA_DeleteOnClose);//关闭窗口时自动释放内存
-    w->show();
-    return QApplication::exec();
+    // 检查是否需要初始化配置
+    // TODO: 检查配置文件是否存在
+
+    // 显示登录对话框
+    LoginDialog loginDialog;
+    if (loginDialog.exec() == QDialog::Accepted) {
+        MainWindow mainWindow;
+        mainWindow.show();
+        return app.exec();
+    }
+
+    return 0;
 }
