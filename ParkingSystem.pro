@@ -41,6 +41,7 @@ SOURCES += \
     UI/HomePage/homepage.cpp \
     UI/Login/logindialog.cpp \
     UI/MainWindow/mainwindow.cpp \
+    UI/ManagePage/managepage.cpp \
     UI/Register/registerdialog.cpp \
     UI/VehicleInfo/vehicleinfopage.cpp \
     camerathread.cpp \
@@ -79,6 +80,7 @@ HEADERS += \
     UI/HomePage/homepage.h \
     UI/Login/logindialog.h \
     UI/MainWindow/mainwindow.h \
+    UI/ManagePage/managepage.h \
     UI/Register/registerdialog.h \
     UI/VehicleInfo/vehicleinfopage.h \
     camerathread.h \
@@ -141,6 +143,7 @@ FORMS += \
     UI/HomePage/homepage.ui \
     UI/Login/logindialog.ui \
     UI/MainWindow/mainwindow.ui \
+    UI/ManagePage/managepage.ui \
     UI/Register/registerdialog.ui \
     UI/VehicleInfo/vehicleinfopage.ui
 

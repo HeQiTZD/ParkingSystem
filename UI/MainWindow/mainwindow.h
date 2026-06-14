@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "UI/HomePage/homepage.h"
+#include "UI/ManagePage/managepage.h"
 #include "UI/VehicleInfo/vehicleinfopage.h"
 
 QT_BEGIN_NAMESPACE
@@ -27,6 +28,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     HomePage *m_homePage;
+    ManagePage *m_managePage;
     VehicleInfoPage *m_vehicleInfoPage;
     bool m_sidebarExpanded;
     void updateSidebar();
