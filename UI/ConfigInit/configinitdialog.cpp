@@ -3,14 +3,20 @@
 #include "initfile.h"
 #include <QMessageBox>
 #include <QFile>
+#include <QGraphicsDropShadowEffect>
+#include <QMouseEvent>
 
 ConfigInitDialog::ConfigInitDialog(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::ConfigInitDialog)
+    ui(new Ui::ConfigInitDialog),
+    m_dragging(false)
 {
     ui->setupUi(this);
     setFixedSize(700, 900);
-    setWindowTitle("停车场数据初始化");
+
+    setupWindowFlags();
+    setupShadow();
+    setupTitleBar();
 
     // 加载配置窗口样式
     QFile styleFile(":/styles/config.qss");
@@ -23,6 +29,72 @@ ConfigInitDialog::ConfigInitDialog(QWidget *parent) :
 ConfigInitDialog::~ConfigInitDialog()
 {
     delete ui;
+}
+
+void ConfigInitDialog::setupWindowFlags()
+{
+    setWindowFlags(Qt::FramelessWindowHint | Qt::WindowMinimizeButtonHint);
+    setAttribute(Qt::WA_TranslucentBackground);
+}
+
+void ConfigInitDialog::setupShadow()
+{
+    QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect(this);
+    shadow->setBlurRadius(20);
+    shadow->setColor(QColor(0, 0, 0, 80));
+    shadow->setOffset(0, 0);
+    ui->mainContainer->setGraphicsEffect(shadow);
+}
+
+void ConfigInitDialog::setupTitleBar()
+{
+    ui->titleBar->installEventFilter(this);
+}
+
+bool ConfigInitDialog::eventFilter(QObject *obj, QEvent *event)
+{
+    if (obj == ui->titleBar) {
+        QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+
+        switch (event->type()) {
+        case QEvent::MouseButtonPress:
+            if (mouseEvent->button() == Qt::LeftButton) {
+                m_dragging = true;
+                m_dragPosition = mouseEvent->globalPos() - frameGeometry().topLeft();
+                return true;
+            }
+            break;
+
+        case QEvent::MouseMove:
+            if (m_dragging && (mouseEvent->buttons() & Qt::LeftButton)) {
+                move(mouseEvent->globalPos() - m_dragPosition);
+                return true;
+            }
+            break;
+
+        case QEvent::MouseButtonRelease:
+            if (mouseEvent->button() == Qt::LeftButton) {
+                m_dragging = false;
+                return true;
+            }
+            break;
+
+        default:
+            break;
+        }
+    }
+
+    return QDialog::eventFilter(obj, event);
+}
+
+void ConfigInitDialog::on_btnMinimize_clicked()
+{
+    showMinimized();
+}
+
+void ConfigInitDialog::on_btnClose_clicked()
+{
+    close();
 }
 
 bool ConfigInitDialog::validateInputs()
