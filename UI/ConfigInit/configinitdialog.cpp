@@ -2,6 +2,7 @@
 #include "ui_configinitdialog.h"
 #include "initfile.h"
 #include <QMessageBox>
+#include <QFile>
 
 ConfigInitDialog::ConfigInitDialog(QWidget *parent) :
     QDialog(parent),
@@ -10,6 +11,13 @@ ConfigInitDialog::ConfigInitDialog(QWidget *parent) :
     ui->setupUi(this);
     setFixedSize(500, 600);
     setWindowTitle("停车场数据初始化");
+
+    // 加载配置窗口样式
+    QFile styleFile(":/styles/config.qss");
+    if (styleFile.open(QFile::ReadOnly)) {
+        setStyleSheet(styleFile.readAll());
+        styleFile.close();
+    }
 }
 
 ConfigInitDialog::~ConfigInitDialog()
