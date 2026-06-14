@@ -6,19 +6,17 @@ QDialog {
 }
 
 /* -------------------- 标题样式 -------------------- */
+/* 不设置 font-size/font-weight：titleLabel 使用 rich text，内联样式会覆盖 QSS */
 QLabel#titleLabel {
     color: #1a1a2e;
-    font-size: 18pt;
-    font-weight: bold;
     padding: 10px 0;
 }
 
 /* -------------------- 分组标题 -------------------- */
+/* 不设置 font-size/font-weight：这些标签使用 rich text，内联样式会覆盖 QSS */
 QLabel#dbSectionLabel,
 QLabel#parkingSectionLabel {
     color: #1a1a2e;
-    font-size: 12pt;
-    font-weight: 600;
     padding: 8px 0;
     border-bottom: 2px solid #3b82f6;
     margin-top: 10px;
@@ -62,6 +60,7 @@ QLineEdit:focus {
 }
 
 /* -------------------- 提交按钮 -------------------- */
+/* 不设置 min-height：UI 文件中 minimumSize height 已设为 40px，QSS 的 20px 不会生效 */
 QPushButton#btnSubmit {
     background-color: #3b82f6;
     color: #ffffff;
@@ -70,7 +69,6 @@ QPushButton#btnSubmit {
     padding: 10px 24px;
     font-size: 14px;
     font-weight: 600;
-    min-height: 20px;
 }
 
 QPushButton#btnSubmit:hover {
@@ -82,6 +80,7 @@ QPushButton#btnSubmit:pressed {
 }
 
 /* -------------------- 取消按钮 -------------------- */
+/* 不设置 min-height：UI 文件中 minimumSize height 已设为 40px，QSS 的 20px 不会生效 */
 QPushButton#btnCancel {
     background-color: #ffffff;
     color: #475569;
@@ -89,7 +88,6 @@ QPushButton#btnCancel {
     border-radius: 6px;
     padding: 10px 24px;
     font-size: 14px;
-    min-height: 20px;
 }
 
 QPushButton#btnCancel:hover {
