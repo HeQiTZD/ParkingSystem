@@ -178,3 +178,51 @@
     color: #2d7acc;
     text-decoration: underline;
 }
+
+/* ==================== 标题栏样式 ==================== */
+
+/* 标题栏容器 */
+#titleBar {
+    background-color: #ffffff;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+/* 标题栏按钮基础样式 */
+QPushButton#btnMinimize,
+QPushButton#btnClose {
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    color: #94a3b8;
+    font-size: 14px;
+    font-weight: bold;
+    min-width: 36px;
+    max-width: 36px;
+    min-height: 28px;
+    max-height: 28px;
+    padding: 0px;
+}
+
+/* 最小化按钮悬浮 */
+QPushButton#btnMinimize:hover {
+    background-color: #f1f5f9;
+    color: #64748b;
+}
+
+/* 最小化按钮按下 */
+QPushButton#btnMinimize:pressed {
+    background-color: #e2e8f0;
+}
+
+/* 关闭按钮悬浮 */
+QPushButton#btnClose:hover {
+    background-color: #ef4444;
+    color: #ffffff;
+}
+
+/* 关闭按钮按下 */
+QPushButton#btnClose:pressed {
+    background-color: #dc2626;
+}
