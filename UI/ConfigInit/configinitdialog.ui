@@ -26,6 +26,9 @@
    <string>停车场数据初始化</string>
   </property>
   <layout class="QVBoxLayout" name="outerLayout">
+   <property name="spacing">
+    <number>0</number>
+   </property>
    <property name="leftMargin">
     <number>10</number>
    </property>
@@ -40,9 +43,6 @@
    </property>
    <item>
     <widget class="QWidget" name="mainContainer">
-     <property name="styleSheet">
-      <string>background-color: white; border-radius: 8px;</string>
-     </property>
      <layout class="QVBoxLayout" name="containerLayout">
       <property name="spacing">
        <number>0</number>
