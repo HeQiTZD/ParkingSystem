@@ -50,9 +50,7 @@
     <widget class="QWidget" name="mainContainer" native="true">
      <property name="styleSheet">
       <string notr="true">QWidget#mainContainer {
-    background: #FFFFFF;
-    border: 1px solid #E5E5E5;
-    border-radius: 12px;
+    background: transparent;
 }</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_4">
