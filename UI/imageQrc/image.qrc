@@ -2,5 +2,11 @@
     <qresource prefix="/new/prefix1">
         <file alias="brandImage">login.png</file>
         <file alias="checkmark_checked">checkmark_checked.png</file>
+        <file alias="LoginBrandImage">Login-Brand-image.png</file>
+        <file alias="icon-person">person.svg</file>
+        <file alias="icon-lock">lock.svg</file>
+        <file alias="icon-security">security.svg</file>
+        <file alias="icon-visibility">visibility.svg</file>
+        <file alias="icon-visibility-off">visibility_off.svg</file>
     </qresource>
 </RCC>
