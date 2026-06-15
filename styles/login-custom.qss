@@ -89,7 +89,15 @@ QPushButton#loginButton {
 /* 按钮悬停效果 */
 QPushButton#loginButton:hover {
     background-color: #003090;
-    box-shadow: 0 4px 6px rgba(0, 63, 177, 0.2);
+}
+
+QPushButton#registerButton {
+    background-color: transparent;
+    color: #434654;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    font-size: 14px;
+    min-height: 44px;
 }
 
 QPushButton#registerButton:hover {
