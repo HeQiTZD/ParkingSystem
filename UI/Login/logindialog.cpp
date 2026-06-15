@@ -144,9 +144,70 @@ void LoginDialog::mousePressEvent(QMouseEvent *event)
 
 void LoginDialog::drawBrandPanel(QPainter &painter, const QRect &rect)
 {
-    Q_UNUSED(painter);
-    Q_UNUSED(rect);
-    // TODO: 在Task 4中实现品牌区绘制
+    // 保存画家状态
+    painter.save();
+
+    // 设置裁剪区域为圆角矩形
+    QPainterPath clipPath;
+    clipPath.addRoundedRect(rect, 12, 0);
+    painter.setClipPath(clipPath);
+
+    // 1. 绘制背景图片
+    if (!m_brandPixmap.isNull()) {
+        painter.drawPixmap(rect, m_brandPixmap);
+    } else {
+        // 如果图片加载失败，使用纯色背景
+        painter.fillRect(rect, QColor("#1A56DB"));
+    }
+
+    // 2. 绘制渐变叠加层
+    QLinearGradient gradient(rect.topLeft(), rect.bottomLeft());
+    gradient.setColorAt(0, QColor(0, 63, 177, 102));   // 40%透明度
+    gradient.setColorAt(0.5, QColor(0, 63, 177, 153)); // 60%透明度
+    gradient.setColorAt(1, QColor(0, 63, 177, 230));   // 90%透明度
+    painter.fillRect(rect, gradient);
+
+    // 3. 绘制品牌文字区域
+    QRect textArea = rect.adjusted(20, 0, -20, -20);
+
+    // 绘制Security图标和Sentinel LPR标题
+    painter.setPen(QColor("#FFFFFF"));
+    painter.setFont(QFont("Microsoft YaHei", 24, QFont::Bold));
+    QRect titleRect = textArea.adjusted(0, 0, 0, -200);
+    painter.drawText(titleRect, Qt::AlignBottom | Qt::AlignLeft, "Sentinel LPR");
+
+    // 绘制智能车牌识别系统标题
+    painter.setFont(QFont("Microsoft YaHei", 16, QFont::Bold));
+    QRect subtitleRect = textArea.adjusted(0, 0, 0, -160);
+    painter.drawText(subtitleRect, Qt::AlignBottom | Qt::AlignLeft, "智能车牌识别系统");
+
+    // 绘制描述文字
+    painter.setFont(QFont("Microsoft YaHei", 10));
+    painter.setPen(QColor(255, 255, 255, 204));  // 80%透明度
+    QRect descRect = textArea.adjusted(0, 0, 0, -120);
+    painter.drawText(descRect, Qt::AlignBottom | Qt::AlignLeft | Qt::TextWordWrap,
+                     "高精度算法，实时全天候监控，为您的车辆安全保驾护航。");
+
+    // 4. 绘制标签
+    painter.setFont(QFont("Microsoft YaHei", 8));
+    painter.setPen(QColor(255, 255, 255, 180));
+
+    QRect tag1Rect(rect.left() + 20, rect.bottom() - 50, 80, 24);
+    QRect tag2Rect(rect.left() + 110, rect.bottom() - 50, 80, 24);
+
+    // 绘制标签背景
+    painter.setPen(Qt::NoPen);
+    painter.setBrush(QColor(255, 255, 255, 25));
+    painter.drawRoundedRect(tag1Rect, 4, 4);
+    painter.drawRoundedRect(tag2Rect, 4, 4);
+
+    // 绘制标签文字
+    painter.setPen(QColor(255, 255, 255, 200));
+    painter.drawText(tag1Rect, Qt::AlignCenter, "99.9% 识别率");
+    painter.drawText(tag2Rect, Qt::AlignCenter, "毫秒级响应");
+
+    // 恢复画家状态
+    painter.restore();
 }
 
 void LoginDialog::drawLoginPanel(QPainter &painter, const QRect &rect)
