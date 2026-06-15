@@ -1,12 +1,23 @@
 <RCC>
-    <qresource prefix="/new/prefix1">
-        <file alias="brandImage">login.png</file>
-        <file alias="checkmark_checked">checkmark_checked.png</file>
-        <file alias="LoginBrandImage">Login-Brand-image.png</file>
+    <qresource prefix="/icons">
+        <!-- 登录窗口品牌图片 -->
+        <file alias="login-brand-image">Login-Brand-image.png</file>
+        <!-- 登录窗口旧品牌图片 -->
+        <file alias="login-brand-image-old">login.png</file>
+        <!-- 复选框选中状态图标 -->
+        <file alias="checkmark-checked">checkmark_checked.png</file>
+        <!-- 用户/人物图标 -->
         <file alias="icon-person">person.svg</file>
+        <!-- 锁/密码图标 -->
         <file alias="icon-lock">lock.svg</file>
+        <!-- 安全/盾牌图标 -->
         <file alias="icon-security">security.svg</file>
+        <!-- 可见/显示密码图标 -->
         <file alias="icon-visibility">visibility.svg</file>
+        <!-- 不可见/隐藏密码图标 -->
         <file alias="icon-visibility-off">visibility_off.svg</file>
+    </qresource>
+    <qresource prefix="/styles">
+        <file>../../styles/login.qss</file>
     </qresource>
 </RCC>
