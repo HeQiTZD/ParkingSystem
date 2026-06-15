@@ -48,7 +48,8 @@ LoginDialog::~LoginDialog()
 void LoginDialog::resizeEvent(QResizeEvent *event)
 {
     QDialog::resizeEvent(event);
-    update();  // 触发重绘
+    updateLayout();
+    update();
 }
 
 void LoginDialog::setupUI()
@@ -120,24 +121,74 @@ void LoginDialog::paintEvent(QPaintEvent *event)
 
     // 4. 绘制右侧登录面板
     drawLoginPanel(painter, loginRect);
+
+    // 5. 绘制输入框
+    drawInputField(painter, m_usernameRect, m_usernameFocused, m_usernameHovered, false,
+                   m_usernameEdit->text(), m_personIcon);
+    drawInputField(painter, m_passwordRect, m_passwordFocused, m_passwordHovered, true,
+                   m_passwordVisible ? m_passwordEdit->text() : "",
+                   m_lockIcon);
+
+    // 6. 绘制密码可见性切换按钮
+    QIcon toggleIcon = m_passwordVisible ? m_visibilityIcon : m_visibilityOffIcon;
+    if (!toggleIcon.isNull()) {
+        toggleIcon.paint(&painter, m_toggleBtnRect);
+    }
+
+    // 7. 绘制记住我复选框
+    drawRememberMe(painter, m_rememberMeRect, m_rememberMeCheckBox->isChecked());
+
+    // 8. 绘制忘记密码链接
+    drawForgotPassword(painter, m_forgotPasswordRect);
+
+    // 9. 绘制登录按钮
+    drawButton(painter, m_loginBtnRect, "登 录", true, m_loginButtonHovered);
+
+    // 10. 绘制注册按钮
+    drawButton(painter, m_registerBtnRect, "新用户注册", false, m_registerButtonHovered);
 }
 
 void LoginDialog::mousePressEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton) {
-        // 检查是否点击在标题栏区域
-        QRect titleBarRect(10, 10, width() - 20, 40);
-        if (titleBarRect.contains(event->pos())) {
-            m_dragging = true;
-            m_dragPosition = event->globalPos() - frameGeometry().topLeft();
-            event->accept();
+        QPoint pos = event->pos();
+
+        // 检查是否点击在输入框区域
+        if (isPointInRect(pos, m_usernameRect)) {
+            m_usernameEdit->setFocus();
+            update();
+        } else if (isPointInRect(pos, m_passwordRect)) {
+            m_passwordEdit->setFocus();
+            update();
+        }
+        // 检查是否点击在记住我复选框
+        else if (isPointInRect(pos, m_rememberMeRect)) {
+            m_rememberMeCheckBox->setChecked(!m_rememberMeCheckBox->isChecked());
+            update();
+        }
+        // 检查是否点击在忘记密码链接
+        else if (isPointInRect(pos, m_forgotPasswordRect)) {
+            // TODO: 实现忘记密码逻辑
+        }
+        // 检查是否点击在登录按钮
+        else if (isPointInRect(pos, m_loginBtnRect)) {
+            handleLogin();
+        }
+        // 检查是否点击在注册按钮
+        else if (isPointInRect(pos, m_registerBtnRect)) {
+            // TODO: 实现注册逻辑
+        }
+        // 检查是否点击在密码可见性切换按钮
+        else if (isPointInRect(pos, m_toggleBtnRect)) {
+            togglePasswordVisibility();
         }
     }
+
+    QDialog::mousePressEvent(event);
 }
 
 void LoginDialog::drawBrandPanel(QPainter &painter, const QRect &rect)
 {
-    // 保存画家状态
     painter.save();
 
     // 设置裁剪区域为圆角矩形
@@ -147,7 +198,12 @@ void LoginDialog::drawBrandPanel(QPainter &painter, const QRect &rect)
 
     // 1. 绘制背景图片
     if (!m_brandPixmap.isNull()) {
-        painter.drawPixmap(rect, m_brandPixmap);
+        // 按比例缩放图片以填充区域
+        QPixmap scaledPixmap = m_brandPixmap.scaled(rect.size(), Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+        // 居中绘制
+        int x = (rect.width() - scaledPixmap.width()) / 2;
+        int y = (rect.height() - scaledPixmap.height()) / 2;
+        painter.drawPixmap(rect.left() + x, rect.top() + y, scaledPixmap);
     } else {
         // 如果图片加载失败，使用纯色背景
         painter.fillRect(rect, QColor("#1A56DB"));
@@ -160,24 +216,29 @@ void LoginDialog::drawBrandPanel(QPainter &painter, const QRect &rect)
     gradient.setColorAt(1, QColor(0, 63, 177, 230));   // 90%透明度
     painter.fillRect(rect, gradient);
 
-    // 3. 绘制品牌文字区域
+    // 3. 绘制品牌文字
     QRect textArea = rect.adjusted(20, 0, -20, -20);
 
-    // 绘制Security图标和Sentinel LPR标题
+    // 绘制Security图标
+    if (!m_personIcon.isNull()) {
+        m_personIcon.paint(&painter, QRect(rect.left() + 20, rect.bottom() - 200, 24, 24));
+    }
+
+    // 绘制Sentinel LPR标题
     painter.setPen(QColor("#FFFFFF"));
     painter.setFont(QFont("Microsoft YaHei", 24, QFont::Bold));
-    QRect titleRect = textArea.adjusted(0, 0, 0, -200);
+    QRect titleRect = textArea.adjusted(0, 0, 0, -160);
     painter.drawText(titleRect, Qt::AlignBottom | Qt::AlignLeft, "Sentinel LPR");
 
     // 绘制智能车牌识别系统标题
     painter.setFont(QFont("Microsoft YaHei", 16, QFont::Bold));
-    QRect subtitleRect = textArea.adjusted(0, 0, 0, -160);
+    QRect subtitleRect = textArea.adjusted(0, 0, 0, -120);
     painter.drawText(subtitleRect, Qt::AlignBottom | Qt::AlignLeft, "智能车牌识别系统");
 
     // 绘制描述文字
     painter.setFont(QFont("Microsoft YaHei", 10));
     painter.setPen(QColor(255, 255, 255, 204));  // 80%透明度
-    QRect descRect = textArea.adjusted(0, 0, 0, -120);
+    QRect descRect = textArea.adjusted(0, 0, 0, -80);
     painter.drawText(descRect, Qt::AlignBottom | Qt::AlignLeft | Qt::TextWordWrap,
                      "高精度算法，实时全天候监控，为您的车辆安全保驾护航。");
 
@@ -199,13 +260,11 @@ void LoginDialog::drawBrandPanel(QPainter &painter, const QRect &rect)
     painter.drawText(tag1Rect, Qt::AlignCenter, "99.9% 识别率");
     painter.drawText(tag2Rect, Qt::AlignCenter, "毫秒级响应");
 
-    // 恢复画家状态
     painter.restore();
 }
 
 void LoginDialog::drawLoginPanel(QPainter &painter, const QRect &rect)
 {
-    // 保存画家状态
     painter.save();
 
     // 1. 绘制白色背景
@@ -241,36 +300,7 @@ void LoginDialog::drawLoginPanel(QPainter &painter, const QRect &rect)
     painter.setFont(QFont("Microsoft YaHei", 12, QFont::Bold));
     painter.drawText(passwordLabelArea, Qt::AlignLeft | Qt::AlignBottom, "密码 PASSWORD");
 
-    // 6. 绘制输入框背景（装饰性，实际输入框由UI控件实现）
-    QRect usernameEditBg = rect.adjusted(40, 220, -40, -rect.height() + 265);
-    QRect passwordEditBg = rect.adjusted(40, 320, -40, -rect.height() + 365);
-
-    painter.setPen(QColor("#E2E8F0"));
-    painter.setBrush(QColor("#F3F3FE"));
-    painter.drawRoundedRect(usernameEditBg, 8, 8);
-    painter.drawRoundedRect(passwordEditBg, 8, 8);
-
-    // 7. 绘制输入框图标
-    painter.setPen(QColor("#737686"));
-    if (!m_personIcon.isNull()) {
-        m_personIcon.paint(&painter, QRect(usernameEditBg.left() + 12, usernameEditBg.top() + 10, 20, 20));
-    }
-    if (!m_lockIcon.isNull()) {
-        m_lockIcon.paint(&painter, QRect(passwordEditBg.left() + 12, passwordEditBg.top() + 10, 20, 20));
-    }
-
-    // 8. 绘制登录按钮背景
-    QRect loginBtnBg = rect.adjusted(40, 400, -40, -rect.height() + 448);
-    painter.setPen(Qt::NoPen);
-    painter.setBrush(QColor("#003FB1"));
-    painter.drawRoundedRect(loginBtnBg, 8, 8);
-
-    // 绘制登录按钮文字
-    painter.setPen(QColor("#FFFFFF"));
-    painter.setFont(QFont("Microsoft YaHei", 14, QFont::Bold));
-    painter.drawText(loginBtnBg, Qt::AlignCenter, "登 录");
-
-    // 9. 绘制分隔线和"或"文字
+    // 6. 绘制分隔线和"或"文字
     QRect separatorArea = rect.adjusted(40, 460, -40, -rect.height() + 480);
     painter.setPen(QColor("#E2E8F0"));
     painter.drawLine(separatorArea.left(), separatorArea.center().y(),
@@ -282,18 +312,16 @@ void LoginDialog::drawLoginPanel(QPainter &painter, const QRect &rect)
     painter.setFont(QFont("Microsoft YaHei", 10));
     painter.drawText(separatorArea, Qt::AlignCenter, "或");
 
-    // 10. 绘制注册按钮背景
-    QRect registerBtnBg = rect.adjusted(40, 490, -40, -rect.height() + 534);
-    painter.setPen(QColor("#E2E8F0"));
-    painter.setBrush(QColor("#FFFFFF"));
-    painter.drawRoundedRect(registerBtnBg, 8, 8);
+    // 7. 绘制底部版权信息
+    QRect copyrightArea = rect.adjusted(40, 0, -40, -20);
+    painter.setPen(QColor("#737686"));
+    painter.setFont(QFont("Microsoft YaHei", 8));
+    painter.drawText(copyrightArea, Qt::AlignBottom | Qt::AlignLeft, "© 2024 Sentinel Technology. All rights reserved.");
 
-    // 绘制注册按钮文字
-    painter.setPen(QColor("#434654"));
-    painter.setFont(QFont("Microsoft YaHei", 14));
-    painter.drawText(registerBtnBg, Qt::AlignCenter, "新用户注册");
+    // 绘制服务条款和隐私政策
+    QRect termsArea = rect.adjusted(0, 0, -40, -20);
+    painter.drawText(termsArea, Qt::AlignBottom | Qt::AlignRight, "服务条款  隐私政策");
 
-    // 恢复画家状态
     painter.restore();
 }
 
@@ -362,10 +390,36 @@ bool LoginDialog::eventFilter(QObject *obj, QEvent *event)
 
 void LoginDialog::mouseMoveEvent(QMouseEvent *event)
 {
-    if (m_dragging && (event->buttons() & Qt::LeftButton)) {
-        move(event->globalPos() - m_dragPosition);
-        event->accept();
+    QPoint pos = event->pos();
+
+    // 更新悬停状态
+    bool newUsernameHovered = isPointInRect(pos, m_usernameRect);
+    bool newPasswordHovered = isPointInRect(pos, m_passwordRect);
+    bool newLoginButtonHovered = isPointInRect(pos, m_loginBtnRect);
+    bool newRegisterButtonHovered = isPointInRect(pos, m_registerBtnRect);
+
+    // 检查是否需要更新
+    if (newUsernameHovered != m_usernameHovered ||
+        newPasswordHovered != m_passwordHovered ||
+        newLoginButtonHovered != m_loginButtonHovered ||
+        newRegisterButtonHovered != m_registerButtonHovered) {
+
+        m_usernameHovered = newUsernameHovered;
+        m_passwordHovered = newPasswordHovered;
+        m_loginButtonHovered = newLoginButtonHovered;
+        m_registerButtonHovered = newRegisterButtonHovered;
+
+        // 更新鼠标光标
+        if (m_loginButtonHovered || m_registerButtonHovered) {
+            setCursor(Qt::PointingHandCursor);
+        } else {
+            setCursor(Qt::ArrowCursor);
+        }
+
+        update();
     }
+
+    QDialog::mouseMoveEvent(event);
 }
 
 void LoginDialog::keyPressEvent(QKeyEvent *event)
@@ -466,36 +520,42 @@ void LoginDialog::updateLayout()
 
 void LoginDialog::drawInputField(QPainter &painter, const QRect &rect, bool focused, bool hovered, bool isPassword, const QString &text, const QIcon &icon)
 {
-    Q_UNUSED(isPassword);
-
     painter.save();
 
-    // 绘制输入框背景
+    // 绘制背景
     QColor bgColor = focused ? QColor("#FFFFFF") : QColor("#F3F3FE");
-    QColor borderColor = focused ? QColor("#003FB1") : (hovered ? QColor("#C0C4D6") : QColor("#E2E8F0"));
-
-    painter.setPen(QPen(borderColor, focused ? 2 : 1));
     painter.setBrush(bgColor);
+    painter.setPen(Qt::NoPen);
     painter.drawRoundedRect(rect, 8, 8);
 
-    // 绘制左侧图标
+    // 绘制边框
+    QColor borderColor;
+    if (focused) {
+        borderColor = QColor("#003FB1");
+    } else if (hovered) {
+        borderColor = QColor("#9CA3AF");
+    } else {
+        borderColor = QColor("#E2E8F0");
+    }
+    painter.setPen(QPen(borderColor, 1));
+    painter.setBrush(Qt::NoBrush);
+    painter.drawRoundedRect(rect, 8, 8);
+
+    // 绘制图标
     if (!icon.isNull()) {
-        icon.paint(&painter, QRect(rect.left() + 12, rect.top() + (rect.height() - 20) / 2, 20, 20));
+        icon.paint(&painter, QRect(rect.left() + 12, rect.top() + 10, 20, 20));
     }
 
-    // 绘制文本（如果可见）
-    if (!text.isEmpty()) {
-        painter.setPen(QColor("#1F2937"));
-        painter.setFont(QFont("Microsoft YaHei", 11));
-        QRect textRect = rect.adjusted(40, 0, -12, 0);
-        painter.drawText(textRect, Qt::AlignVCenter | Qt::AlignLeft, text);
-    } else {
-        // 绘制占位符文字
+    // 绘制文本
+    painter.setPen(QColor("#191B23"));
+    painter.setFont(QFont("Microsoft YaHei", 14));
+    QRect textRect = rect.adjusted(40, 0, -10, 0);
+    painter.drawText(textRect, Qt::AlignVCenter | Qt::AlignLeft, text);
+
+    // 如果是密码字段且未显示，绘制占位符点
+    if (isPassword && text.isEmpty() && !focused) {
         painter.setPen(QColor("#9CA3AF"));
-        painter.setFont(QFont("Microsoft YaHei", 11));
-        QRect textRect = rect.adjusted(40, 0, -12, 0);
-        painter.drawText(textRect, Qt::AlignVCenter | Qt::AlignLeft,
-                         isPassword ? "请输入密码" : "请输入用户名");
+        painter.drawText(textRect, Qt::AlignVCenter | Qt::AlignLeft, "请输入密码");
     }
 
     painter.restore();
@@ -505,25 +565,31 @@ void LoginDialog::drawButton(QPainter &painter, const QRect &rect, const QString
 {
     painter.save();
 
+    // 绘制背景
+    QColor bgColor;
     if (primary) {
-        QColor bgColor = hovered ? QColor("#1E40AF") : QColor("#003FB1");
-        painter.setPen(Qt::NoPen);
-        painter.setBrush(bgColor);
-        painter.drawRoundedRect(rect, 8, 8);
-
-        painter.setPen(QColor("#FFFFFF"));
-        painter.setFont(QFont("Microsoft YaHei", 14, QFont::Bold));
+        bgColor = hovered ? QColor("#002D8A") : QColor("#003FB1");
     } else {
-        QColor bgColor = hovered ? QColor("#F9FAFB") : QColor("#FFFFFF");
-        painter.setPen(QColor("#E2E8F0"));
-        painter.setBrush(bgColor);
-        painter.drawRoundedRect(rect, 8, 8);
+        bgColor = hovered ? QColor("#F5F5F5") : QColor("#FFFFFF");
+    }
+    painter.setBrush(bgColor);
+    painter.setPen(Qt::NoPen);
+    painter.drawRoundedRect(rect, 8, 8);
 
-        painter.setPen(QColor("#434654"));
-        painter.setFont(QFont("Microsoft YaHei", 14));
+    // 绘制边框（非主按钮）
+    if (!primary) {
+        QColor borderColor = hovered ? QColor("#9CA3AF") : QColor("#E2E8F0");
+        painter.setPen(QPen(borderColor, 1));
+        painter.setBrush(Qt::NoBrush);
+        painter.drawRoundedRect(rect, 8, 8);
     }
 
+    // 绘制文字
+    QColor textColor = primary ? QColor("#FFFFFF") : QColor("#434654");
+    painter.setPen(textColor);
+    painter.setFont(QFont("Microsoft YaHei", 14, QFont::Bold));
     painter.drawText(rect, Qt::AlignCenter, text);
+
     painter.restore();
 }
 
@@ -532,24 +598,25 @@ void LoginDialog::drawRememberMe(QPainter &painter, const QRect &rect, bool chec
     painter.save();
 
     // 绘制复选框
-    QRect checkboxRect(rect.left(), rect.center().y() - 9, 18, 18);
-    QColor borderColor = QColor("#9CA3AF");
-    painter.setPen(QPen(borderColor, 2));
-    painter.setBrush(Qt::NoBrush);
+    QRect checkboxRect(rect.left(), rect.top() + 3, 16, 16);
+    QColor bgColor = checked ? QColor("#003FB1") : QColor("#FFFFFF");
+    painter.setBrush(bgColor);
+    painter.setPen(QPen(QColor("#9CA3AF"), 1));
     painter.drawRoundedRect(checkboxRect, 3, 3);
 
+    // 如果选中，绘制勾选标记
     if (checked) {
-        painter.setPen(QPen(QColor("#003FB1"), 2));
+        painter.setPen(QPen(QColor("#FFFFFF"), 2));
         painter.drawLine(checkboxRect.left() + 4, checkboxRect.center().y(),
-                         checkboxRect.center().x() - 1, checkboxRect.center().y() + 4);
-        painter.drawLine(checkboxRect.center().x() - 1, checkboxRect.center().y() + 4,
-                         checkboxRect.right() - 4, checkboxRect.top() + 4);
+                         checkboxRect.center().x(), checkboxRect.center().y() + 3);
+        painter.drawLine(checkboxRect.center().x(), checkboxRect.center().y() + 3,
+                         checkboxRect.right() - 3, checkboxRect.top() + 3);
     }
 
     // 绘制文字
     painter.setPen(QColor("#434654"));
-    painter.setFont(QFont("Microsoft YaHei", 10));
-    QRect textRect = checkboxRect.adjusted(24, 0, 60, 0);
+    painter.setFont(QFont("Microsoft YaHei", 12));
+    QRect textRect = rect.adjusted(22, 0, 0, 0);
     painter.drawText(textRect, Qt::AlignVCenter | Qt::AlignLeft, "记住我");
 
     painter.restore();
@@ -560,8 +627,8 @@ void LoginDialog::drawForgotPassword(QPainter &painter, const QRect &rect)
     painter.save();
 
     painter.setPen(QColor("#737686"));
-    painter.setFont(QFont("Microsoft YaHei", 10));
-    painter.drawText(rect, Qt::AlignRight | Qt::AlignVCenter, "忘记密码？");
+    painter.setFont(QFont("Microsoft YaHei", 12));
+    painter.drawText(rect, Qt::AlignVCenter | Qt::AlignRight, "忘记密码？");
 
     painter.restore();
 }
