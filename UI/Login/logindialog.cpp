@@ -41,6 +41,16 @@ LoginDialog::LoginDialog(QWidget *parent)
         qWarning() << "无法加载样式表:" << styleFile.fileName();
     }
 
+    // 加载自定义样式表
+    QFile customStyleFile(":/styles/login-custom.qss");
+    if (customStyleFile.open(QFile::ReadOnly)) {
+        QString customStyleSheet = QLatin1String(customStyleFile.readAll());
+        this->setStyleSheet(this->styleSheet() + customStyleSheet);
+        customStyleFile.close();
+    } else {
+        qWarning() << "无法加载自定义样式表:" << customStyleFile.fileName();
+    }
+
     // 连接密码可见性切换按钮信号
     connect(ui->togglePasswordVisibility, &QPushButton::clicked,
             this, &LoginDialog::on_togglePasswordVisibility_clicked);

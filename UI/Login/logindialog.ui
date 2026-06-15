@@ -201,28 +201,6 @@
           <number>0</number>
          </property>
          <item>
-          <widget class="QWidget" name="brandPanel" native="true">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>600</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>600</width>
-             <height>16777215</height>
-            </size>
-           </property>
-          </widget>
-         </item>
-         <item>
           <widget class="QWidget" name="loginPanel" native="true">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -247,70 +225,21 @@
              <number>0</number>
             </property>
             <item>
-             <widget class="QLabel" name="titleLabel">
-              <property name="font">
-               <font>
-                <pointsize>32</pointsize>
-                <bold>true</bold>
-               </font>
-              </property>
-              <property name="text">
-               <string>用户登录</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer name="titleSpacer">
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="sizeType">
-               <enum>QSizePolicy::Fixed</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>20</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item>
-             <widget class="QLabel" name="usernameLabel">
-              <property name="font">
-               <font>
-                <pointsize>10</pointsize>
-                <bold>true</bold>
-               </font>
-              </property>
-              <property name="text">
-               <string>用户名</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer name="labelSpacer1">
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="sizeType">
-               <enum>QSizePolicy::Fixed</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>20</width>
-                <height>8</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item>
              <widget class="QLineEdit" name="usernameEdit">
               <property name="minimumSize">
                <size>
                 <width>0</width>
-                <height>50</height>
+                <height>45</height>
                </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QLineEdit {
+    background-color: #F3F3FE;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    padding: 10px 12px 10px 40px;
+    font-size: 14px;
+}</string>
               </property>
               <property name="placeholderText">
                <string>请输入用户名</string>
@@ -334,35 +263,6 @@
              </spacer>
             </item>
             <item>
-             <widget class="QLabel" name="passwordLabel">
-              <property name="font">
-               <font>
-                <pointsize>10</pointsize>
-                <bold>true</bold>
-               </font>
-              </property>
-              <property name="text">
-               <string>密码</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer name="labelSpacer2">
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="sizeType">
-               <enum>QSizePolicy::Fixed</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>20</width>
-                <height>8</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item>
              <layout class="QHBoxLayout" name="passwordEditLayout">
               <property name="spacing">
                <number>0</number>
@@ -372,7 +272,7 @@
                 <property name="minimumSize">
                  <size>
                   <width>0</width>
-                  <height>50</height>
+                  <height>45</height>
                  </size>
                 </property>
                 <property name="placeholderText">
@@ -483,7 +383,7 @@
               <property name="minimumSize">
                <size>
                 <width>0</width>
-                <height>52</height>
+                <height>48</height>
                </size>
               </property>
               <property name="text">
@@ -566,7 +466,7 @@
               <property name="minimumSize">
                <size>
                 <width>0</width>
-                <height>52</height>
+                <height>44</height>
                </size>
               </property>
               <property name="text">

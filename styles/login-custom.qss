@@ -1,0 +1,144 @@
+/* 登录对话框自定义样式表 */
+
+/* 主容器 - 透明背景，由paintEvent绘制 */
+QWidget#mainContainer {
+    background: transparent;
+}
+
+/* 标题栏 - 透明背景 */
+QWidget#titleBar {
+    background: transparent;
+}
+
+/* 系统按钮 */
+QPushButton#btnMinimize, QPushButton#btnClose {
+    background: transparent;
+    border: none;
+    color: #666666;
+    font-size: 16px;
+    min-width: 36px;
+    min-height: 28px;
+}
+
+QPushButton#btnMinimize:hover, QPushButton#btnClose:hover {
+    background: #E5E5E5;
+}
+
+/* 输入框 - 透明背景，由drawLoginPanel绘制背景 */
+QLineEdit {
+    background-color: transparent;
+    border: none;
+    padding: 10px 12px 10px 40px;
+    font-size: 14px;
+    color: #191B23;
+}
+
+QLineEdit:focus {
+    border: none;
+}
+
+QLineEdit::placeholder {
+    color: #737686;
+}
+
+/* 密码可见性切换按钮 */
+QPushButton#togglePasswordVisibility {
+    background: transparent;
+    border: none;
+    padding: 5px;
+}
+
+QPushButton#togglePasswordVisibility:hover {
+    background: #E2E8F0;
+    border-radius: 4px;
+}
+
+/* 复选框 */
+QCheckBox {
+    spacing: 8px;
+    color: #434654;
+    font-size: 13px;
+}
+
+QCheckBox::indicator {
+    width: 16px;
+    height: 16px;
+}
+
+/* 忘记密码链接 */
+QLabel#forgotPasswordLabel {
+    color: #003FB1;
+    font-size: 13px;
+}
+
+QLabel#forgotPasswordLabel:hover {
+    text-decoration: underline;
+}
+
+/* 登录按钮 - 透明背景，由drawLoginPanel绘制背景 */
+QPushButton#loginButton {
+    background-color: transparent;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    min-height: 48px;
+}
+
+QPushButton#loginButton:hover {
+    background-color: rgba(0, 63, 177, 0.1);
+}
+
+QPushButton#loginButton:pressed {
+    background-color: rgba(0, 63, 177, 0.2);
+}
+
+/* 注册按钮 - 透明背景，由drawLoginPanel绘制背景 */
+QPushButton#registerButton {
+    background-color: transparent;
+    color: #434654;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    min-height: 44px;
+}
+
+QPushButton#registerButton:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+QPushButton#registerButton:pressed {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* 分隔线 */
+Line {
+    color: #E2E8F0;
+}
+
+/* 或标签 */
+QLabel#orLabel {
+    color: #737686;
+    font-size: 10px;
+}
+
+/* 页脚 */
+QWidget#footerPanel {
+    background: #F8FAFC;
+    border-top: 1px solid #E2E8F0;
+}
+
+QLabel#copyrightLabel {
+    color: #737686;
+    font-size: 10px;
+}
+
+QLabel#termsLabel, QLabel#privacyLabel {
+    color: #003FB1;
+    font-size: 10px;
+}
+
+QLabel#termsLabel:hover, QLabel#privacyLabel:hover {
+    text-decoration: underline;
+}
