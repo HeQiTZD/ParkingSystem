@@ -1,181 +1,23 @@
-/* ==================== LoginPanel 样式 ==================== */
+/* ==================== LoginDialog 样式 ==================== */
 
-/* loginPanel 容器背景 */
-#loginPanel {
-    background-color: #ffffff;
+/* 对话框背景 */
+#LoginDialog {
+    background: transparent;
 }
-
-/* -------------------- 标题样式 -------------------- */
-#titleLabel {
-    color: #2563eb;
-    font-size: 32pt;
-    font-weight: bold;
-    padding: 0;
-}
-
-/* -------------------- 输入框标签 -------------------- */
-#usernameLabel,
-#passwordLabel {
-    color: #374151;
-    font-size: 10pt;
-    font-weight: bold;
-}
-
-/* -------------------- 输入框样式 -------------------- */
-#usernameEdit,
-#passwordEdit {
-    border: 1px solid #d1d5db;
-    border-radius: 8px;
-    padding: 12px 16px;
-    font-size: 11pt;
-    color: #1f2937;
-    background-color: #f9fafb;
-    selection-background-color: #3b82f6;
-}
-
-#usernameEdit:hover,
-#passwordEdit:hover {
-    border-color: #9ca3af;
-}
-
-#usernameEdit:focus,
-#passwordEdit:focus {
-    border-color: #3b82f6;
-    background-color: #ffffff;
-    outline: none;
-}
-
-#usernameEdit::placeholder,
-#passwordEdit::placeholder {
-    color: #9ca3af;
-}
-
-/* -------------------- 复选框样式 -------------------- */
-QCheckBox#rememberMeCheckBox {
-    color: #374151;
-    font-size: 10pt;
-    spacing: 8px;
-}
-
-QCheckBox#rememberMeCheckBox::indicator {
-    width: 18px;
-    height: 18px;
-    border-radius: 3px;
-    border: 2px solid #9ca3af;
-    background-color: #ffffff;
-}
-
-QCheckBox#rememberMeCheckBox::indicator:hover {
-    border-color: #3b82f6;
-}
-
-QCheckBox#rememberMeCheckBox::indicator:checked {
-    background-color: transparent;
-    border: none;
-    image: url(:/icons/checkmark-checked);
-}
-
-/* -------------------- 忘记密码链接样式 -------------------- */
-#forgotPasswordLabel {
-    color: #6b7280;
-    font-size: 10pt;
-}
-
-#forgotPasswordLabel:hover {
-    color: #3b82f6;
-}
-
-/* -------------------- 登录按钮样式 -------------------- */
-#loginButton {
-    background-color: #1d4ed8;
-    color: #ffffff;
-    border: none;
-    border-radius: 8px;
-    padding: 12px 24px;
-    font-size: 12pt;
-    font-weight: 600;
-}
-
-#loginButton:hover {
-    background-color: #1e40af;
-}
-
-#loginButton:pressed {
-    background-color: #1e3a8a;
-}
-
-#loginButton:disabled {
-    background-color: #93c5fd;
-    color: #ffffff;
-}
-
-/* -------------------- 注册按钮样式 -------------------- */
-#registerButton {
-    background-color: #ffffff;
-    color: #374151;
-    border: 1px solid #d1d5db;
-    border-radius: 8px;
-    padding: 12px 24px;
-    font-size: 12pt;
-    font-weight: 500;
-}
-
-#registerButton:hover {
-    background-color: #f9fafb;
-    border-color: #9ca3af;
-}
-
-#registerButton:pressed {
-    background-color: #f3f4f6;
-}
-
-/* -------------------- 分隔线样式 -------------------- */
-#separatorContainer {
-    background-color: transparent;
-}
-
-#leftSeparatorLine,
-#rightSeparatorLine {
-    color: #e5e7eb;
-    max-height: 1px;
-}
-
-#orLabel {
-    color: #9ca3af;
-    font-size: 9pt;
-}
-
-/* -------------------- 底部面板样式 -------------------- */
-#footerPanel {
-    background-color: transparent;
-}
-
-#copyrightLabel {
-    color: #9ca3af;
-    font-size: 8pt;
-}
-
-#termsLabel,
-#privacyLabel {
-    color: #6b7280;
-    font-size: 8pt;
-}
-
-#termsLabel:hover,
-#privacyLabel:hover {
-    color: #3b82f6;
-}
-
-/* ==================== 标题栏样式 ==================== */
 
 /* 标题栏容器 */
 #titleBar {
-    background-color: #ffffff;
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
+    background: transparent;
 }
 
-/* 标题栏按钮基础样式 */
+/* 内容区域 */
+#contentArea {
+    background: transparent;
+}
+
+/* ==================== 标题栏按钮样式 ==================== */
+
+/* 最小化和关闭按钮 */
 QPushButton#btnMinimize,
 QPushButton#btnClose {
     background: transparent;
@@ -191,36 +33,20 @@ QPushButton#btnClose {
     padding: 0px;
 }
 
-/* 最小化按钮悬浮 */
 QPushButton#btnMinimize:hover {
     background-color: #f1f5f9;
     color: #64748b;
 }
 
-/* 最小化按钮按下 */
 QPushButton#btnMinimize:pressed {
     background-color: #e2e8f0;
 }
 
-/* 关闭按钮悬浮 */
 QPushButton#btnClose:hover {
     background-color: #ef4444;
     color: #ffffff;
 }
 
-/* 关闭按钮按下 */
 QPushButton#btnClose:pressed {
     background-color: #dc2626;
-}
-
-/* 密码可见性切换按钮 */
-QPushButton#togglePasswordVisibility {
-    background: transparent;
-    border: none;
-    padding: 5px;
-}
-
-QPushButton#togglePasswordVisibility:hover {
-    background-color: #f1f5f9;
-    border-radius: 4px;
 }
