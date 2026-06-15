@@ -206,6 +206,11 @@
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
+           <property name="styleSheet">
+            <string notr="true">QWidget#loginPanel {
+    background: transparent;
+}</string>
+           </property>
            <layout class="QVBoxLayout" name="loginPanelLayout">
             <property name="spacing">
              <number>0</number>
