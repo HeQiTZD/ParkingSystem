@@ -212,9 +212,92 @@ void LoginDialog::drawBrandPanel(QPainter &painter, const QRect &rect)
 
 void LoginDialog::drawLoginPanel(QPainter &painter, const QRect &rect)
 {
-    Q_UNUSED(painter);
-    Q_UNUSED(rect);
-    // TODO: 在Task 5中实现登录面板绘制
+    // 保存画家状态
+    painter.save();
+
+    // 1. 绘制白色背景
+    painter.setBrush(QColor("#FFFFFF"));
+    painter.setPen(Qt::NoPen);
+    painter.drawRoundedRect(rect, 0, 12);
+
+    // 2. 绘制标题区域
+    QRect titleArea = rect.adjusted(40, 40, -40, -rect.height() + 120);
+
+    // 绘制"用户登录"标题
+    painter.setPen(QColor("#003FB1"));
+    painter.setFont(QFont("STLiti", "华文隶书", 32, QFont::Normal));
+    painter.drawText(titleArea, Qt::AlignLeft | Qt::AlignBottom, "用户登录");
+
+    // 3. 绘制副标题
+    QRect subtitleArea = rect.adjusted(40, 100, -40, -rect.height() + 160);
+    painter.setPen(QColor("#434654"));
+    painter.setFont(QFont("Microsoft YaHei", 14));
+    painter.drawText(subtitleArea, Qt::AlignLeft | Qt::AlignBottom, "请输入您的账户进行登录");
+
+    // 4. 绘制用户名标签
+    QRect usernameLabelArea = rect.adjusted(40, 180, -40, -rect.height() + 210);
+    painter.setPen(QColor("#434654"));
+    painter.setFont(QFont("Microsoft YaHei", 12, QFont::Bold));
+    painter.drawText(usernameLabelArea, Qt::AlignLeft | Qt::AlignBottom, "用户名 USERNAME");
+
+    // 5. 绘制密码标签
+    QRect passwordLabelArea = rect.adjusted(40, 280, -40, -rect.height() + 310);
+    painter.drawText(passwordLabelArea, Qt::AlignLeft | Qt::AlignBottom, "密码 PASSWORD");
+
+    // 6. 绘制输入框背景（装饰性，实际输入框由UI控件实现）
+    QRect usernameEditBg = rect.adjusted(40, 220, -40, -rect.height() + 265);
+    QRect passwordEditBg = rect.adjusted(40, 320, -40, -rect.height() + 365);
+
+    painter.setPen(QColor("#E2E8F0"));
+    painter.setBrush(QColor("#F3F3FE"));
+    painter.drawRoundedRect(usernameEditBg, 8, 8);
+    painter.drawRoundedRect(passwordEditBg, 8, 8);
+
+    // 7. 绘制输入框图标
+    painter.setPen(QColor("#737686"));
+    if (!m_personIcon.isNull()) {
+        m_personIcon.paint(&painter, QRect(usernameEditBg.left() + 12, usernameEditBg.top() + 10, 20, 20));
+    }
+    if (!m_lockIcon.isNull()) {
+        m_lockIcon.paint(&painter, QRect(passwordEditBg.left() + 12, passwordEditBg.top() + 10, 20, 20));
+    }
+
+    // 8. 绘制登录按钮背景
+    QRect loginBtnBg = rect.adjusted(40, 400, -40, -rect.height() + 448);
+    painter.setPen(Qt::NoPen);
+    painter.setBrush(QColor("#003FB1"));
+    painter.drawRoundedRect(loginBtnBg, 8, 8);
+
+    // 绘制登录按钮文字
+    painter.setPen(QColor("#FFFFFF"));
+    painter.setFont(QFont("Microsoft YaHei", 14, QFont::Bold));
+    painter.drawText(loginBtnBg, Qt::AlignCenter, "登 录");
+
+    // 9. 绘制分隔线和"或"文字
+    QRect separatorArea = rect.adjusted(40, 460, -40, -rect.height() + 480);
+    painter.setPen(QColor("#E2E8F0"));
+    painter.drawLine(separatorArea.left(), separatorArea.center().y(),
+                     separatorArea.center().x() - 20, separatorArea.center().y());
+    painter.drawLine(separatorArea.center().x() + 20, separatorArea.center().y(),
+                     separatorArea.right(), separatorArea.center().y());
+
+    painter.setPen(QColor("#737686"));
+    painter.setFont(QFont("Microsoft YaHei", 10));
+    painter.drawText(separatorArea, Qt::AlignCenter, "或");
+
+    // 10. 绘制注册按钮背景
+    QRect registerBtnBg = rect.adjusted(40, 490, -40, -rect.height() + 534);
+    painter.setPen(QColor("#E2E8F0"));
+    painter.setBrush(QColor("#FFFFFF"));
+    painter.drawRoundedRect(registerBtnBg, 8, 8);
+
+    // 绘制注册按钮文字
+    painter.setPen(QColor("#434654"));
+    painter.setFont(QFont("Microsoft YaHei", 14));
+    painter.drawText(registerBtnBg, Qt::AlignCenter, "新用户注册");
+
+    // 恢复画家状态
+    painter.restore();
 }
 
 void LoginDialog::loadResources()
