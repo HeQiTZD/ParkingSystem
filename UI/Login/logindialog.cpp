@@ -242,6 +242,8 @@ void LoginDialog::drawLoginPanel(QPainter &painter, const QRect &rect)
 
     // 5. 绘制密码标签
     QRect passwordLabelArea = rect.adjusted(40, 280, -40, -rect.height() + 310);
+    painter.setPen(QColor("#434654"));
+    painter.setFont(QFont("Microsoft YaHei", 12, QFont::Bold));
     painter.drawText(passwordLabelArea, Qt::AlignLeft | Qt::AlignBottom, "密码 PASSWORD");
 
     // 6. 绘制输入框背景（装饰性，实际输入框由UI控件实现）
