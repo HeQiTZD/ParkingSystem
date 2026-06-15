@@ -9,9 +9,12 @@
 #include <QMouseEvent>
 #include <QLinearGradient>
 #include <QKeyEvent>
+#include <QTimer>
 
 LoginDialog::LoginDialog(QWidget *parent)
     : QDialog(parent)
+    , ui(nullptr)
+    , m_dragging(false)
     , m_passwordVisible(false)
     , m_usernameFocused(false)
     , m_passwordFocused(false)
@@ -43,6 +46,16 @@ LoginDialog::LoginDialog(QWidget *parent)
 
 LoginDialog::~LoginDialog()
 {
+}
+
+void LoginDialog::on_btnMinimize_clicked()
+{
+    showMinimized();
+}
+
+void LoginDialog::on_btnClose_clicked()
+{
+    close();
 }
 
 void LoginDialog::resizeEvent(QResizeEvent *event)
@@ -146,6 +159,11 @@ void LoginDialog::paintEvent(QPaintEvent *event)
 
     // 10. 绘制注册按钮
     drawButton(painter, m_registerBtnRect, "新用户注册", false, m_registerButtonHovered);
+
+    // 11. 绘制加载指示器
+    if (m_isLoading) {
+        drawLoadingIndicator(painter, m_loginBtnRect);
+    }
 }
 
 void LoginDialog::mousePressEvent(QMouseEvent *event)
@@ -181,6 +199,11 @@ void LoginDialog::mousePressEvent(QMouseEvent *event)
         // 检查是否点击在密码可见性切换按钮
         else if (isPointInRect(pos, m_toggleBtnRect)) {
             togglePasswordVisibility();
+        }
+        // 点击在品牌区或其他空白区域，启动窗口拖拽
+        else {
+            m_dragging = true;
+            m_dragPosition = event->globalPos() - frameGeometry().topLeft();
         }
     }
 
@@ -424,29 +447,59 @@ void LoginDialog::mouseMoveEvent(QMouseEvent *event)
 
 void LoginDialog::keyPressEvent(QKeyEvent *event)
 {
-    if (event->key() == Qt::Key_Escape) {
-        close();
+    if (event->key() == Qt::Key_Tab) {
+        // 在输入框之间切换焦点
+        if (m_usernameEdit->hasFocus()) {
+            m_passwordEdit->setFocus();
+        } else if (m_passwordEdit->hasFocus()) {
+            m_usernameEdit->setFocus();
+        }
+        update();
     } else if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter) {
+        // 回车键触发登录
         handleLogin();
-    } else {
-        QDialog::keyPressEvent(event);
+    } else if (event->key() == Qt::Key_Escape) {
+        // ESC键关闭对话框
+        close();
     }
+
+    QDialog::keyPressEvent(event);
 }
 
 // ==================== 交互处理 ====================
 
 void LoginDialog::handleLogin()
 {
-    // TODO: 实现登录逻辑
-    QString username = m_usernameEdit->text();
+    // 获取输入内容
+    QString username = m_usernameEdit->text().trimmed();
     QString password = m_passwordEdit->text();
 
-    if (username.isEmpty() || password.isEmpty()) {
+    // 简单验证
+    if (username.isEmpty()) {
+        // TODO: 显示用户名不能为空的提示
+        m_usernameEdit->setFocus();
         return;
     }
 
-    // 暂时只打印日志
-    qInfo() << "登录尝试:" << username;
+    if (password.isEmpty()) {
+        // TODO: 显示密码不能为空的提示
+        m_passwordEdit->setFocus();
+        return;
+    }
+
+    // TODO: 实现实际的登录逻辑
+    qDebug() << "登录尝试:" << username;
+
+    // 模拟登录过程
+    m_isLoading = true;
+    update();
+
+    // 使用QTimer模拟异步登录
+    QTimer::singleShot(1000, this, [this]() {
+        m_isLoading = false;
+        update();
+        // TODO: 登录成功后关闭对话框
+    });
 }
 
 void LoginDialog::togglePasswordVisibility()
@@ -552,10 +605,11 @@ void LoginDialog::drawInputField(QPainter &painter, const QRect &rect, bool focu
     QRect textRect = rect.adjusted(40, 0, -10, 0);
     painter.drawText(textRect, Qt::AlignVCenter | Qt::AlignLeft, text);
 
-    // 如果是密码字段且未显示，绘制占位符点
-    if (isPassword && text.isEmpty() && !focused) {
+    // 绘制占位符文本
+    if (text.isEmpty() && !focused) {
         painter.setPen(QColor("#9CA3AF"));
-        painter.drawText(textRect, Qt::AlignVCenter | Qt::AlignLeft, "请输入密码");
+        QString placeholder = isPassword ? "请输入密码" : "请输入用户名";
+        painter.drawText(textRect, Qt::AlignVCenter | Qt::AlignLeft, placeholder);
     }
 
     painter.restore();
@@ -635,8 +689,32 @@ void LoginDialog::drawForgotPassword(QPainter &painter, const QRect &rect)
 
 void LoginDialog::drawLoadingIndicator(QPainter &painter, const QRect &rect)
 {
-    Q_UNUSED(painter);
-    Q_UNUSED(rect);
-    // TODO: 实现加载指示器动画
+    if (!m_isLoading) return;
+
+    painter.save();
+
+    // 绘制半透明背景
+    painter.setBrush(QColor(255, 255, 255, 180));
+    painter.setPen(Qt::NoPen);
+    painter.drawRoundedRect(rect, 8, 8);
+
+    // 绘制加载动画
+    painter.setPen(QPen(QColor("#003FB1"), 3));
+    painter.setBrush(Qt::NoBrush);
+
+    int size = qMin(rect.width(), rect.height()) - 20;
+    QRect indicatorRect(rect.center().x() - size/2, rect.center().y() - size/2, size, size);
+
+    // 绘制旋转的弧线
+    static int angle = 0;
+    angle = (angle + 5) % 360;
+    painter.drawArc(indicatorRect, angle * 16, 270 * 16);
+
+    painter.restore();
+
+    // 触发重绘以创建动画效果
+    if (m_isLoading) {
+        update();
+    }
 }
 
