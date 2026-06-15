@@ -42,8 +42,10 @@ int main(int argc, char *argv[])
     //     }
     // }
 
+    // ConfigInitDialog configDialog;
+    // configDialog.exec();
+
     LoginDialog loginDialog;
     loginDialog.exec();
-
     return 0;
 }

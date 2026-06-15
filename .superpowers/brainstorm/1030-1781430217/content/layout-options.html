@@ -1,0 +1,268 @@
+<h2>登录表单布局改进方案</h2>
+<p class="subtitle">基于你的需求：布局尺寸优化 + 视觉层次优化 + 宽松布局</p>
+
+<div class="section">
+  <h3>当前布局分析</h3>
+  <div class="mockup">
+    <div class="mockup-header">当前登录表单布局</div>
+    <div class="mockup-body" style="padding: 20px;">
+      <div style="display: flex; gap: 30px;">
+        <div style="flex: 2; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; min-height: 400px;">
+          <div style="text-align: center;">
+            <div style="font-size: 48px; margin-bottom: 10px;">🅿️</div>
+            <div style="font-size: 18px; font-weight: 600;">品牌栏</div>
+          </div>
+        </div>
+        <div style="flex: 3; padding: 20px;">
+          <div style="font-size: 24px; font-weight: bold; margin-bottom: 30px;">用户登录</div>
+          <div style="margin-bottom: 20px;">
+            <div style="font-size: 14px; margin-bottom: 8px; color: #555;">用户名</div>
+            <div style="width: 500px; height: 50px; background: #f8f9fa; border: 2px solid #e0e0e0; border-radius: 8px;"></div>
+          </div>
+          <div style="margin-bottom: 20px;">
+            <div style="font-size: 14px; margin-bottom: 8px; color: #555;">密码</div>
+            <div style="width: 500px; height: 50px; background: #f8f9fa; border: 2px solid #e0e0e0; border-radius: 8px;"></div>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; width: 500px;">
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <div style="width: 18px; height: 18px; border: 2px solid #ccc; border-radius: 4px;"></div>
+              <span style="font-size: 12px; color: #666;">记住我</span>
+            </div>
+            <span style="font-size: 12px; color: #4a90d9;">忘记密码</span>
+          </div>
+          <div style="width: 500px; height: 50px; background: #4a90d9; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 16px; font-weight: bold; margin-bottom: 20px;">登 录</div>
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; width: 500px;">
+            <div style="flex: 1; height: 1px; background: #e0e0e0;"></div>
+            <span style="font-size: 12px; color: #999;">或</span>
+            <div style="flex: 1; height: 1px; background: #e0e0e0;"></div>
+          </div>
+          <div style="width: 500px; height: 50px; border: 2px solid #4a90d9; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #4a90d9; font-size: 16px; font-weight: 600;">注 册</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p style="font-size: 12px; color: #666; margin-top: 8px;">
+    <strong>当前问题：</strong>
+    <br>• 输入框和按钮宽度固定为500px，不够灵活
+    <br>• 间距较小（15px），布局偏紧凑
+    <br>• 边距较小（30px左右，20px上下）
+  </p>
+</div>
+
+<div class="section">
+  <h3>方案A：优化固定宽度（推荐）</h3>
+  <p>调整输入框和按钮宽度，增加间距和边距，创造更宽松的布局</p>
+
+  <div class="mockup">
+    <div class="mockup-header">方案A：优化固定宽度</div>
+    <div class="mockup-body" style="padding: 20px;">
+      <div style="display: flex; gap: 30px;">
+        <div style="flex: 2; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; min-height: 400px;">
+          <div style="text-align: center;">
+            <div style="font-size: 48px; margin-bottom: 10px;">🅿️</div>
+            <div style="font-size: 18px; font-weight: 600;">品牌栏</div>
+          </div>
+        </div>
+        <div style="flex: 3; padding: 40px;">
+          <div style="font-size: 28px; font-weight: bold; margin-bottom: 40px;">用户登录</div>
+          <div style="margin-bottom: 24px;">
+            <div style="font-size: 14px; margin-bottom: 10px; color: #555;">用户名</div>
+            <div style="width: 420px; height: 48px; background: #f8f9fa; border: 2px solid #e0e0e0; border-radius: 8px;"></div>
+          </div>
+          <div style="margin-bottom: 24px;">
+            <div style="font-size: 14px; margin-bottom: 10px; color: #555;">密码</div>
+            <div style="width: 420px; height: 48px; background: #f8f9fa; border: 2px solid #e0e0e0; border-radius: 8px;"></div>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; width: 420px;">
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <div style="width: 18px; height: 18px; border: 2px solid #ccc; border-radius: 4px;"></div>
+              <span style="font-size: 12px; color: #666;">记住我</span>
+            </div>
+            <span style="font-size: 12px; color: #4a90d9;">忘记密码</span>
+          </div>
+          <div style="width: 420px; height: 48px; background: #4a90d9; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 16px; font-weight: bold; margin-bottom: 24px;">登 录</div>
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 24px; width: 420px;">
+            <div style="flex: 1; height: 1px; background: #e0e0e0;"></div>
+            <span style="font-size: 12px; color: #999;">或</span>
+            <div style="flex: 1; height: 1px; background: #e0e0e0;"></div>
+          </div>
+          <div style="width: 420px; height: 48px; border: 2px solid #4a90d9; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #4a90d9; font-size: 16px; font-weight: 600;">注 册</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pros-cons">
+    <div class="pros">
+      <h4>优点</h4>
+      <ul>
+        <li>输入框宽度从500px调整为420px，更协调</li>
+        <li>间距从15px增加到24px，更宽松</li>
+        <li>边距从30px增加到40px，更舒适</li>
+        <li>标题字号从24pt增加到28pt，更突出</li>
+      </ul>
+    </div>
+    <div class="cons">
+      <h4>缺点</h4>
+      <ul>
+        <li>仍然是固定宽度，不够灵活</li>
+        <li>需要调整多个尺寸参数</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>方案B：响应式宽度</h3>
+  <p>设置最小宽度和最大宽度，让输入框在一定范围内自适应</p>
+
+  <div class="mockup">
+    <div class="mockup-header">方案B：响应式宽度</div>
+    <div class="mockup-body" style="padding: 20px;">
+      <div style="display: flex; gap: 30px;">
+        <div style="flex: 2; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; min-height: 400px;">
+          <div style="text-align: center;">
+            <div style="font-size: 48px; margin-bottom: 10px;">🅿️</div>
+            <div style="font-size: 18px; font-weight: 600;">品牌栏</div>
+          </div>
+        </div>
+        <div style="flex: 3; padding: 40px;">
+          <div style="font-size: 28px; font-weight: bold; margin-bottom: 40px;">用户登录</div>
+          <div style="margin-bottom: 24px;">
+            <div style="font-size: 14px; margin-bottom: 10px; color: #555;">用户名</div>
+            <div style="min-width: 350px; max-width: 450px; width: 100%; height: 48px; background: #f8f9fa; border: 2px solid #e0e0e0; border-radius: 8px;"></div>
+          </div>
+          <div style="margin-bottom: 24px;">
+            <div style="font-size: 14px; margin-bottom: 10px; color: #555;">密码</div>
+            <div style="min-width: 350px; max-width: 450px; width: 100%; height: 48px; background: #f8f9fa; border: 2px solid #e0e0e0; border-radius: 8px;"></div>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; min-width: 350px; max-width: 450px; width: 100%;">
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <div style="width: 18px; height: 18px; border: 2px solid #ccc; border-radius: 4px;"></div>
+              <span style="font-size: 12px; color: #666;">记住我</span>
+            </div>
+            <span style="font-size: 12px; color: #4a90d9;">忘记密码</span>
+          </div>
+          <div style="min-width: 350px; max-width: 450px; width: 100%; height: 48px; background: #4a90d9; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 16px; font-weight: bold; margin-bottom: 24px;">登 录</div>
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 24px; min-width: 350px; max-width: 450px; width: 100%;">
+            <div style="flex: 1; height: 1px; background: #e0e0e0;"></div>
+            <span style="font-size: 12px; color: #999;">或</span>
+            <div style="flex: 1; height: 1px; background: #e0e0e0;"></div>
+          </div>
+          <div style="min-width: 350px; max-width: 450px; width: 100%; height: 48px; border: 2px solid #4a90d9; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #4a90d9; font-size: 16px; font-weight: 600;">注 册</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pros-cons">
+    <div class="pros">
+      <h4>优点</h4>
+      <ul>
+        <li>输入框宽度自适应，更灵活</li>
+        <li>设置最小宽度350px，最大宽度450px</li>
+        <li>间距和边距与方案A相同</li>
+        <li>适应不同窗口尺寸</li>
+      </ul>
+    </div>
+    <div class="cons">
+      <h4>缺点</h4>
+      <ul>
+        <li>实现相对复杂</li>
+        <li>需要处理边界情况</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>方案C：紧凑优化</h3>
+  <p>保持紧凑布局，但优化视觉层次和对齐方式</p>
+
+  <div class="mockup">
+    <div class="mockup-header">方案C：紧凑优化</div>
+    <div class="mockup-body" style="padding: 20px;">
+      <div style="display: flex; gap: 30px;">
+        <div style="flex: 2; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; min-height: 400px;">
+          <div style="text-align: center;">
+            <div style="font-size: 48px; margin-bottom: 10px;">🅿️</div>
+            <div style="font-size: 18px; font-weight: 600;">品牌栏</div>
+          </div>
+        </div>
+        <div style="flex: 3; padding: 30px;">
+          <div style="font-size: 24px; font-weight: bold; margin-bottom: 30px; text-align: center;">用户登录</div>
+          <div style="margin-bottom: 18px;">
+            <div style="font-size: 14px; margin-bottom: 8px; color: #555; font-weight: 600;">用户名</div>
+            <div style="width: 450px; height: 45px; background: #f8f9fa; border: 2px solid #e0e0e0; border-radius: 6px;"></div>
+          </div>
+          <div style="margin-bottom: 18px;">
+            <div style="font-size: 14px; margin-bottom: 8px; color: #555; font-weight: 600;">密码</div>
+            <div style="width: 450px; height: 45px; background: #f8f9fa; border: 2px solid #e0e0e0; border-radius: 6px;"></div>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; width: 450px;">
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <div style="width: 16px; height: 16px; border: 2px solid #ccc; border-radius: 3px;"></div>
+              <span style="font-size: 12px; color: #666;">记住我</span>
+            </div>
+            <span style="font-size: 12px; color: #4a90d9;">忘记密码</span>
+          </div>
+          <div style="width: 450px; height: 45px; background: #4a90d9; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-size: 15px; font-weight: bold; margin-bottom: 18px;">登 录</div>
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 18px; width: 450px;">
+            <div style="flex: 1; height: 1px; background: #e0e0e0;"></div>
+            <span style="font-size: 11px; color: #999;">或</span>
+            <div style="flex: 1; height: 1px; background: #e0e0e0;"></div>
+          </div>
+          <div style="width: 450px; height: 45px; border: 2px solid #4a90d9; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: #4a90d9; font-size: 15px; font-weight: 600;">注 册</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pros-cons">
+    <div class="pros">
+      <h4>优点</h4>
+      <ul>
+        <li>保持紧凑布局，空间利用率高</li>
+        <li>标题居中，视觉更平衡</li>
+        <li>输入框宽度从500px调整为450px</li>
+        <li>圆角从8px调整为6px，更精致</li>
+      </ul>
+    </div>
+    <div class="cons">
+      <h4>缺点</h4>
+      <ul>
+        <li>不符合"宽松布局"的需求</li>
+        <li>间距较小，可读性稍差</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>选择方案</h3>
+  <p>请选择你偏好的方案：</p>
+
+  <div class="options">
+    <div class="option" data-choice="a" onclick="toggleSelect(this)">
+      <div class="letter">A</div>
+      <div class="content">
+        <h4>优化固定宽度（推荐）</h4>
+        <p>输入框420px，间距24px，边距40px，标题28pt</p>
+      </div>
+    </div>
+    <div class="option" data-choice="b" onclick="toggleSelect(this)">
+      <div class="letter">B</div>
+      <div class="content">
+        <h4>响应式宽度</h4>
+        <p>输入框350-450px自适应，间距24px，边距40px</p>
+      </div>
+    </div>
+    <div class="option" data-choice="c" onclick="toggleSelect(this)">
+      <div class="letter">C</div>
+      <div class="content">
+        <h4>紧凑优化</h4>
+        <p>输入框450px，间距18px，边距30px，标题居中</p>
+      </div>
+    </div>
+  </div>
+</div>

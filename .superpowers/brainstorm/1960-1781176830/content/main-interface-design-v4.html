@@ -1,0 +1,108 @@
+<h2>主功能界面设计（修订版 v4）</h2>
+<p class="subtitle">饼图上方添加时间显示</p>
+
+<div class="mockup">
+  <div class="mockup-header">整体布局结构</div>
+  <div class="mockup-body">
+    <div style="display: flex; height: 500px; border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
+      <!-- 左侧导航栏 -->
+      <div style="width: 80px; background: #1e293b; display: flex; flex-direction: column; align-items: center; padding: 1rem 0; gap: 0.5rem;">
+        <div style="width: 60px; height: 60px; background: #2563eb; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; cursor: pointer;">
+          <span style="font-size: 1.2rem;">🏠</span>
+          <span style="font-size: 0.7rem; margin-top: 0.25rem;">主页</span>
+        </div>
+        <div style="width: 60px; height: 60px; background: transparent; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #94a3b8; cursor: pointer;">
+          <span style="font-size: 1.2rem;">📷</span>
+          <span style="font-size: 0.7rem; margin-top: 0.25rem;">摄像头</span>
+        </div>
+        <div style="width: 60px; height: 60px; background: transparent; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #94a3b8; cursor: pointer;">
+          <span style="font-size: 1.2rem;">📋</span>
+          <span style="font-size: 0.7rem; margin-top: 0.25rem;">车辆信息</span>
+        </div>
+        <div style="width: 60px; height: 60px; background: transparent; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #94a3b8; cursor: pointer;">
+          <span style="font-size: 1.2rem;">⚙️</span>
+          <span style="font-size: 0.7rem; margin-top: 0.25rem;">管理</span>
+        </div>
+      </div>
+      <!-- 右侧内容区 -->
+      <div style="flex: 1; background: #f8fafc; padding: 1.5rem;">
+        <div style="background: white; border-radius: 8px; padding: 1rem; height: 100%; border: 1px solid #e2e8f0;">
+          <div style="color: #94a3b8; text-align: center; padding-top: 40%;">内容区域（QStackedWidget）</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="mockup" style="margin-top: 2rem;">
+  <div class="mockup-header">主页布局（调整后）</div>
+  <div class="mockup-body">
+    <div style="height: 400px; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; padding: 1rem; background: #f8fafc;">
+      <!-- 上方区域 70% -->
+      <div style="display: flex; gap: 1rem; height: 70%;">
+        <!-- 摄像头预览（大） -->
+        <div style="flex: 3; background: #1e293b; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #94a3b8;">
+          <div style="text-align: center;">
+            <span style="font-size: 2rem;">📷</span>
+            <p style="margin: 0.5rem 0 0;">摄像头预览区域</p>
+          </div>
+        </div>
+        <!-- 右侧：时间 + 饼图 -->
+        <div style="flex: 1; display: flex; flex-direction: column; gap: 0.75rem;">
+          <!-- 时间显示 -->
+          <div style="background: white; border-radius: 8px; border: 1px solid #e2e8f0; padding: 0.75rem; text-align: center;">
+            <div style="font-size: 0.75rem; color: #64748b; margin-bottom: 0.25rem;">当前时间</div>
+            <div style="font-size: 1.5rem; font-weight: 600; color: #1e293b; font-family: monospace;">2026-06-11 14:30:25</div>
+          </div>
+          <!-- 饼图统计 -->
+          <div style="flex: 1; background: white; border-radius: 8px; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center;">
+            <div style="text-align: center; color: #94a3b8;">
+              <span style="font-size: 2rem;">📊</span>
+              <p style="margin: 0.5rem 0 0;">饼图统计</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 下方区域 25% -->
+      <div style="display: flex; gap: 1rem; height: 25%; margin-top: 1rem;">
+        <!-- 视频控制 -->
+        <div style="flex: 1; background: white; border-radius: 8px; border: 1px solid #e2e8f0; padding: 0.5rem; display: flex; flex-direction: column; justify-content: space-between;">
+          <div style="font-size: 0.75rem; color: #64748b;">视频控制</div>
+          <div style="background: #e2e8f0; height: 3px; border-radius: 2px;"></div>
+          <div style="display: flex; gap: 0.4rem;">
+            <button style="padding: 0.3rem 0.6rem; background: #2563eb; color: white; border: none; border-radius: 4px; font-size: 0.7rem;">视频</button>
+            <button style="padding: 0.3rem 0.6rem; background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 0.7rem;">暂停</button>
+            <button style="padding: 0.3rem 0.6rem; background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 0.7rem;">截取照片</button>
+            <button style="padding: 0.3rem 0.6rem; background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 0.7rem;">播放</button>
+          </div>
+        </div>
+        <!-- 入库操作 -->
+        <div style="flex: 1; background: white; border-radius: 8px; border: 1px solid #e2e8f0; padding: 0.5rem; display: flex; flex-direction: column; justify-content: space-between;">
+          <div style="font-size: 0.75rem; color: #64748b;">入库操作</div>
+          <div style="display: flex; gap: 0.4rem;">
+            <input style="flex: 1; padding: 0.3rem; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 0.7rem;" placeholder="输入车牌号">
+            <button style="padding: 0.3rem 0.6rem; background: #16a34a; color: white; border: none; border-radius: 4px; font-size: 0.7rem;">入库</button>
+          </div>
+        </div>
+        <!-- 出库操作 -->
+        <div style="flex: 1; background: white; border-radius: 8px; border: 1px solid #e2e8f0; padding: 0.5rem; display: flex; flex-direction: column; justify-content: space-between;">
+          <div style="font-size: 0.75rem; color: #64748b;">出库操作</div>
+          <div style="display: flex; gap: 0.4rem;">
+            <input style="flex: 1; padding: 0.3rem; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 0.7rem;" placeholder="输入车牌号">
+            <button style="padding: 0.3rem 0.6rem; background: #dc2626; color: white; border: none; border-radius: 4px; font-size: 0.7rem;">出库</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top: 1.5rem;">
+  <h3>主页设计要点</h3>
+  <ul>
+    <li><strong>上方区域（70%）：</strong>摄像头预览占 3/4，右侧 1/4 分为时间显示和饼图统计</li>
+    <li><strong>时间显示：</strong>位于饼图上方，实时显示当前日期和时间（格式：YYYY-MM-DD HH:mm:ss）</li>
+    <li><strong>下方区域（25%）：</strong>视频控制、入库操作、出库操作三栏并排</li>
+    <li><strong>窗口支持调整大小：</strong>内容区自适应拉伸</li>
+  </ul>
+</div>

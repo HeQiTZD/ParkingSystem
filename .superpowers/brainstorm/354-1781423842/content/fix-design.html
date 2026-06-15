@@ -1,0 +1,83 @@
+<h2>登录界面修复方案</h2>
+<p class="subtitle">仅调整尺寸，保持绝对定位</p>
+
+<div class="section">
+  <h3>修复内容</h3>
+  <div class="mockup">
+    <div class="mockup-header">修改对比</div>
+    <div class="mockup-body" style="padding:16px;">
+      <table style="width:100%; border-collapse:collapse; font-size:13px;">
+        <tr style="background:#f8fafc;">
+          <th style="padding:8px; text-align:left; border-bottom:2px solid #e2e8f0;">控件</th>
+          <th style="padding:8px; text-align:left; border-bottom:2px solid #e2e8f0;">属性</th>
+          <th style="padding:8px; text-align:left; border-bottom:2px solid #e2e8f0;">当前值</th>
+          <th style="padding:8px; text-align:left; border-bottom:2px solid #e2e8f0;">修改为</th>
+        </tr>
+        <tr>
+          <td style="padding:8px; border-bottom:1px solid #f1f5f9;">titleLabel</td>
+          <td style="padding:8px; border-bottom:1px solid #f1f5f9;">width</td>
+          <td style="padding:8px; border-bottom:1px solid #f1f5f9; color:#ef4444;">131</td>
+          <td style="padding:8px; border-bottom:1px solid #f1f5f9; color:#22c55e;">200</td>
+        </tr>
+        <tr>
+          <td style="padding:8px; border-bottom:1px solid #f1f5f9;">forgotPasswordLabel</td>
+          <td style="padding:8px; border-bottom:1px solid #f1f5f9;">x</td>
+          <td style="padding:8px; border-bottom:1px solid #f1f5f9; color:#ef4444;">470</td>
+          <td style="padding:8px; border-bottom:1px solid #f1f5f9; color:#22c55e;">430</td>
+        </tr>
+        <tr>
+          <td style="padding:8px; border-bottom:1px solid #f1f5f9;">forgotPasswordLabel</td>
+          <td style="padding:8px; border-bottom:1px solid #f1f5f9;">width</td>
+          <td style="padding:8px; border-bottom:1px solid #f1f5f9; color:#ef4444;">51</td>
+          <td style="padding:8px; border-bottom:1px solid #f1f5f9; color:#22c55e;">100</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>修复后效果预览</h3>
+  <div class="mockup">
+    <div class="mockup-header">登录界面预览</div>
+    <div class="mockup-body" style="padding:0;">
+      <div style="display:flex; height:400px;">
+        <!-- 左侧品牌面板 -->
+        <div style="flex:2; background:linear-gradient(135deg, #1a1a2e, #16213e); display:flex; align-items:center; justify-content:center;">
+          <span style="color:white; font-size:18px; font-weight:bold;">品牌区域</span>
+        </div>
+        <!-- 右侧登录面板 -->
+        <div style="flex:3; background:#ffffff; padding:30px; position:relative;">
+          <div style="margin-bottom:30px;">
+            <span style="font-size:24px; font-weight:bold; color:#1a1a2e;">用户登录</span>
+          </div>
+          <div style="margin-bottom:15px;">
+            <div style="color:#555; font-size:14px; margin-bottom:5px;">用户名</div>
+            <div style="border:2px solid #e0e0e0; border-radius:8px; padding:12px 16px; background:#f8f9fa;">请输入用户名</div>
+          </div>
+          <div style="margin-bottom:15px;">
+            <div style="color:#555; font-size:14px; margin-bottom:5px;">密码</div>
+            <div style="border:2px solid #e0e0e0; border-radius:8px; padding:12px 16px; background:#f8f9fa;">请输入密码</div>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <span style="color:#666; font-size:14px;">☐ 记住我</span>
+            <span style="color:#4a90d9; font-size:14px; cursor:pointer;">忘记密码</span>
+          </div>
+          <div style="background:#4a90d9; color:white; text-align:center; padding:14px; border-radius:8px; font-weight:bold; font-size:16px;">登 录</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="options">
+    <div class="option" data-choice="confirmed" onclick="toggleSelect(this)">
+      <div class="letter">✓</div>
+      <div class="content">
+        <h3>方案确认</h3>
+        <p>仅修改 titleLabel 宽度为 200px，forgotPasswordLabel 的 x 从 470 改为 430、宽度从 51 改为 100。其他保持不变。</p>
+      </div>
+    </div>
+  </div>
+</div>

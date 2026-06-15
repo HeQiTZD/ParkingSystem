@@ -1,0 +1,196 @@
+<h2>方案A：最小改动方案 - 设计细节</h2>
+<p class="subtitle">统一登录窗口和配置初始化窗口的无边框设计</p>
+
+<div class="section">
+  <h3>1. 标题栏统一设计</h3>
+  <p>将登录窗口的标题栏按钮改为与配置初始化窗口一致的矩形文字按钮风格</p>
+
+  <div class="split">
+    <div class="mockup">
+      <div class="mockup-header">当前登录窗口标题栏</div>
+      <div class="mockup-body" style="display: flex; justify-content: flex-end; gap: 8px; padding: 10px; background: #f8f8f8; border-radius: 8px 8px 0 0;">
+        <div style="width: 12px; height: 12px; background: #FFBD2E; border-radius: 50%;"></div>
+        <div style="width: 12px; height: 12px; background: #FF5F57; border-radius: 50%;"></div>
+      </div>
+      <p style="font-size: 12px; color: #666; margin-top: 8px;">圆形彩色按钮（macOS风格）</p>
+    </div>
+    <div class="mockup">
+      <div class="mockup-header">目标标题栏设计</div>
+      <div class="mockup-body" style="display: flex; justify-content: flex-end; gap: 8px; padding: 10px; background: #fff; border-radius: 8px 8px 0 0; border-bottom: 1px solid #f1f5f9;">
+        <div style="width: 36px; height: 28px; background: #f1f5f9; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #94a3b8;">─</div>
+        <div style="width: 36px; height: 28px; background: #f1f5f9; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #94a3b8;">×</div>
+      </div>
+      <p style="font-size: 12px; color: #666; margin-top: 8px;">矩形文字按钮（统一风格）</p>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>2. 品牌栏布局修复</h3>
+  <p>修复brandPanel的布局问题，确保品牌图片正确显示</p>
+
+  <div class="mockup">
+    <div class="mockup-header">品牌栏布局结构</div>
+    <div class="mockup-body" style="display: flex; height: 300px;">
+      <div style="flex: 2; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; padding: 20px;">
+        <div style="font-size: 24px; font-weight: bold; margin-bottom: 10px;">🅿️</div>
+        <div style="font-size: 18px; font-weight: 600;">停车场管理系统</div>
+        <div style="font-size: 12px; margin-top: 5px; opacity: 0.8;">Parking Management System</div>
+      </div>
+      <div style="flex: 3; padding: 30px; display: flex; flex-direction: column; justify-content: center;">
+        <div style="font-size: 24px; font-weight: bold; margin-bottom: 30px;">用户登录</div>
+        <div style="margin-bottom: 20px;">
+          <div style="font-size: 14px; margin-bottom: 8px; color: #555;">用户名</div>
+          <div style="height: 50px; background: #f8f9fa; border: 2px solid #e0e0e0; border-radius: 8px;"></div>
+        </div>
+        <div style="margin-bottom: 20px;">
+          <div style="font-size: 14px; margin-bottom: 8px; color: #555;">密码</div>
+          <div style="height: 50px; background: #f8f9fa; border: 2px solid #e0e0e0; border-radius: 8px;"></div>
+        </div>
+        <div style="height: 50px; background: #4a90d9; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 16px; font-weight: bold;">登 录</div>
+      </div>
+    </div>
+    <p style="font-size: 12px; color: #666; margin-top: 8px;">品牌栏显示品牌信息，右侧为登录表单</p>
+  </div>
+</div>
+
+<div class="section">
+  <h3>3. 布局管理器改造</h3>
+  <p>将登录表单从绝对定位改为使用布局管理器</p>
+
+  <div class="mockup">
+    <div class="mockup-header">布局结构对比</div>
+    <div class="mockup-body" style="display: flex; gap: 20px;">
+      <div style="flex: 1;">
+        <h4 style="margin-bottom: 10px; color: #ef4444;">当前：绝对定位</h4>
+        <div style="background: #fef2f2; padding: 15px; border-radius: 8px; font-family: monospace; font-size: 12px;">
+          titleLabel: (30, 20)<br>
+          usernameLabel: (20, 110)<br>
+          usernameEdit: (20, 140)<br>
+          passwordLabel: (20, 210)<br>
+          passwordEdit: (20, 240)<br>
+          rememberMeCheckBox: (20, 310)<br>
+          forgotPasswordLabel: (430, 310)<br>
+          loginButton: (20, 360)<br>
+          registerButton: (20, 470)
+        </div>
+      </div>
+      <div style="flex: 1;">
+        <h4 style="margin-bottom: 10px; color: #22c55e;">目标：布局管理器</h4>
+        <div style="background: #f0fdf4; padding: 15px; border-radius: 8px; font-family: monospace; font-size: 12px;">
+          QVBoxLayout<br>
+          ├─ titleLabel<br>
+          ├─ QFormLayout<br>
+          │ ├─ usernameLabel + usernameEdit<br>
+          │ └─ passwordLabel + passwordEdit<br>
+          ├─ QHBoxLayout<br>
+          │ ├─ rememberMeCheckBox<br>
+          │ └─ forgotPasswordLabel<br>
+          ├─ loginButton<br>
+          ├─ separatorContainer<br>
+          └─ registerButton
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>4. 样式统一</h3>
+  <p>确保两个窗口的标题栏样式完全一致</p>
+
+  <div class="mockup">
+    <div class="mockup-header">样式定义对比</div>
+    <div class="mockup-body" style="display: flex; gap: 20px;">
+      <div style="flex: 1;">
+        <h4 style="margin-bottom: 10px;">登录窗口样式</h4>
+        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: monospace; font-size: 11px;">
+          <span style="color: #94a3b8;">/* 标题栏容器 */</span><br>
+          #titleBar {<br>
+          &nbsp;&nbsp;background: #F8F8F8;<br>
+          &nbsp;&nbsp;border-top-left-radius: 12px;<br>
+          &nbsp;&nbsp;border-top-right-radius: 12px;<br>
+          &nbsp;&nbsp;border-bottom: 1px solid #E5E5E5;<br>
+          }<br><br>
+          <span style="color: #94a3b8;">/* 按钮样式 */</span><br>
+          QPushButton#btnMinimize,<br>
+          QPushButton#btnClose {<br>
+          &nbsp;&nbsp;background: transparent;<br>
+          &nbsp;&nbsp;border: none;<br>
+          &nbsp;&nbsp;border-radius: 4px;<br>
+          &nbsp;&nbsp;color: #94a3b8;<br>
+          &nbsp;&nbsp;font-size: 14px;<br>
+          &nbsp;&nbsp;font-weight: bold;<br>
+          &nbsp;&nbsp;min-width: 36px;<br>
+          &nbsp;&nbsp;max-width: 36px;<br>
+          &nbsp;&nbsp;min-height: 28px;<br>
+          &nbsp;&nbsp;max-height: 28px;<br>
+          }
+        </div>
+      </div>
+      <div style="flex: 1;">
+        <h4 style="margin-bottom: 10px;">配置初始化窗口样式</h4>
+        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: monospace; font-size: 11px;">
+          <span style="color: #94a3b8;">/* 标题栏容器 */</span><br>
+          #titleBar {<br>
+          &nbsp;&nbsp;background-color: #ffffff;<br>
+          &nbsp;&nbsp;border-top-left-radius: 8px;<br>
+          &nbsp;&nbsp;border-top-right-radius: 8px;<br>
+          &nbsp;&nbsp;border-bottom: 1px solid #f1f5f9;<br>
+          }<br><br>
+          <span style="color: #94a3b8;">/* 按钮样式 */</span><br>
+          QPushButton#btnMinimize,<br>
+          QPushButton#btnClose {<br>
+          &nbsp;&nbsp;background: transparent;<br>
+          &nbsp;&nbsp;border: none;<br>
+          &nbsp;&nbsp;border-radius: 4px;<br>
+          &nbsp;&nbsp;color: #94a3b8;<br>
+          &nbsp;&nbsp;font-size: 14px;<br>
+          &nbsp;&nbsp;font-weight: bold;<br>
+          &nbsp;&nbsp;min-width: 36px;<br>
+          &nbsp;&nbsp;max-width: 36px;<br>
+          &nbsp;&nbsp;min-height: 28px;<br>
+          &nbsp;&nbsp;max-height: 28px;<br>
+          }
+        </div>
+      </div>
+    </div>
+    <p style="font-size: 12px; color: #666; margin-top: 8px;">两个窗口的标题栏样式将完全一致</p>
+  </div>
+</div>
+
+<div class="section">
+  <h3>5. 实施步骤</h3>
+  <p>按照以下步骤实施改造：</p>
+
+  <div class="options">
+    <div class="option" data-choice="step1">
+      <div class="letter">1</div>
+      <div class="content">
+        <h4>修改标题栏按钮样式</h4>
+        <p>更新logindialog.ui中的按钮定义，改为矩形文字按钮</p>
+      </div>
+    </div>
+    <div class="option" data-choice="step2">
+      <div class="letter">2</div>
+      <div class="content">
+        <h4>修复品牌栏布局</h4>
+        <p>确保brandPanel正确显示品牌图片，修复布局问题</p>
+      </div>
+    </div>
+    <div class="option" data-choice="step3">
+      <div class="letter">3</div>
+      <div class="content">
+        <h4>改造登录表单布局</h4>
+        <p>将绝对定位改为布局管理器，提高灵活性和可维护性</p>
+      </div>
+    </div>
+    <div class="option" data-choice="step4">
+      <div class="letter">4</div>
+      <div class="content">
+        <h4>统一样式定义</h4>
+        <p>确保两个窗口的标题栏样式完全一致</p>
+      </div>
+    </div>
+  </div>
+</div>

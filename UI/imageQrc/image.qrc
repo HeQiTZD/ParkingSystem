@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/new/prefix1">
         <file alias="brandImage">login.png</file>
+        <file alias="checkmark_checked">checkmark_checked.png</file>
     </qresource>
 </RCC>

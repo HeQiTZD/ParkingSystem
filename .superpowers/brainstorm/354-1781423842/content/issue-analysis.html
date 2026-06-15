@@ -1,0 +1,77 @@
+<h2>登录界面问题分析</h2>
+<p class="subtitle">UI/ConfigInit/logindialog.ui 布局问题</p>
+
+<div class="section">
+  <h3>问题 1：标题被遮挡</h3>
+  <div class="split">
+    <div class="mockup">
+      <div class="mockup-header">当前状态（问题）</div>
+      <div class="mockup-body" style="padding:16px;">
+        <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:8px; padding:20px; position:relative; height:200px;">
+          <div style="position:absolute; left:30px; top:20px; width:131px; height:41px; border:2px dashed #ef4444; display:flex; align-items:center; justify-content:center;">
+            <span style="font-size:24px; font-weight:bold; color:#1a1a2e; overflow:hidden; white-space:nowrap;">用户登录</span>
+          </div>
+          <div style="position:absolute; left:30px; top:65px; color:#ef4444; font-size:12px;">⚠ 标签宽度131px，24pt字体需要约160px</div>
+        </div>
+      </div>
+    </div>
+    <div class="mockup">
+      <div class="mockup-header">预期效果（修复后）</div>
+      <div class="mockup-body" style="padding:16px;">
+        <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:8px; padding:20px; position:relative; height:200px;">
+          <div style="position:absolute; left:30px; top:20px; width:200px; height:41px; border:2px dashed #22c55e; display:flex; align-items:center;">
+            <span style="font-size:24px; font-weight:bold; color:#1a1a2e;">用户登录</span>
+          </div>
+          <div style="position:absolute; left:30px; top:65px; color:#22c55e; font-size:12px;">✓ 标签宽度200px，字体完整显示</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>问题 2：忘记密码显示不全</h3>
+  <div class="split">
+    <div class="mockup">
+      <div class="mockup-header">当前状态（问题）</div>
+      <div class="mockup-body" style="padding:16px;">
+        <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:8px; padding:20px; position:relative; height:200px;">
+          <div style="position:absolute; left:20px; top:100px;">
+            <span style="color:#555;">☐ 记住我</span>
+          </div>
+          <div style="position:absolute; left:470px; top:100px; width:51px; height:21px; border:2px dashed #ef4444; display:flex; align-items:center; justify-content:flex-end;">
+            <span style="color:#4a90d9; font-size:14px; overflow:hidden; white-space:nowrap;">忘记密码</span>
+          </div>
+          <div style="position:absolute; left:470px; top:125px; color:#ef4444; font-size:12px;">⚠ 宽度仅51px，需要约70px</div>
+        </div>
+      </div>
+    </div>
+    <div class="mockup">
+      <div class="mockup-header">预期效果（修复后）</div>
+      <div class="mockup-body" style="padding:16px;">
+        <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:8px; padding:20px; position:relative; height:200px;">
+          <div style="position:absolute; left:20px; top:100px;">
+            <span style="color:#555;">☐ 记住我</span>
+          </div>
+          <div style="position:absolute; left:430px; top:100px; width:100px; height:21px; border:2px dashed #22c55e; display:flex; align-items:center; justify-content:flex-end;">
+            <span style="color:#4a90d9; font-size:14px;">忘记密码</span>
+          </div>
+          <div style="position:absolute; left:430px; top:125px; color:#22c55e; font-size:12px;">✓ 宽度100px，完整显示</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>根本原因</h3>
+  <div class="options">
+    <div class="option" data-choice="absolute" onclick="toggleSelect(this)">
+      <div class="letter">A</div>
+      <div class="content">
+        <h3>绝对定位导致的问题</h3>
+        <p>loginPanel 内部使用绝对定位（无布局），所有控件位置和尺寸都是硬编码的。当字体大小或内容变化时，标签尺寸不足以显示完整内容。</p>
+      </div>
+    </div>
+  </div>
+</div>

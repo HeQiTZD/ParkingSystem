@@ -1,0 +1,206 @@
+<h2>子页面设计（修订版 v5）</h2>
+<p class="subtitle">排序时间细分为入库时间、出库时间</p>
+
+<!-- 车辆信息页面 -->
+<div class="mockup">
+  <div class="mockup-header">车辆信息页面（带排序功能）</div>
+  <div class="mockup-body">
+    <div style="height: 400px; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; background: #f8fafc; display: flex; flex-direction: column;">
+      <!-- 顶部栏 -->
+      <div style="display: flex; justify-content: flex-end; align-items: center; padding: 0.4rem 1rem;">
+        <span style="font-size: 0.8rem; color: #334155; font-family: monospace; font-weight: 500;">2026-06-11 14:30:25</span>
+      </div>
+      <!-- 内容区域 -->
+      <div style="flex: 1; padding: 0 1rem 1rem;">
+        <div style="background: white; border-radius: 8px; padding: 1rem; height: 100%; border: 1px solid #e2e8f0; display: flex; flex-direction: column;">
+          <!-- 查询和排序区域 -->
+          <div style="display: flex; gap: 0.75rem; margin-bottom: 1rem; align-items: flex-end; flex-wrap: wrap;">
+            <!-- 查询部分 -->
+            <div>
+              <div style="font-size: 0.75rem; color: #64748b; margin-bottom: 0.25rem;">车牌号</div>
+              <input style="padding: 0.4rem 0.6rem; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 0.8rem; width: 120px;" placeholder="输入车牌号">
+            </div>
+            <div>
+              <div style="font-size: 0.75rem; color: #64748b; margin-bottom: 0.25rem;">开始时间</div>
+              <input style="padding: 0.4rem 0.6rem; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 0.8rem; width: 150px;" placeholder="选择开始时间" type="datetime-local">
+            </div>
+            <div>
+              <div style="font-size: 0.75rem; color: #64748b; margin-bottom: 0.25rem;">结束时间</div>
+              <input style="padding: 0.4rem 0.6rem; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 0.8rem; width: 150px;" placeholder="选择结束时间" type="datetime-local">
+            </div>
+            <button style="padding: 0.4rem 1rem; background: #2563eb; color: white; border: none; border-radius: 4px; font-size: 0.8rem;">查询</button>
+            <button style="padding: 0.4rem 1rem; background: #dc2626; color: white; border: none; border-radius: 4px; font-size: 0.8rem;">删除</button>
+
+            <!-- 分隔线 -->
+            <div style="width: 1px; height: 30px; background: #e2e8f0; margin: 0 0.25rem;"></div>
+
+            <!-- 排序部分 -->
+            <div>
+              <div style="font-size: 0.75rem; color: #64748b; margin-bottom: 0.25rem;">排序方式</div>
+              <select style="padding: 0.4rem 0.6rem; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 0.8rem; min-width: 110px; background: white;">
+                <option>入库时间</option>
+                <option>出库时间</option>
+                <option>停车时长</option>
+                <option>停车费用</option>
+              </select>
+            </div>
+            <div>
+              <div style="font-size: 0.75rem; color: #64748b; margin-bottom: 0.25rem;">排序方向</div>
+              <select style="padding: 0.4rem 0.6rem; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 0.8rem; min-width: 80px; background: white;">
+                <option>正序 ↑</option>
+                <option>倒序 ↓</option>
+              </select>
+            </div>
+          </div>
+          <!-- 表格 -->
+          <div style="flex: 1; overflow: auto;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+              <thead>
+                <tr style="background: #f1f5f9;">
+                  <th style="padding: 0.7rem; text-align: left; border-bottom: 2px solid #e2e8f0; color: #1e293b; font-weight: 600;">车牌号</th>
+                  <th style="padding: 0.7rem; text-align: left; border-bottom: 2px solid #e2e8f0; color: #1e293b; font-weight: 600;">入库时间</th>
+                  <th style="padding: 0.7rem; text-align: left; border-bottom: 2px solid #e2e8f0; color: #1e293b; font-weight: 600;">出库时间</th>
+                  <th style="padding: 0.7rem; text-align: left; border-bottom: 2px solid #e2e8f0; color: #1e293b; font-weight: 600;">停车时长</th>
+                  <th style="padding: 0.7rem; text-align: left; border-bottom: 2px solid #e2e8f0; color: #1e293b; font-weight: 600;">停车费用</th>
+                  <th style="padding: 0.7rem; text-align: left; border-bottom: 2px solid #e2e8f0; color: #1e293b; font-weight: 600;">状态</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="cursor: pointer;">
+                  <td style="padding: 0.7rem; border-bottom: 1px solid #f1f5f9; color: #334155; font-weight: 500;">京A12345</td>
+                  <td style="padding: 0.7rem; border-bottom: 1px solid #f1f5f9; color: #334155;">2026-06-11 08:30</td>
+                  <td style="padding: 0.7rem; border-bottom: 1px solid #f1f5f9; color: #334155;">2026-06-11 14:30</td>
+                  <td style="padding: 0.7rem; border-bottom: 1px solid #f1f5f9; color: #334155;">6小时</td>
+                  <td style="padding: 0.7rem; border-bottom: 1px solid #f1f5f9; color: #334155;">¥30.00</td>
+                  <td style="padding: 0.7rem; border-bottom: 1px solid #f1f5f9;"><span style="background: #dcfce7; color: #16a34a; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: 500;">已离场</span></td>
+                </tr>
+                <tr style="background: #f8fafc; cursor: pointer;">
+                  <td style="padding: 0.7rem; border-bottom: 1px solid #f1f5f9; color: #334155; font-weight: 500;">京B67890</td>
+                  <td style="padding: 0.7rem; border-bottom: 1px solid #f1f5f9; color: #334155;">2026-06-11 10:15</td>
+                  <td style="padding: 0.7rem; border-bottom: 1px solid #f1f5f9; color: #334155;">-</td>
+                  <td style="padding: 0.7rem; border-bottom: 1px solid #f1f5f9; color: #334155;">4小时15分</td>
+                  <td style="padding: 0.7rem; border-bottom: 1px solid #f1f5f9; color: #334155;">-</td>
+                  <td style="padding: 0.7rem; border-bottom: 1px solid #f1f5f9;"><span style="background: #dbeafe; color: #2563eb; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: 500;">在场</span></td>
+                </tr>
+                <tr style="cursor: pointer; background: #f0f9ff;">
+                  <td style="padding: 0.7rem; border-bottom: 1px solid #f1f5f9; color: #334155; font-weight: 500;">京C11111</td>
+                  <td style="padding: 0.7rem; border-bottom: 1px solid #f1f5f9; color: #334155;">2026-06-11 09:00</td>
+                  <td style="padding: 0.7rem; border-bottom: 1px solid #f1f5f9; color: #334155;">2026-06-11 12:00</td>
+                  <td style="padding: 0.7rem; border-bottom: 1px solid #f1f5f9; color: #334155;">3小时</td>
+                  <td style="padding: 0.7rem; border-bottom: 1px solid #f1f5f9; color: #334155;">¥25.00</td>
+                  <td style="padding: 0.7rem; border-bottom: 1px solid #f1f5f9;"><span style="background: #dcfce7; color: #16a34a; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: 500;">已离场</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 管理页面 -->
+<div class="mockup" style="margin-top: 2rem;">
+  <div class="mockup-header">管理页面</div>
+  <div class="mockup-body">
+    <div style="height: 400px; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; background: #f8fafc; display: flex; flex-direction: column;">
+      <!-- 顶部栏 -->
+      <div style="display: flex; justify-content: flex-end; align-items: center; padding: 0.4rem 1rem;">
+        <span style="font-size: 0.8rem; color: #334155; font-family: monospace; font-weight: 500;">2026-06-11 14:30:25</span>
+      </div>
+      <!-- 内容区域 -->
+      <div style="flex: 1; padding: 0 1rem 1rem;">
+        <div style="background: white; border-radius: 8px; padding: 1rem; height: 100%; border: 1px solid #e2e8f0; display: flex; flex-direction: column;">
+          <!-- 标题和按钮 -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <h3 style="margin: 0; color: #1e293b; font-size: 1rem;">管理员信息</h3>
+            <div style="display: flex; gap: 0.5rem;">
+              <button style="padding: 0.4rem 1rem; background: #2563eb; color: white; border: none; border-radius: 4px; font-size: 0.8rem;">添加新用户</button>
+              <button style="padding: 0.4rem 1rem; background: #f59e0b; color: white; border: none; border-radius: 4px; font-size: 0.8rem;">修改</button>
+              <button style="padding: 0.4rem 1rem; background: #dc2626; color: white; border: none; border-radius: 4px; font-size: 0.8rem;">删除</button>
+            </div>
+          </div>
+          <!-- 表格 -->
+          <div style="flex: 1; overflow: auto;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+              <thead>
+                <tr style="background: #f1f5f9;">
+                  <th style="padding: 0.7rem; text-align: left; border-bottom: 2px solid #e2e8f0; color: #1e293b; font-weight: 600;">用户名</th>
+                  <th style="padding: 0.7rem; text-align: left; border-bottom: 2px solid #e2e8f0; color: #1e293b; font-weight: 600;">姓名</th>
+                  <th style="padding: 0.7rem; text-align: left; border-bottom: 2px solid #e2e8f0; color: #1e293b; font-weight: 600;">手机号</th>
+                  <th style="padding: 0.7rem; text-align: left; border-bottom: 2px solid #e2e8f0; color: #1e293b; font-weight: 600;">角色</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="cursor: pointer;">
+                  <td style="padding: 0.7rem; border-bottom: 1px solid #f1f5f9; color: #334155; font-weight: 500;">admin</td>
+                  <td style="padding: 0.7rem; border-bottom: 1px solid #f1f5f9; color: #334155;">张三</td>
+                  <td style="padding: 0.7rem; border-bottom: 1px solid #f1f5f9; color: #334155;">13800138000</td>
+                  <td style="padding: 0.7rem; border-bottom: 1px solid #f1f5f9;"><span style="background: #dbeafe; color: #2563eb; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: 500;">管理员</span></td>
+                </tr>
+                <tr style="background: #f8fafc; cursor: pointer;">
+                  <td style="padding: 0.7rem; border-bottom: 1px solid #f1f5f9; color: #334155; font-weight: 500;">user01</td>
+                  <td style="padding: 0.7rem; border-bottom: 1px solid #f1f5f9; color: #334155;">李四</td>
+                  <td style="padding: 0.7rem; border-bottom: 1px solid #f1f5f9; color: #334155;">13900139000</td>
+                  <td style="padding: 0.7rem; border-bottom: 1px solid #f1f5f9;"><span style="background: #f1f5f9; color: #475569; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: 500;">普通用户</span></td>
+                </tr>
+                <tr style="cursor: pointer; background: #f0f9ff;">
+                  <td style="padding: 0.7rem; border-bottom: 1px solid #f1f5f9; color: #334155; font-weight: 500;">user02</td>
+                  <td style="padding: 0.7rem; border-bottom: 1px solid #f1f5f9; color: #334155;">王五</td>
+                  <td style="padding: 0.7rem; border-bottom: 1px solid #f1f5f9; color: #334155;">13700137000</td>
+                  <td style="padding: 0.7rem; border-bottom: 1px solid #f1f5f9;"><span style="background: #f1f5f9; color: #475569; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: 500;">普通用户</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 摄像头页面 -->
+<div class="mockup" style="margin-top: 2rem;">
+  <div class="mockup-header">摄像头页面</div>
+  <div class="mockup-body">
+    <div style="height: 400px; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; background: #f8fafc; display: flex; flex-direction: column;">
+      <!-- 顶部栏 -->
+      <div style="display: flex; justify-content: flex-end; align-items: center; padding: 0.4rem 1rem;">
+        <span style="font-size: 0.8rem; color: #334155; font-family: monospace; font-weight: 500;">2026-06-11 14:30:25</span>
+      </div>
+      <!-- 内容区域 -->
+      <div style="flex: 1; padding: 0 1rem 1rem;">
+        <div style="background: white; border-radius: 8px; padding: 1rem; height: 100%; border: 1px solid #e2e8f0; display: flex; flex-direction: column;">
+          <!-- 控制区域 -->
+          <div style="display: flex; gap: 0.75rem; margin-bottom: 1rem; align-items: center;">
+            <button style="padding: 0.4rem 1rem; background: #2563eb; color: white; border: none; border-radius: 4px; font-size: 0.8rem;">初始化</button>
+            <select style="padding: 0.4rem 0.6rem; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 0.8rem; min-width: 150px;">
+              <option>选择摄像头设备</option>
+              <option>摄像头 1</option>
+              <option>摄像头 2</option>
+            </select>
+            <button style="padding: 0.4rem 1rem; background: #16a34a; color: white; border: none; border-radius: 4px; font-size: 0.8rem;">Open</button>
+            <button style="padding: 0.4rem 1rem; background: #f59e0b; color: white; border: none; border-radius: 4px; font-size: 0.8rem;">暂停</button>
+            <button style="padding: 0.4rem 1rem; background: #dc2626; color: white; border: none; border-radius: 4px; font-size: 0.8rem;">释放资源</button>
+          </div>
+          <!-- 摄像头画面 -->
+          <div style="flex: 1; background: #1e293b; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #94a3b8;">
+            <div style="text-align: center;">
+              <span style="font-size: 3rem;">📷</span>
+              <p style="margin: 0.5rem 0 0;">摄像头大画面显示区域</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top: 2rem;">
+  <h3>修改内容</h3>
+  <ul>
+    <li><strong>排序方式：</strong>从3个选项增加为4个</li>
+    <li><strong>时间细分：</strong>"时间"拆分为"入库时间"和"出库时间"</li>
+    <li><strong>完整选项：</strong>入库时间、出库时间、停车时长、停车费用</li>
+  </ul>
+</div>

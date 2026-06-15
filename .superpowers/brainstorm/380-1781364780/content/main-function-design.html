@@ -1,0 +1,92 @@
+<h2>主功能界面设计</h2>
+<p class="subtitle">可折叠侧边栏 + 上下布局</p>
+
+<div class="section">
+  <h3>整体布局</h3>
+  <div class="mockup">
+    <div class="mockup-header">主功能界面布局</div>
+    <div class="mockup-body" style="height: 400px; padding: 0;">
+      <div style="display: flex; height: 100%;">
+        <!-- 可折叠侧边栏 -->
+        <div style="width: 60px; background: #1e40af; display: flex; flex-direction: column; align-items: center; padding-top: 15px; transition: width 0.3s;">
+          <div style="width: 40px; height: 40px; background: rgba(255,255,255,0.2); border-radius: 4px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center;">
+            <div style="width: 20px; height: 2px; background: white; margin: 3px 0;"></div>
+            <div style="width: 20px; height: 2px; background: white; margin: 3px 0;"></div>
+            <div style="width: 20px; height: 2px; background: white; margin: 3px 0;"></div>
+          </div>
+          <div style="width: 40px; height: 40px; background: rgba(255,255,255,0.3); border-radius: 4px; margin-bottom: 10px; display: flex; align-items: center; justify-content: center;">
+            <div style="font-size: 16px;">🏠</div>
+          </div>
+          <div style="width: 40px; height: 40px; background: rgba(255,255,255,0.1); border-radius: 4px; margin-bottom: 10px; display: flex; align-items: center; justify-content: center;">
+            <div style="font-size: 16px;">📊</div>
+          </div>
+          <div style="width: 40px; height: 40px; background: rgba(255,255,255,0.1); border-radius: 4px; margin-bottom: 10px; display: flex; align-items: center; justify-content: center;">
+            <div style="font-size: 16px;">👥</div>
+          </div>
+          <div style="width: 40px; height: 40px; background: rgba(255,255,255,0.1); border-radius: 4px; margin-bottom: 10px; display: flex; align-items: center; justify-content: center;">
+            <div style="font-size: 16px;">📷</div>
+          </div>
+        </div>
+        <!-- 主内容区域 -->
+        <div style="flex: 1; background: #f8fafc; padding: 15px;">
+          <div style="background: white; border-radius: 4px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); height: 100%; padding: 15px;">
+            <div style="font-size: 16px; font-weight: bold; color: #1e293b; margin-bottom: 15px;">主页内容区域</div>
+            <div style="background: #e2e8f0; height: 200px; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: #64748b;">摄像头预览区域</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>主页设计</h3>
+  <div class="mockup">
+    <div class="mockup-header">主页 - 上下布局</div>
+    <div class="mockup-body" style="height: 400px;">
+      <div style="display: flex; flex-direction: column; height: 100%;">
+        <!-- 上方：摄像头预览 -->
+        <div style="flex: 1; background: #1e293b; border-radius: 4px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; color: #94a3b8; position: relative;">
+          <div style="text-align: center;">
+            <div style="font-size: 48px; margin-bottom: 10px;">📷</div>
+            <div>摄像头实时预览</div>
+          </div>
+          <!-- 视频控制条 -->
+          <div style="position: absolute; bottom: 10px; left: 10px; right: 10px; background: rgba(0,0,0,0.5); border-radius: 4px; padding: 8px; display: flex; align-items: center; gap: 10px;">
+            <div style="width: 24px; height: 24px; background: #3b82f6; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+              <div style="width: 0; height: 0; border-left: 8px solid white; border-top: 5px solid transparent; border-bottom: 5px solid transparent; margin-left: 2px;"></div>
+            </div>
+            <div style="flex: 1; height: 4px; background: #475569; border-radius: 2px;">
+              <div style="width: 30%; height: 100%; background: #3b82f6; border-radius: 2px;"></div>
+            </div>
+            <div style="font-size: 12px; color: #94a3b8;">00:30 / 01:45</div>
+          </div>
+        </div>
+        <!-- 下方：统计和操作 -->
+        <div style="display: flex; gap: 15px;">
+          <!-- 左侧：饼图统计 -->
+          <div style="flex: 1; background: white; border-radius: 4px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); padding: 15px;">
+            <div style="font-size: 14px; font-weight: bold; color: #1e293b; margin-bottom: 10px;">车辆统计</div>
+            <div style="width: 120px; height: 120px; border-radius: 50%; background: conic-gradient(#3b82f6 0% 40%, #93c5fd 40% 70%, #dbeafe 70% 100%); margin: 0 auto; display: flex; align-items: center; justify-content: center;">
+              <div style="width: 80px; height: 80px; background: white; border-radius: 50%;"></div>
+            </div>
+          </div>
+          <!-- 右侧：操作按钮 -->
+          <div style="flex: 1; background: white; border-radius: 4px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); padding: 15px;">
+            <div style="font-size: 14px; font-weight: bold; color: #1e293b; margin-bottom: 10px;">车辆操作</div>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              <div style="display: flex; gap: 10px;">
+                <div style="flex: 1; height: 35px; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc; display: flex; align-items: center; padding-left: 10px; font-size: 12px; color: #94a3b8;">车牌号</div>
+                <div style="width: 80px; height: 35px; background: #3b82f6; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px;">入库</div>
+              </div>
+              <div style="display: flex; gap: 10px;">
+                <div style="flex: 1; height: 35px; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc; display: flex; align-items: center; padding-left: 10px; font-size: 12px; color: #94a3b8;">车牌号</div>
+                <div style="width: 80px; height: 35px; background: #ef4444; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px;">出库</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

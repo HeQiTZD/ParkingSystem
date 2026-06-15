@@ -1,0 +1,77 @@
+<h2>实现方案对比</h2>
+<p class="subtitle">选择 QSS 文件的组织方式</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>方案A：独立配置文件（推荐）</h3>
+      <p>创建单独的 <code>styles/config.qss</code>，在 ConfigInitDialog 构造函数中加载</p>
+      <div class="pros-cons" style="margin-top: 12px;">
+        <div class="pros">
+          <h4>优点</h4>
+          <ul>
+            <li>样式独立，易于维护</li>
+            <li>可复用于其他配置窗口</li>
+            <li>不影响全局样式</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>缺点</h4>
+          <ul>
+            <li>需要额外的文件加载代码</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>方案B：合并到全局样式</h3>
+      <p>将 ConfigInitDialog 样式添加到 <code>styles/global.qss</code> 末尾</p>
+      <div class="pros-cons" style="margin-top: 12px;">
+        <div class="pros">
+          <h4>优点</h4>
+          <ul>
+            <li>只需维护一个文件</li>
+            <li>自动随全局样式加载</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>缺点</h4>
+          <ul>
+            <li>global.qss 会变得臃肿</li>
+            <li>不同窗口样式耦合</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>方案C：内联到 UI 文件</h3>
+      <p>在 <code>configinitdialog.ui</code> 的 widget 属性中直接设置样式</p>
+      <div class="pros-cons" style="margin-top: 12px;">
+        <div class="pros">
+          <h4>优点</h4>
+          <ul>
+            <li>所见即所得</li>
+            <li>无需额外文件</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>缺点</h4>
+          <ul>
+            <li>难以复用和维护</li>
+            <li>样式与布局耦合</li>
+            <li>不支持伪类选择器</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -8,6 +8,7 @@
 #include <QDebug>
 #include <QGraphicsDropShadowEffect>
 #include <QMouseEvent>
+#include <QLinearGradient>
 
 LoginDialog::LoginDialog(QWidget *parent)
     : QDialog(parent)
@@ -18,8 +19,6 @@ LoginDialog::LoginDialog(QWidget *parent)
 
     // 设置密码输入框模式
     ui->passwordEdit->setEchoMode(QLineEdit::Password);
-    ui->passwordEdit->setPlaceholderText("请输入密码");
-    ui->usernameEdit->setPlaceholderText("请输入用户名");
 
     // 设置无边框窗口
     setupWindowFlags();
@@ -30,7 +29,7 @@ LoginDialog::LoginDialog(QWidget *parent)
     QFile styleFile(":/styles/login.qss");
     if (styleFile.open(QFile::ReadOnly)) {
         QString styleSheet = QLatin1String(styleFile.readAll());
-        ui->loginPanel->setStyleSheet(styleSheet);
+        this->setStyleSheet(styleSheet);
         styleFile.close();
     } else {
         qWarning() << "无法加载样式表:" << styleFile.fileName();
@@ -52,33 +51,8 @@ void LoginDialog::resizeEvent(QResizeEvent *event)
 
 void LoginDialog::updateBrandPanelBackground()
 {
-    QPixmap pixmap(":/new/prefix1/brandImage");
-    if (pixmap.isNull()) {
-        return;
-    }
-
-    // 获取 brandPanel 的尺寸
-    QSize panelSize = ui->brandPanel->size();
-
-    // 等比缩放图片，保持宽高比，平滑变换
-    QPixmap scaledPixmap = pixmap.scaled(panelSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-
-    // 创建一个与 panel 同尺寸的透明画布
-    QPixmap background(panelSize);
-    background.fill(Qt::transparent);
-
-    // 在画布中心绘制缩放后的图片
-    QPainter painter(&background);
-    int x = (panelSize.width() - scaledPixmap.width()) / 2;
-    int y = (panelSize.height() - scaledPixmap.height()) / 2;
-    painter.drawPixmap(x, y, scaledPixmap);
-    painter.end();
-
-    // 设置为背景
-    ui->brandPanel->setAutoFillBackground(true);
-    QPalette palette;
-    palette.setBrush(ui->brandPanel->backgroundRole(), QBrush(background));
-    ui->brandPanel->setPalette(palette);
+    ui->brandPanel->setAutoFillBackground(false);
+    ui->brandPanel->setStyleSheet("background-image: url(:/new/prefix1/brandImage); background-position: center; background-repeat: no-repeat; background-color: #1e3a5f;");
 }
 
 void LoginDialog::setupWindowFlags()

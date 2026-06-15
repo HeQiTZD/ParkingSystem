@@ -1,0 +1,169 @@
+<h2>方案C 详细设计：可拖拽标题栏</h2>
+<p class="subtitle">带标题 + 最小化 + 关闭按钮，支持窗口拖拽移动</p>
+
+<div class="mockup">
+  <div class="mockup-header">ConfigInitDialog 效果预览</div>
+  <div class="mockup-body" style="padding: 0;">
+    <!-- 模拟无边框窗口 -->
+    <div style="width: 400px; margin: 20px auto; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.15);">
+      <!-- 标题栏 -->
+      <div style="background: #1a1a2e; color: white; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; cursor: move;">
+        <span style="font-size: 14px; font-weight: 600;">停车场数据初始化</span>
+        <div style="display: flex; gap: 8px;">
+          <div style="width: 32px; height: 32px; background: rgba(255,255,255,0.1); border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px;" onmouseover="this.style.background='#d1d5db';" onmouseout="this.style.background='rgba(255,255,255,0.1);'">─</div>
+          <div style="width: 32px; height: 32px; background: rgba(255,255,255,0.1); border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px;" onmouseover="this.style.background='#ef4444';" onmouseout="this.style.background='rgba(255,255,255,0.1);'">✕</div>
+        </div>
+      </div>
+      <!-- 内容区域 -->
+      <div style="background: white; padding: 30px;">
+        <div style="text-align: center; margin-bottom: 20px;">
+          <div style="font-size: 18px; font-weight: 600; color: #1a1a2e;">停车场数据初始化</div>
+        </div>
+        <div style="background: #f8fafc; border-radius: 8px; padding: 20px; margin-bottom: 15px;">
+          <div style="font-size: 12px; font-weight: 600; color: #3b82f6; margin-bottom: 10px;">数据库配置</div>
+          <div style="height: 8px; background: #e2e8f0; border-radius: 4px; margin-bottom: 8px;"></div>
+          <div style="height: 8px; background: #e2e8f0; border-radius: 4px; width: 80%;"></div>
+        </div>
+        <div style="background: #f8fafc; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+          <div style="font-size: 12px; font-weight: 600; color: #3b82f6; margin-bottom: 10px;">停车场配置</div>
+          <div style="height: 8px; background: #e2e8f0; border-radius: 4px; margin-bottom: 8px;"></div>
+          <div style="height: 8px; background: #e2e8f0; border-radius: 4px; width: 60%;"></div>
+        </div>
+        <div style="display: flex; gap: 10px; justify-content: center;">
+          <div style="padding: 10px 24px; border: 1px solid #e2e8f0; border-radius: 6px; color: #475569; font-size: 14px;">取消</div>
+          <div style="padding: 10px 24px; background: #3b82f6; border-radius: 6px; color: white; font-size: 14px; font-weight: 600;">提交</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h3>实现细节</h3>
+
+<div class="section">
+  <h4>1. 窗口标志设置</h4>
+  <div class="mockup">
+    <div class="mockup-header">C++ 代码</div>
+    <div class="mockup-body" style="font-family: monospace; font-size: 13px; line-height: 1.6;">
+      <span style="color: #3b82f6;">// 移除系统边框</span><br>
+      setWindowFlags(Qt::FramelessWindowHint | Qt::Window);<br><br>
+      <span style="color: #3b82f6;">// 设置背景透明（可选，用于圆角）</span><br>
+      setAttribute(Qt::WA_TranslucentBackground);
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h4>2. UI 布局结构</h4>
+  <div class="mockup">
+    <div class="mockup-header">布局层次</div>
+    <div class="mockup-body" style="font-family: monospace; font-size: 13px;">
+      <div style="padding-left: 0;">QDialog (FramelessWindowHint)</div>
+      <div style="padding-left: 20px;">└─ QVBoxLayout (mainLayout)</div>
+      <div style="padding-left: 40px;">├─ QWidget (titleBar) <span style="color: #3b82f6;">← 新增标题栏</span></div>
+      <div style="padding-left: 60px;">├─ QHBoxLayout</div>
+      <div style="padding-left: 80px;">├─ QLabel (titleLabel) <span style="color: #3b82f6;">← "停车场数据初始化"</span></div>
+      <div style="padding-left: 80px;">├─ QSpacerItem</div>
+      <div style="padding-left: 80px;">├─ QPushButton (btnMinimize) <span style="color: #3b82f6;">← 最小化按钮</span></div>
+      <div style="padding-left: 80px;">└─ QPushButton (btnClose) <span style="color: #3b82f6;">← 关闭按钮</span></div>
+      <div style="padding-left: 40px;">└─ QWidget (contentWidget)</div>
+      <div style="padding-left: 60px;">└─ 原有内容布局...</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h4>3. QSS 样式</h4>
+  <div class="mockup">
+    <div class="mockup-header">config.qss 新增样式</div>
+    <div class="mockup-body" style="font-family: monospace; font-size: 13px; line-height: 1.6;">
+      <span style="color: #3b82f6;">/* 标题栏 */</span><br>
+      QWidget#titleBar {<br>
+      &nbsp;&nbsp;background-color: #1a1a2e;<br>
+      &nbsp;&nbsp;border-top-left-radius: 12px;<br>
+      &nbsp;&nbsp;border-top-right-radius: 12px;<br>
+      }<br><br>
+      <span style="color: #3b82f6;">/* 标题文字 */</span><br>
+      QLabel#titleLabel {<br>
+      &nbsp;&nbsp;color: white;<br>
+      &nbsp;&nbsp;font-size: 14px;<br>
+      &nbsp;&nbsp;font-weight: 600;<br>
+      &nbsp;&nbsp;padding: 0 16px;<br>
+      }<br><br>
+      <span style="color: #3b82f6;">/* 最小化按钮 */</span><br>
+      QPushButton#btnMinimize {<br>
+      &nbsp;&nbsp;background: rgba(255,255,255,0.1);<br>
+      &nbsp;&nbsp;border: none;<br>
+      &nbsp;&nbsp;border-radius: 6px;<br>
+      &nbsp;&nbsp;width: 32px;<br>
+      &nbsp;&nbsp;height: 32px;<br>
+      }<br>
+      QPushButton#btnMinimize:hover {<br>
+      &nbsp;&nbsp;background: #d1d5db;<br>
+      }<br><br>
+      <span style="color: #3b82f6;">/* 关闭按钮 */</span><br>
+      QPushButton#btnClose {<br>
+      &nbsp;&nbsp;background: rgba(255,255,255,0.1);<br>
+      &nbsp;&nbsp;border: none;<br>
+      &nbsp;&nbsp;border-radius: 6px;<br>
+      &nbsp;&nbsp;width: 32px;<br>
+      &nbsp;&nbsp;height: 32px;<br>
+      }<br>
+      QPushButton#btnClose:hover {<br>
+      &nbsp;&nbsp;background: #ef4444;<br>
+      }
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h4>4. 窗口拖拽实现</h4>
+  <div class="mockup">
+    <div class="mockup-header">鼠标事件处理</div>
+    <div class="mockup-body" style="font-family: monospace; font-size: 13px; line-height: 1.6;">
+      <span style="color: #3b82f6;">// 头文件声明</span><br>
+      protected:<br>
+      &nbsp;&nbsp;void mousePressEvent(QMouseEvent *event) override;<br>
+      &nbsp;&nbsp;void mouseMoveEvent(QMouseEvent *event) override;<br>
+      &nbsp;&nbsp;void mouseReleaseEvent(QMouseEvent *event) override;<br><br>
+      private:<br>
+      &nbsp;&nbsp;QPoint m_dragPosition;<br>
+      &nbsp;&nbsp;bool m_isDragging = false;<br><br>
+      <span style="color: #3b82f6;">// 实现</span><br>
+      void ConfigInitDialog::mousePressEvent(QMouseEvent *event) {<br>
+      &nbsp;&nbsp;if (event->button() == Qt::LeftButton && <br>
+      &nbsp;&nbsp;&nbsp;&nbsp;ui->titleBar->underMouse()) {<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;m_isDragging = true;<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;m_dragPosition = event->globalPos() - pos();<br>
+      &nbsp;&nbsp;}<br>
+      }
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h4>5. 按钮功能实现</h4>
+  <div class="mockup">
+    <div class="mockup-header">槽函数</div>
+    <div class="mockup-body" style="font-family: monospace; font-size: 13px; line-height: 1.6;">
+      <span style="color: #3b82f6;">// 最小化</span><br>
+      void ConfigInitDialog::on_btnMinimize_clicked() {<br>
+      &nbsp;&nbsp;showMinimized();<br>
+      }<br><br>
+      <span style="color: #3b82f6;">// 关闭</span><br>
+      void ConfigInitDialog::on_btnClose_clicked() {<br>
+      &nbsp;&nbsp;close();<br>
+      }
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top: 30px;">
+  <h3>需要修改的文件</h3>
+  <ul>
+    <li><strong>UI/ConfigInit/configinitdialog.ui</strong> - 添加标题栏布局和按钮</li>
+    <li><strong>UI/ConfigInit/configinitdialog.h</strong> - 添加鼠标事件声明和成员变量</li>
+    <li><strong>UI/ConfigInit/configinitdialog.cpp</strong> - 实现拖拽和按钮功能</li>
+    <li><strong>styles/config.qss</strong> - 添加标题栏和按钮样式</li>
+  </ul>
+</div>

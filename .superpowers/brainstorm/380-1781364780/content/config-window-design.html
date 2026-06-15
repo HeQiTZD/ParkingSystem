@@ -1,0 +1,150 @@
+<h2>配置初始化窗口设计</h2>
+<p class="subtitle">简单表单布局</p>
+
+<div class="section">
+  <h3>配置初始化窗口</h3>
+  <div class="mockup">
+    <div class="mockup-header">停车场数据初始化</div>
+    <div class="mockup-body" style="height: 450px; display: flex; align-items: center; justify-content: center; background: #f1f5f9;">
+      <div style="width: 400px; background: white; border-radius: 8px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); padding: 30px;">
+        <!-- 标题 -->
+        <div style="text-align: center; margin-bottom: 25px;">
+          <div style="font-size: 20px; font-weight: bold; color: #1e293b; margin-bottom: 5px;">停车场数据初始化</div>
+          <div style="font-size: 14px; color: #64748b;">请配置数据库连接和停车场信息</div>
+        </div>
+
+        <!-- 数据库配置 -->
+        <div style="margin-bottom: 20px;">
+          <div style="font-size: 14px; font-weight: 600; color: #3b82f6; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #dbeafe;">数据库配置</div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div>
+              <div style="font-size: 12px; color: #64748b; margin-bottom: 4px;">IP地址</div>
+              <div style="height: 35px; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc; display: flex; align-items: center; padding-left: 10px; font-size: 13px; color: #94a3b8;">127.0.0.1</div>
+            </div>
+            <div>
+              <div style="font-size: 12px; color: #64748b; margin-bottom: 4px;">端口号</div>
+              <div style="height: 35px; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc; display: flex; align-items: center; padding-left: 10px; font-size: 13px; color: #94a3b8;">3306</div>
+            </div>
+            <div>
+              <div style="font-size: 12px; color: #64748b; margin-bottom: 4px;">数据库名</div>
+              <div style="height: 35px; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc; display: flex; align-items: center; padding-left: 10px; font-size: 13px; color: #94a3b8;">parking_db</div>
+            </div>
+            <div>
+              <div style="font-size: 12px; color: #64748b; margin-bottom: 4px;">账户</div>
+              <div style="height: 35px; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc; display: flex; align-items: center; padding-left: 10px; font-size: 13px; color: #94a3b8;">root</div>
+            </div>
+            <div style="grid-column: span 2;">
+              <div style="font-size: 12px; color: #64748b; margin-bottom: 4px;">密码</div>
+              <div style="height: 35px; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc; display: flex; align-items: center; padding-left: 10px; font-size: 13px; color: #94a3b8;">••••••••</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 停车场配置 -->
+        <div style="margin-bottom: 25px;">
+          <div style="font-size: 14px; font-weight: 600; color: #3b82f6; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #dbeafe;">停车场配置</div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
+            <div>
+              <div style="font-size: 12px; color: #64748b; margin-bottom: 4px;">停车场名</div>
+              <div style="height: 35px; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc; display: flex; align-items: center; padding-left: 10px; font-size: 13px; color: #94a3b8;">智慧停车场</div>
+            </div>
+            <div>
+              <div style="font-size: 12px; color: #64748b; margin-bottom: 4px;">价格(元/小时)</div>
+              <div style="height: 35px; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc; display: flex; align-items: center; padding-left: 10px; font-size: 13px; color: #94a3b8;">5.00</div>
+            </div>
+            <div>
+              <div style="font-size: 12px; color: #64748b; margin-bottom: 4px;">容量(个)</div>
+              <div style="height: 35px; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc; display: flex; align-items: center; padding-left: 10px; font-size: 13px; color: #94a3b8;">100</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 按钮 -->
+        <div style="display: flex; gap: 15px; justify-content: flex-end;">
+          <div style="width: 100px; height: 40px; border: 1px solid #e2e8f0; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #64748b; cursor: pointer;">取消</div>
+          <div style="width: 100px; height: 40px; background: #3b82f6; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 14px; color: white; cursor: pointer;">提交</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>设计总结</h3>
+  <div class="split">
+    <div class="mockup">
+      <div class="mockup-header">已确认的设计规范</div>
+      <div class="mockup-body">
+        <div style="display: flex; flex-direction: column; gap: 10px; font-size: 13px;">
+          <div style="display: flex; justify-content: space-between; padding: 8px; background: #f8fafc; border-radius: 4px;">
+            <span style="color: #64748b;">整体风格</span>
+            <span style="color: #1e293b; font-weight: 600;">经典商务</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 8px; background: #f8fafc; border-radius: 4px;">
+            <span style="color: #64748b;">主色调</span>
+            <span style="color: #3b82f6; font-weight: 600;">#3b82f6</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 8px; background: #f8fafc; border-radius: 4px;">
+            <span style="color: #64748b;">导航布局</span>
+            <span style="color: #1e293b; font-weight: 600;">可折叠侧边栏</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 8px; background: #f8fafc; border-radius: 4px;">
+            <span style="color: #64748b;">主页布局</span>
+            <span style="color: #1e293b; font-weight: 600;">上下布局</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 8px; background: #f8fafc; border-radius: 4px;">
+            <span style="color: #64748b;">表格样式</span>
+            <span style="color: #1e293b; font-weight: 600;">现代简约</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 8px; background: #f8fafc; border-radius: 4px;">
+            <span style="color: #64748b;">圆角</span>
+            <span style="color: #1e293b; font-weight: 600;">4px</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 8px; background: #f8fafc; border-radius: 4px;">
+            <span style="color: #64748b;">阴影</span>
+            <span style="color: #1e293b; font-weight: 600;">中等</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mockup">
+      <div class="mockup-header">界面清单</div>
+      <div class="mockup-body">
+        <div style="display: flex; flex-direction: column; gap: 8px; font-size: 13px;">
+          <div style="display: flex; align-items: center; gap: 10px; padding: 8px; background: #dcfce7; border-radius: 4px;">
+            <span style="color: #166534;">✓</span>
+            <span style="color: #1e293b;">登录窗口</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px; padding: 8px; background: #dcfce7; border-radius: 4px;">
+            <span style="color: #166534;">✓</span>
+            <span style="color: #1e293b;">注册窗口</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px; padding: 8px; background: #dcfce7; border-radius: 4px;">
+            <span style="color: #166534;">✓</span>
+            <span style="color: #1e293b;">主功能界面</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px; padding: 8px; background: #dcfce7; border-radius: 4px;">
+            <span style="color: #166534;">✓</span>
+            <span style="color: #1e293b;">主页</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px; padding: 8px; background: #dcfce7; border-radius: 4px;">
+            <span style="color: #166534;">✓</span>
+            <span style="color: #1e293b;">车辆信息页面</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px; padding: 8px; background: #dcfce7; border-radius: 4px;">
+            <span style="color: #166534;">✓</span>
+            <span style="color: #1e293b;">管理页面</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px; padding: 8px; background: #dcfce7; border-radius: 4px;">
+            <span style="color: #166534;">✓</span>
+            <span style="color: #1e293b;">摄像头页面</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px; padding: 8px; background: #dcfce7; border-radius: 4px;">
+            <span style="color: #166534;">✓</span>
+            <span style="color: #1e293b;">配置初始化窗口</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
