@@ -54,7 +54,7 @@ LoginDialog::~LoginDialog()
 void LoginDialog::resizeEvent(QResizeEvent *event)
 {
     QDialog::resizeEvent(event);
-    updateBrandPanelBackground();
+    update();  // 触发重绘
 }
 
 void LoginDialog::updateBrandPanelBackground()
@@ -80,23 +80,15 @@ void LoginDialog::setupShadow()
 
 void LoginDialog::setupTitleBar()
 {
-    ui->titleBar->installEventFilter(this);
+    this->installEventFilter(this);
 }
 
 bool LoginDialog::eventFilter(QObject *obj, QEvent *event)
 {
-    if (obj == ui->titleBar) {
+    if (obj == this) {
         QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
 
         switch (event->type()) {
-        case QEvent::MouseButtonPress:
-            if (mouseEvent->button() == Qt::LeftButton) {
-                m_dragging = true;
-                m_dragPosition = mouseEvent->globalPos() - frameGeometry().topLeft();
-                return true;
-            }
-            break;
-
         case QEvent::MouseMove:
             if (m_dragging && (mouseEvent->buttons() & Qt::LeftButton)) {
                 move(mouseEvent->globalPos() - m_dragPosition);
@@ -129,17 +121,42 @@ void LoginDialog::on_btnClose_clicked()
     close();
 }
 
-// 空的存根实现 - 将在后续任务中实现
 void LoginDialog::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
-    // TODO: 在Task 6中实现自定义绘制
+    QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing);
+
+    // 1. 绘制底层白色圆角矩形背景
+    QRect mainRect = rect().adjusted(10, 10, -10, -10);  // 留出阴影空间
+    painter.setBrush(QColor("#FFFFFF"));
+    painter.setPen(Qt::NoPen);
+    painter.drawRoundedRect(mainRect, 12, 12);
+
+    // 2. 计算左侧品牌区和右侧登录面板的区域
+    int brandWidth = static_cast<int>(mainRect.width() * BRAND_PANEL_RATIO);
+    QRect brandRect(mainRect.left(), mainRect.top(), brandWidth, mainRect.height());
+    QRect loginRect(mainRect.left() + brandWidth, mainRect.top(),
+                    mainRect.width() - brandWidth, mainRect.height());
+
+    // 3. 绘制左侧品牌区
+    drawBrandPanel(painter, brandRect);
+
+    // 4. 绘制右侧登录面板
+    drawLoginPanel(painter, loginRect);
 }
 
 void LoginDialog::mousePressEvent(QMouseEvent *event)
 {
-    Q_UNUSED(event);
-    // TODO: 在Task 6中实现鼠标按下事件处理
+    if (event->button() == Qt::LeftButton) {
+        // 检查是否点击在标题栏区域
+        QRect titleBarRect(10, 10, width() - 20, 40);
+        if (titleBarRect.contains(event->pos())) {
+            m_dragging = true;
+            m_dragPosition = event->globalPos() - frameGeometry().topLeft();
+            event->accept();
+        }
+    }
 }
 
 void LoginDialog::drawBrandPanel(QPainter &painter, const QRect &rect)
