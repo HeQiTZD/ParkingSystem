@@ -59,8 +59,8 @@ void LoginDialog::resizeEvent(QResizeEvent *event)
 
 void LoginDialog::updateBrandPanelBackground()
 {
-    ui->brandPanel->setAutoFillBackground(false);
-    ui->brandPanel->setStyleSheet("background-image: url(:/icons/login-brand-image); background-position: center; background-repeat: no-repeat; background-color: #1e3a5f;");
+    // 品牌区背景将由drawBrandPanel方法通过QPainter绘制
+    // 此方法保留为空，以便在需要时进行其他更新
 }
 
 void LoginDialog::setupWindowFlags()
@@ -149,7 +149,7 @@ void LoginDialog::drawBrandPanel(QPainter &painter, const QRect &rect)
 
     // 设置裁剪区域为圆角矩形
     QPainterPath clipPath;
-    clipPath.addRoundedRect(rect, 12, 0);
+    clipPath.addRoundedRect(rect, 12, 12);
     painter.setClipPath(clipPath);
 
     // 1. 绘制背景图片
