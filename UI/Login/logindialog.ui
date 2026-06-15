@@ -400,6 +400,11 @@
                 <property name="text">
                  <string/>
                 </property>
+                <property name="icon">
+                 <iconset resource="../imageQrc/image.qrc">
+                  <normaloff>:/icons/icon-visibility-off</normaloff>
+                 </iconset>
+                </property>
                </widget>
               </item>
              </layout>
