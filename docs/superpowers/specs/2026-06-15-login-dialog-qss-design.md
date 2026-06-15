@@ -198,21 +198,22 @@
 ```css
 #LoginDialog QLabel#label {
     color: #1a1a2e;
-    font-size: 18pt;
-    font-weight: 600;
     padding: 10px 0;
 }
 ```
+
+**注意：** 不设置font-size/font-weight，因为标签使用rich text（内联样式），QSS设置会被覆盖。
 
 #### 副标题标签 (label_2)
 
 ```css
 #LoginDialog QLabel#label_2 {
     color: #475569;
-    font-size: 10pt;
     padding: 5px 0;
 }
 ```
+
+**注意：** 不设置font-size/font-weight，因为标签使用rich text（内联样式），QSS设置会被覆盖。
 
 #### 用户名标签 (label_3)
 
@@ -257,10 +258,11 @@
 ```css
 #LoginDialog QLabel#label_5 {
     color: #94a3b8;
-    font-size: 12px;
     padding: 0 10px;
 }
 ```
+
+**注意：** 不设置font-size，因为标签使用rich text（内联样式），QSS设置会被覆盖。
 
 #### 记住我复选框 (checkBox)
 
@@ -294,7 +296,6 @@
 ```css
 #LoginDialog QLabel#label_6 {
     color: #3b82f6;
-    font-size: 14px;
     padding: 5px;
 }
 
@@ -304,6 +305,8 @@
 }
 ```
 
+**注意：** 不设置font-size，因为标签使用rich text（内联样式），QSS设置会被覆盖。
+
 ### 7. 底部信息样式
 
 #### 版权信息 (label_7)
@@ -311,18 +314,18 @@
 ```css
 #LoginDialog QLabel#label_7 {
     color: #94a3b8;
-    font-size: 12px;
     min-width: 100px;
     max-width: 300px;
 }
 ```
+
+**注意：** 不设置font-size，因为标签使用rich text（内联样式），QSS设置会被覆盖。
 
 #### 服务条款 (label_8)
 
 ```css
 #LoginDialog QLabel#label_8 {
     color: #3b82f6;
-    font-size: 12px;
     min-width: 50px;
     max-width: 50px;
     min-height: 25px;
@@ -336,12 +339,13 @@
 }
 ```
 
+**注意：** 不设置font-size，因为标签使用rich text（内联样式），QSS设置会被覆盖。
+
 #### 隐私政策 (label_9)
 
 ```css
 #LoginDialog QLabel#label_9 {
     color: #3b82f6;
-    font-size: 12px;
     min-width: 50px;
     max-width: 50px;
     min-height: 25px;
@@ -354,6 +358,8 @@
     text-decoration: underline;
 }
 ```
+
+**注意：** 不设置font-size，因为标签使用rich text（内联样式），QSS设置会被覆盖。
 
 ## 配色方案
 

@@ -82,3 +82,9 @@ CMakeLists.txt.user*
 .uic/
 /build*/
 /.qtcreator/
+
+# IDE cache files
+.qtc_clangd/
+.mimocode/
+.superpowers/
+.codegraph/

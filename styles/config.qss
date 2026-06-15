@@ -1,21 +1,22 @@
 /* ==================== ConfigInitDialog 样式 ==================== */
+/* 作用域限制：仅影响 ConfigInitDialog (#ConfigInitDialog) */
 
 /* 对话框容器 */
-QDialog {
+#ConfigInitDialog {
     background-color: #ffffff;
 }
 
 /* -------------------- 标题样式 -------------------- */
 /* 不设置 font-size/font-weight：titleLabel 使用 rich text，内联样式会覆盖 QSS */
-QLabel#titleLabel {
+#ConfigInitDialog QLabel#titleLabel {
     color: #1a1a2e;
     padding: 10px 0;
 }
 
 /* -------------------- 分组标题 -------------------- */
 /* 不设置 font-size/font-weight：这些标签使用 rich text，内联样式会覆盖 QSS */
-QLabel#dbSectionLabel,
-QLabel#parkingSectionLabel {
+#ConfigInitDialog QLabel#dbSectionLabel,
+#ConfigInitDialog QLabel#parkingSectionLabel {
     color: #1a1a2e;
     padding: 8px 0;
     border-bottom: 2px solid #3b82f6;
@@ -23,14 +24,14 @@ QLabel#parkingSectionLabel {
 }
 
 /* -------------------- 标签样式 -------------------- */
-QLabel#lblIP,
-QLabel#lblPort,
-QLabel#lblDBName,
-QLabel#lblUsername,
-QLabel#lblPassword,
-QLabel#lblParkingName,
-QLabel#lblPrice,
-QLabel#lblCapacity {
+#ConfigInitDialog QLabel#lblIP,
+#ConfigInitDialog QLabel#lblPort,
+#ConfigInitDialog QLabel#lblDBName,
+#ConfigInitDialog QLabel#lblUsername,
+#ConfigInitDialog QLabel#lblPassword,
+#ConfigInitDialog QLabel#lblParkingName,
+#ConfigInitDialog QLabel#lblPrice,
+#ConfigInitDialog QLabel#lblCapacity {
     color: #475569;
     font-size: 14px;
     min-width: 80px;
@@ -38,7 +39,7 @@ QLabel#lblCapacity {
 }
 
 /* -------------------- 输入框样式 -------------------- */
-QLineEdit {
+#ConfigInitDialog QLineEdit {
     border: 1px solid #e2e8f0;
     border-radius: 6px;
     padding: 10px 14px;
@@ -48,11 +49,11 @@ QLineEdit {
     min-height: 20px;
 }
 
-QLineEdit:hover {
+#ConfigInitDialog QLineEdit:hover {
     border-color: #94a3b8;
 }
 
-QLineEdit:focus {
+#ConfigInitDialog QLineEdit:focus {
     border-color: #3b82f6;
     background-color: #ffffff;
     border-width: 2px;
@@ -61,7 +62,7 @@ QLineEdit:focus {
 
 /* -------------------- 提交按钮 -------------------- */
 /* 不设置 min-height：UI 文件中 minimumSize height 已设为 40px，QSS 的 20px 不会生效 */
-QPushButton#btnSubmit {
+#ConfigInitDialog QPushButton#btnSubmit {
     background-color: #3b82f6;
     color: #ffffff;
     border: none;
@@ -71,17 +72,17 @@ QPushButton#btnSubmit {
     font-weight: 600;
 }
 
-QPushButton#btnSubmit:hover {
+#ConfigInitDialog QPushButton#btnSubmit:hover {
     background-color: #2563eb;
 }
 
-QPushButton#btnSubmit:pressed {
+#ConfigInitDialog QPushButton#btnSubmit:pressed {
     background-color: #1d4ed8;
 }
 
 /* -------------------- 取消按钮 -------------------- */
 /* 不设置 min-height：UI 文件中 minimumSize height 已设为 40px，QSS 的 20px 不会生效 */
-QPushButton#btnCancel {
+#ConfigInitDialog QPushButton#btnCancel {
     background-color: #ffffff;
     color: #475569;
     border: 1px solid #e2e8f0;
@@ -90,19 +91,19 @@ QPushButton#btnCancel {
     font-size: 14px;
 }
 
-QPushButton#btnCancel:hover {
+#ConfigInitDialog QPushButton#btnCancel:hover {
     background-color: #f8fafc;
     border-color: #94a3b8;
 }
 
-QPushButton#btnCancel:pressed {
+#ConfigInitDialog QPushButton#btnCancel:pressed {
     background-color: #f1f5f9;
 }
 
 /* ==================== 标题栏样式 ==================== */
 
 /* 标题栏容器 */
-#titleBar {
+#ConfigInitDialog #titleBar {
     background-color: #ffffff;
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
@@ -110,8 +111,8 @@ QPushButton#btnCancel:pressed {
 }
 
 /* 标题栏按钮基础样式 */
-QPushButton#btnMinimize,
-QPushButton#btnClose {
+#ConfigInitDialog QPushButton#btnMinimize,
+#ConfigInitDialog QPushButton#btnClose {
     background: transparent;
     border: none;
     border-radius: 4px;
@@ -126,29 +127,29 @@ QPushButton#btnClose {
 }
 
 /* 最小化按钮悬浮 */
-QPushButton#btnMinimize:hover {
+#ConfigInitDialog QPushButton#btnMinimize:hover {
     background-color: #f1f5f9;
     color: #64748b;
 }
 
 /* 最小化按钮按下 */
-QPushButton#btnMinimize:pressed {
+#ConfigInitDialog QPushButton#btnMinimize:pressed {
     background-color: #e2e8f0;
 }
 
 /* 关闭按钮悬浮 */
-QPushButton#btnClose:hover {
+#ConfigInitDialog QPushButton#btnClose:hover {
     background-color: #ef4444;
     color: #ffffff;
 }
 
 /* 关闭按钮按下 */
-QPushButton#btnClose:pressed {
+#ConfigInitDialog QPushButton#btnClose:pressed {
     background-color: #dc2626;
 }
 
 /* ==================== 主容器样式 ==================== */
-#mainContainer {
+#ConfigInitDialog #mainContainer {
     background-color: #ffffff;
     border-radius: 8px;
 }
