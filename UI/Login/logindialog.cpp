@@ -15,11 +15,16 @@ LoginDialog::LoginDialog(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::LoginDialog)
     , m_dragging(false)
+    , m_passwordVisible(false)
 {
     ui->setupUi(this);
 
+    // 加载资源
+    loadResources();
+
     // 设置密码输入框模式
     ui->passwordEdit->setEchoMode(QLineEdit::Password);
+    updatePasswordVisibilityIcon();
 
     // 设置无边框窗口
     setupWindowFlags();
@@ -36,7 +41,9 @@ LoginDialog::LoginDialog(QWidget *parent)
         qWarning() << "无法加载样式表:" << styleFile.fileName();
     }
 
-    updateBrandPanelBackground();
+    // 连接密码可见性切换按钮信号
+    connect(ui->togglePasswordVisibility, &QPushButton::clicked,
+            this, &LoginDialog::on_togglePasswordVisibility_clicked);
 }
 
 LoginDialog::~LoginDialog()
@@ -53,7 +60,7 @@ void LoginDialog::resizeEvent(QResizeEvent *event)
 void LoginDialog::updateBrandPanelBackground()
 {
     ui->brandPanel->setAutoFillBackground(false);
-    ui->brandPanel->setStyleSheet("background-image: url(:/icons/login-brand-image-old); background-position: center; background-repeat: no-repeat; background-color: #1e3a5f;");
+    ui->brandPanel->setStyleSheet("background-image: url(:/icons/login-brand-image); background-position: center; background-repeat: no-repeat; background-color: #1e3a5f;");
 }
 
 void LoginDialog::setupWindowFlags()
@@ -120,4 +127,39 @@ void LoginDialog::on_btnMinimize_clicked()
 void LoginDialog::on_btnClose_clicked()
 {
     close();
+}
+
+void LoginDialog::loadResources()
+{
+    // 加载品牌背景图片
+    m_brandPixmap.load(":/icons/login-brand-image");
+    if (m_brandPixmap.isNull()) {
+        qWarning() << "无法加载品牌背景图片";
+    }
+
+    // 加载图标
+    m_personIcon = QIcon(":/icons/icon-person");
+    m_lockIcon = QIcon(":/icons/icon-lock");
+    m_visibilityIcon = QIcon(":/icons/icon-visibility");
+    m_visibilityOffIcon = QIcon(":/icons/icon-visibility-off");
+}
+
+void LoginDialog::updatePasswordVisibilityIcon()
+{
+    if (m_passwordVisible) {
+        ui->togglePasswordVisibility->setIcon(m_visibilityIcon);
+    } else {
+        ui->togglePasswordVisibility->setIcon(m_visibilityOffIcon);
+    }
+}
+
+void LoginDialog::on_togglePasswordVisibility_clicked()
+{
+    m_passwordVisible = !m_passwordVisible;
+    if (m_passwordVisible) {
+        ui->passwordEdit->setEchoMode(QLineEdit::Normal);
+    } else {
+        ui->passwordEdit->setEchoMode(QLineEdit::Password);
+    }
+    updatePasswordVisibilityIcon();
 }
