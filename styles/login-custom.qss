@@ -86,30 +86,15 @@ QPushButton#loginButton {
     min-height: 48px;
 }
 
+/* 按钮悬停效果 */
 QPushButton#loginButton:hover {
-    background-color: rgba(0, 63, 177, 0.1);
-}
-
-QPushButton#loginButton:pressed {
-    background-color: rgba(0, 63, 177, 0.2);
-}
-
-/* 注册按钮 - 透明背景，由drawLoginPanel绘制背景 */
-QPushButton#registerButton {
-    background-color: transparent;
-    color: #434654;
-    border: none;
-    border-radius: 8px;
-    font-size: 14px;
-    min-height: 44px;
+    background-color: #003090;
+    box-shadow: 0 4px 6px rgba(0, 63, 177, 0.2);
 }
 
 QPushButton#registerButton:hover {
-    background-color: rgba(0, 0, 0, 0.05);
-}
-
-QPushButton#registerButton:pressed {
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: #F8FAFC;
+    border-color: #CBD5E1;
 }
 
 /* 分隔线 */

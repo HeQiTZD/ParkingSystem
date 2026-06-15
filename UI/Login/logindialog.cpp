@@ -81,10 +81,11 @@ void LoginDialog::setupWindowFlags()
 
 void LoginDialog::setupShadow()
 {
+    // 主容器阴影
     QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect(this);
-    shadow->setBlurRadius(20);
-    shadow->setColor(QColor(0, 0, 0, 80));
-    shadow->setOffset(0, 0);
+    shadow->setBlurRadius(25);
+    shadow->setColor(QColor(0, 0, 0, 60));
+    shadow->setOffset(0, 5);
     ui->mainContainer->setGraphicsEffect(shadow);
 }
 
