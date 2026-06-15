@@ -225,7 +225,9 @@ void LoginDialog::drawLoginPanel(QPainter &painter, const QRect &rect)
 
     // 绘制"用户登录"标题
     painter.setPen(QColor("#003FB1"));
-    painter.setFont(QFont("STLiti", "华文隶书", 32, QFont::Normal));
+    QFont titleFont("STLiti", 32, QFont::Normal);
+    titleFont.setStyleName("华文隶书");
+    painter.setFont(titleFont);
     painter.drawText(titleArea, Qt::AlignLeft | Qt::AlignBottom, "用户登录");
 
     // 3. 绘制副标题
