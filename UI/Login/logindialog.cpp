@@ -3,6 +3,7 @@
 #include <QResizeEvent>
 #include <QPixmap>
 #include <QPainter>
+#include <QPainterPath>
 #include <QPalette>
 #include <QFile>
 #include <QDebug>
@@ -52,7 +53,7 @@ void LoginDialog::resizeEvent(QResizeEvent *event)
 void LoginDialog::updateBrandPanelBackground()
 {
     ui->brandPanel->setAutoFillBackground(false);
-    ui->brandPanel->setStyleSheet("background-image: url(:/new/prefix1/brandImage); background-position: center; background-repeat: no-repeat; background-color: #1e3a5f;");
+    ui->brandPanel->setStyleSheet("background-image: url(:/icons/login-brand-image-old); background-position: center; background-repeat: no-repeat; background-color: #1e3a5f;");
 }
 
 void LoginDialog::setupWindowFlags()

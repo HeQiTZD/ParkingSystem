@@ -6,7 +6,6 @@
 #include <QPixmap>
 #include <QIcon>
 #include <QPainter>
-#include <QPainterPath>
 
 namespace Ui {
 class LoginDialog;
@@ -51,6 +50,7 @@ private:
     void setupWindowFlags();
     void setupShadow();
     void setupTitleBar();
+    void updateBrandPanelBackground();
     void loadResources();
     void drawBrandPanel(QPainter &painter, const QRect &rect);
     void drawLoginPanel(QPainter &painter, const QRect &rect);
