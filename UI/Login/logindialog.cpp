@@ -129,6 +129,33 @@ void LoginDialog::on_btnClose_clicked()
     close();
 }
 
+// 空的存根实现 - 将在后续任务中实现
+void LoginDialog::paintEvent(QPaintEvent *event)
+{
+    Q_UNUSED(event);
+    // TODO: 在Task 6中实现自定义绘制
+}
+
+void LoginDialog::mousePressEvent(QMouseEvent *event)
+{
+    Q_UNUSED(event);
+    // TODO: 在Task 6中实现鼠标按下事件处理
+}
+
+void LoginDialog::drawBrandPanel(QPainter &painter, const QRect &rect)
+{
+    Q_UNUSED(painter);
+    Q_UNUSED(rect);
+    // TODO: 在Task 4中实现品牌区绘制
+}
+
+void LoginDialog::drawLoginPanel(QPainter &painter, const QRect &rect)
+{
+    Q_UNUSED(painter);
+    Q_UNUSED(rect);
+    // TODO: 在Task 5中实现登录面板绘制
+}
+
 void LoginDialog::loadResources()
 {
     // 加载品牌背景图片
