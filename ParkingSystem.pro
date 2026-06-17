@@ -40,6 +40,7 @@ SOURCES += \
     # ==================== 核心业务模块 ====================
     UI/HomePage/homepage.cpp \
     UI/Login/logindialog.cpp \
+    UI/Login/usernameedit.cpp \
     UI/MainWindow/mainwindow.cpp \
     UI/ManagePage/managepage.cpp \
     UI/Register/registerdialog.cpp \
@@ -81,6 +82,7 @@ HEADERS += \
     # ==================== 核心业务模块 ====================
     UI/HomePage/homepage.h \
     UI/Login/logindialog.h \
+    UI/Login/usernameedit.h \
     UI/MainWindow/mainwindow.h \
     UI/ManagePage/managepage.h \
     UI/Register/registerdialog.h \
@@ -134,7 +136,8 @@ HEADERS += \
 INCLUDEPATH += C:\OpenCV-MinGW-Build-OpenCV-3.4.8-x64\include \
                C:\OpenCV-MinGW-Build-OpenCV-3.4.8-x64\include\opencv2 \
                C:\OpenCV-MinGW-Build-OpenCV-3.4.8-x64\include\opencv \
-               UI
+               UI\
+               UI\Login
 
 LIBS += -L C:\OpenCV-MinGW-Build-OpenCV-3.4.8-x64\x64\mingw\lib\libopencv_*.a
 

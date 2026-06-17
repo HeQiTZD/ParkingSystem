@@ -7,66 +7,217 @@
 }
 
 /* -------------------- 标签样式 -------------------- */
+/* 主标题 - 20pt 蓝色粗体 */
 #LoginDialog #titleLabel {
-    color: #0000FF;
-    font-weight :bold;
+    color: #1E90FF;
+    font-size: 20pt;
+    font-weight: bold;
 }
 
+/* 副标题 - 12pt 次要灰色 */
 #LoginDialog #subtitleLabel {
-    color: #000000;
+    color: #666666;
+    font-size: 12pt;
 }
 
+/* 表单标签 - 11pt 深灰 */
 #LoginDialog #usernameLabel,
 #LoginDialog #passwordLabel {
-    color: #000000;
+    color: #333333;
+    font-size: 11pt;
 }
 
+/* 忘记密码 - 蓝色链接风格 */
 #LoginDialog #forgotPasswordLabel {
-    color: #000000;
+    color: #1E90FF;
+    cursor: pointer;
 }
 
 #LoginDialog #orSeparatorLabel {
-    color: #000000;
+    color: #757575;
 }
 
 #LoginDialog #copyrightLabel {
-    color: #000000;
+    color: #999999;
 }
 
 #LoginDialog #termsLabel {
-    color: #000000;
+    color: #1E90FF;
 }
 
 #LoginDialog #privacyLabel{
-    color: #000000;
+    color: #1E90FF;
 }
 
 /* -------------------- 复选框 -------------------- */
-#LoginDialog #rememberMeCheckBox{
+#LoginDialog #rememberMeCheckBox {
     color: #000000;
+    spacing: 8px; /* 文字与复选框的间距 */
 }
 
-/* --------------------  ---输入框----------------- */
-#LoginDialog #usernameEdit,
+/* 复选框指示器基础样式 */
+#LoginDialog #rememberMeCheckBox::indicator {
+    width: 15px;
+    height: 15px;
+    border: 2px solid #D3D3D3;
+    border-radius: 4px;
+    background-color: #ffffff;
+}
+
+/* 未选中状态 */
+#LoginDialog #rememberMeCheckBox::indicator:unchecked {
+    border-color: #D3D3D3;
+    background-color: #ffffff;
+}
+
+/* 悬停状态 - 与输入框悬停效果一致 */
+#LoginDialog #rememberMeCheckBox::indicator:unchecked:hover {
+    border-color: #1E90FF;
+    background-color: #f0f8ff;
+}
+
+/* 按下状态 */
+#LoginDialog #rememberMeCheckBox::indicator:unchecked:pressed {
+    border-color: #1E90FF;
+    background-color: #e6f3ff;
+}
+
+/* 选中状态 - 使用登录按钮的蓝色 */
+#LoginDialog #rememberMeCheckBox::indicator:checked {
+    border-color: #1E90FF;
+    background-color: #1E90FF;
+    image: url(:/icons/checked);
+}
+
+/* 选中悬停状态 */
+#LoginDialog #rememberMeCheckBox::indicator:checked:hover {
+    border-color: #1E90FF;
+    background-color: #1E90FF;
+}
+
+/* 选中按下状态 */
+#LoginDialog #rememberMeCheckBox::indicator:checked:pressed {
+    border-color: #166fcc;
+    background-color: #166fcc;
+}
+
+/* 禁用状态 */
+#LoginDialog #rememberMeCheckBox::indicator:disabled {
+    border-color: #e0e0e0;
+    background-color: #f5f5f5;
+}
+
+/* 禁用选中状态 */
+#LoginDialog #rememberMeCheckBox::indicator:checked:disabled {
+    border-color: #a0a0a0;
+    background-color: #a0a0a0;
+}
+
+/* -------------------- 输入框 -------------------- */
 #LoginDialog #passwordEdit {
     color: #000000;
     background-color: #D3D3D3;
+    border: 2px solid #D3D3D3;
     border-radius: 10px;
+    padding: 8px 12px;
 }
 
-/* -------------------- 按钮 -------------------- */
-#LoginDialog #loginButton{
-    color: #000000;
-    background-color :#1E90FF;
+/* 悬停状态 */
+#LoginDialog #passwordEdit:hover {
+    border-color: #a0a0a0;
 }
 
-#LoginDialog #registerButton{
-    color: #000000;
-    background-color :#A9A9A9;
+/* 焦点状态 - 蓝色边框 + 浅蓝背景 */
+#LoginDialog #passwordEdit:focus {
+    border-color: #1E90FF;
+}
+
+/* 禁用状态 */
+#LoginDialog #passwordEdit:disabled {
+    color: #a0a0a0;
+    background-color: #e8e8e8;
+    border-color: #e0e0e0;
+}
+
+/* -------------------- 窗口控制按钮 -------------------- */
+#LoginDialog #minimizeButton {
+    background-color: transparent;
+    border: none;
+    qproperty-icon: url(:/icons/minied);
+    padding: 0px;
+}
+
+#LoginDialog #minimizeButton:hover {
+    background-color: #e0e0e0;
+}
+
+#LoginDialog #minimizeButton:pressed {
+    background-color: #c0c0c0;
+}
+
+/* -------------------- 窗口关闭按钮 -------------------- */
+#LoginDialog #closeButton {
+    background-color: transparent;
+    border: none;
+    qproperty-icon: url(:/icons/close);
+}
+
+#LoginDialog #closeButton:hover {
+    background-color: #f22828;
+}
+
+#LoginDialog #closeButton:pressed {
+    background-color: #f35c5c;
+}
+
+/* -------------------- 登录按钮 -------------------- */
+#LoginDialog #loginButton {
+    color: #ffffff;
+    background-color: #1E90FF;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+}
+
+#LoginDialog #loginButton:hover {
+    background-color: #1a7ee6;
+}
+
+#LoginDialog #loginButton:pressed {
+    background-color: #166fcc;
+}
+
+#LoginDialog #loginButton:disabled {
+    background-color: #a0a0a0;
+    color: #e0e0e0;
+}
+
+/* -------------------- 注册按钮 -------------------- */
+#LoginDialog #registerButton {
+    color: #ffffff;
+    background-color: #A9A9A9;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+}
+
+#LoginDialog #registerButton:hover {
+    background-color: #999999;
+}
+
+#LoginDialog #registerButton:pressed {
+    background-color: #888888;
+}
+
+#LoginDialog #registerButton:disabled {
+    background-color: #c0c0c0;
+    color: #e0e0e0;
 }
 
 /* -------------------- 分割线 -------------------- */
 #LoginDialog #Line_left,
 #LoginDialog #Line_rigth {
-    color: #000000;
+    background-color: #D3D3D3;
+    border: none;
+    max-height: 1px;
 }

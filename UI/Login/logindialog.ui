@@ -44,7 +44,7 @@
    <item row="0" column="0">
     <widget class="QWidget" name="brandImageWidget" native="true">
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/icons/login-brand-image-old);</string>
+      <string notr="true"/>
      </property>
     </widget>
    </item>
@@ -100,8 +100,8 @@
           </property>
           <property name="sizeHint" stdset="0">
            <size>
-            <width>20</width>
-            <height>16</height>
+            <width>16</width>
+            <height>20</height>
            </size>
           </property>
          </spacer>
@@ -121,7 +121,7 @@
            </size>
           </property>
           <property name="text">
-           <string>最小化</string>
+           <string/>
           </property>
          </widget>
         </item>
@@ -140,7 +140,7 @@
            </size>
           </property>
           <property name="text">
-           <string>退出</string>
+           <string/>
           </property>
          </widget>
         </item>
@@ -153,8 +153,8 @@
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>20</width>
-          <height>48</height>
+          <width>48</width>
+          <height>20</height>
          </size>
         </property>
        </spacer>
@@ -343,8 +343,8 @@
             </property>
             <property name="sizeHint" stdset="0">
              <size>
-              <width>20</width>
-              <height>40</height>
+              <width>40</width>
+              <height>20</height>
              </size>
             </property>
            </spacer>
@@ -380,7 +380,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="usernameEdit">
+           <widget class="UsernameEdit" name="usernameEdit">
             <property name="minimumSize">
              <size>
               <width>411</width>
@@ -493,8 +493,8 @@
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>20</width>
-          <height>49</height>
+          <width>49</width>
+          <height>20</height>
          </size>
         </property>
        </spacer>
@@ -562,6 +562,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>UsernameEdit</class>
+   <extends>QLineEdit</extends>
+   <header location="global">usernameedit.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
