@@ -1,1 +1,72 @@
-/* LoginDialog QSS 样式 - 已清空 */
+/* ==================== LoginDialog 样式 ==================== */
+/* 作用域限制：仅影响 LoginDialog (#ConfigInitDialog) */
+
+/* 对话框容器 */
+#LoginDialog {
+    background-color: #ffffff;
+}
+
+/* -------------------- 标签样式 -------------------- */
+#LoginDialog #titleLabel {
+    color: #0000FF;
+    font-weight :bold;
+}
+
+#LoginDialog #subtitleLabel {
+    color: #000000;
+}
+
+#LoginDialog #usernameLabel,
+#LoginDialog #passwordLabel {
+    color: #000000;
+}
+
+#LoginDialog #forgotPasswordLabel {
+    color: #000000;
+}
+
+#LoginDialog #orSeparatorLabel {
+    color: #000000;
+}
+
+#LoginDialog #copyrightLabel {
+    color: #000000;
+}
+
+#LoginDialog #termsLabel {
+    color: #000000;
+}
+
+#LoginDialog #privacyLabel{
+    color: #000000;
+}
+
+/* -------------------- 复选框 -------------------- */
+#LoginDialog #rememberMeCheckBox{
+    color: #000000;
+}
+
+/* --------------------  ---输入框----------------- */
+#LoginDialog #usernameEdit,
+#LoginDialog #passwordEdit {
+    color: #000000;
+    background-color: #D3D3D3;
+    border-radius: 10px;
+}
+
+/* -------------------- 按钮 -------------------- */
+#LoginDialog #loginButton{
+    color: #000000;
+    background-color :#1E90FF;
+}
+
+#LoginDialog #registerButton{
+    color: #000000;
+    background-color :#A9A9A9;
+}
+
+/* -------------------- 分割线 -------------------- */
+#LoginDialog #Line_left,
+#LoginDialog #Line_rigth {
+    color: #000000;
+}
