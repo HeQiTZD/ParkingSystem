@@ -113,32 +113,6 @@
     background-color: #a0a0a0;
 }
 
-/* -------------------- 输入框 -------------------- */
-#LoginDialog #passwordEdit {
-    color: #000000;
-    background-color: #D3D3D3;
-    border: 2px solid #D3D3D3;
-    border-radius: 10px;
-    padding: 8px 12px;
-}
-
-/* 悬停状态 */
-#LoginDialog #passwordEdit:hover {
-    border-color: #a0a0a0;
-}
-
-/* 焦点状态 - 蓝色边框 + 浅蓝背景 */
-#LoginDialog #passwordEdit:focus {
-    border-color: #1E90FF;
-}
-
-/* 禁用状态 */
-#LoginDialog #passwordEdit:disabled {
-    color: #a0a0a0;
-    background-color: #e8e8e8;
-    border-color: #e0e0e0;
-}
-
 /* -------------------- 窗口控制按钮 -------------------- */
 #LoginDialog #minimizeButton {
     background-color: transparent;

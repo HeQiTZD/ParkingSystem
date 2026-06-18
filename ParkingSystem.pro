@@ -40,6 +40,7 @@ SOURCES += \
     # ==================== 核心业务模块 ====================
     UI/HomePage/homepage.cpp \
     UI/Login/logindialog.cpp \
+    UI/Login/passwordedit.cpp \
     UI/Login/usernameedit.cpp \
     UI/MainWindow/mainwindow.cpp \
     UI/ManagePage/managepage.cpp \
@@ -82,6 +83,7 @@ HEADERS += \
     # ==================== 核心业务模块 ====================
     UI/HomePage/homepage.h \
     UI/Login/logindialog.h \
+    UI/Login/passwordedit.h \
     UI/Login/usernameedit.h \
     UI/MainWindow/mainwindow.h \
     UI/ManagePage/managepage.h \

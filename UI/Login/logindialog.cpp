@@ -1,6 +1,7 @@
 ﻿#include "logindialog.h"
 #include "ui_logindialog.h"
 #include "usernameedit.h"
+#include "passwordedit.h"
 
 #include <QFile>
 #include <QMouseEvent>

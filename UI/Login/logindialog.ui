@@ -435,7 +435,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="passwordEdit">
+           <widget class="PasswordEdit" name="passwordEdit">
             <property name="minimumSize">
              <size>
               <width>411</width>
@@ -567,6 +567,11 @@
    <class>UsernameEdit</class>
    <extends>QLineEdit</extends>
    <header location="global">usernameedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>PasswordEdit</class>
+   <extends>QLineEdit</extends>
+   <header location="global">passwordedit.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
