@@ -7,10 +7,12 @@
 #include <QMouseEvent>
 #include <QPainter>
 #include <QPainterPath>
-
-LoginDialog::LoginDialog(QWidget *parent)
+#include <QDebug>
+#include <QMessageBox>
+LoginDialog::LoginDialog(QWidget *parent, DatabaseManager *m_db)
     : QDialog(parent)
     , ui(new Ui::LoginDialog)
+    , m_dbManager(m_db)
 {
     ui->setupUi(this);
     setWindowFlag(Qt::FramelessWindowHint);
@@ -28,6 +30,8 @@ LoginDialog::LoginDialog(QWidget *parent)
         setStyleSheet(styleSheet);
         styleFile.close();
     }
+
+    connect(ui->loginButton,&QPushButton::clicked,this,&LoginDialog::onLoginButton);
 }
 
 LoginDialog::~LoginDialog()
@@ -43,6 +47,34 @@ void LoginDialog::on_closeButton_clicked()
 void LoginDialog::on_miniButton_clicked()
 {
     showMinimized();
+}
+
+void LoginDialog::onLoginButton()
+{
+    // 检查数据库管理器是否有效
+    if (!m_dbManager) {
+        QMessageBox::critical(this, "错误", "数据库未初始化！");
+        return;
+    }
+
+    QString username = ui->usernameEdit->text().trimmed();
+    QString password = ui->passwordEdit->text();
+
+    // 检查输入是否为空
+    if (username.isEmpty() || password.isEmpty()) {
+        QMessageBox::warning(this, "提示", "请输入用户名和密码！");
+        return;
+    }
+
+    // 验证用户
+    if (m_dbManager->validateUser(username, password, userRole)) {
+        qDebug() << "登录成功，角色:" << userRole;
+        accept(); // 关闭对话框，返回 QDialog::Accepted
+    } else {
+        QMessageBox::warning(this, "登录失败", "用户名或密码错误，请重试！");
+        ui->passwordEdit->clear();
+        ui->passwordEdit->setFocus();
+    }
 }
 
 void LoginDialog::mousePressEvent(QMouseEvent *event)
@@ -89,5 +121,5 @@ void LoginDialog::paintEvent(QPaintEvent *event)
     }
 
     // 绘制右侧白色背景 //fillRect - 用纯色填充指定矩形
-    painter.fillRect(ui->formPanelWidget->geometry(), QColor("#ffffff"));
+    painter.fillRect(ui->formPanelWidget->geometry(), QColor(0xffffff));
 }

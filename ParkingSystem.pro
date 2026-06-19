@@ -42,7 +42,7 @@ SOURCES += \
     UI/Login/logindialog.cpp \
     UI/Login/passwordedit.cpp \
     UI/Login/usernameedit.cpp \
-    UI/MainWindow/mainwindow.cpp \
+    UI/MainWindow/mainwindow.cpp\
     UI/ManagePage/managepage.cpp \
     UI/Register/registerdialog.cpp \
     UI/VehicleInfo/vehicleinfopage.cpp \
@@ -140,6 +140,7 @@ INCLUDEPATH += C:\OpenCV-MinGW-Build-OpenCV-3.4.8-x64\include \
                C:\OpenCV-MinGW-Build-OpenCV-3.4.8-x64\include\opencv \
                UI\
                UI\Login
+               .
 
 LIBS += -L C:\OpenCV-MinGW-Build-OpenCV-3.4.8-x64\x64\mingw\lib\libopencv_*.a
 
@@ -161,3 +162,7 @@ FORMS += \
 RESOURCES += \
     UI/imageQrc/image.qrc \
     styles/styles.qrc
+
+DISTFILES += \
+    docs/Databast.md \
+    styles/main.qss

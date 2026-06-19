@@ -37,6 +37,10 @@ public:
     //用户注册
     bool registerUser(const QString &username, const QString &password, const QString &phone);
 
+    //数据库操作
+    bool updateParkingConfig(const QString &name, double price, int capacitiy);
+    
+
 signals:
     void connectionStatusChanged(bool connected);
 

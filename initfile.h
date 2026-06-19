@@ -61,6 +61,7 @@ signals:
     void configLoaded();//配置加载完成信号
     void configSaved();//配置保持完成信号
     void configError(const QString &errorMsg);//配置错误信号
+    void parkingConfigChanged(const QString &name, double price, int capacity);// 配置改变信号
 
 private:
     QJsonObject configData;//存储配置数据

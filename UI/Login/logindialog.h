@@ -2,6 +2,8 @@
 #define LOGINDIALOG_H
 
 #include <QDialog>
+
+#include "databasemanager.h"
 namespace Ui {
 class LoginDialog;
 }
@@ -11,12 +13,16 @@ class LoginDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit LoginDialog(QWidget *parent = nullptr);
+    explicit LoginDialog(QWidget *parent = nullptr, DatabaseManager* m_db = nullptr);
     ~LoginDialog();
+
+    // 获取登录成功后的用户角色
+    QString getUserRole() const { return userRole; }
 
 public slots:
     void on_closeButton_clicked();
     void on_miniButton_clicked();
+    void onLoginButton();
     
 protected:
     void mousePressEvent(QMouseEvent *event) override;
@@ -30,6 +36,9 @@ private:
     QPoint m_dragPos;
     bool m_dragging = false;
     QRect m_dragArea;
+
+    DatabaseManager *m_dbManager;
+    QString userRole;
 };
 
 #endif // LOGINDIALOG_H

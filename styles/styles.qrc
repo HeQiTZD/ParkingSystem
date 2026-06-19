@@ -2,5 +2,6 @@
     <qresource prefix="/styles">
         <file alias="config.qss">config.qss</file>
         <file alias="login.qss">login.qss</file>
+        <file alias="main.qss">main.qss</file>
     </qresource>
 </RCC>

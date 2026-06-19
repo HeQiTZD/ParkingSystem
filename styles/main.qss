@@ -1,0 +1,7 @@
+/* ==================== LoginDialog 样式 ==================== */
+/* 作用域限制：仅影响 MainWindow */
+
+/* 对话框容器 */
+#MainWindow {
+    background-color: #ffffff;
+}

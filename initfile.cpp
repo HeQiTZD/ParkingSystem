@@ -1,6 +1,5 @@
 ﻿#include "initfile.h"
 
-
 InitFile::InitFile(QObject *parent) : QObject(parent) {
     //设置文件路径
     configFilePath = getConfigFilePath();
@@ -167,6 +166,10 @@ void InitFile::setParkingConfig(const QString &name, double price, int capacity)
     parkingConfig["capacity"] = capacity;
 
     configData["parking"] = parkingConfig;
+
+    // 发射信号，通知停车场配置变更
+    emit parkingConfigChanged(name, price, capacity);
+
     qDebug() << QStringLiteral("停车场配置已更新");
 }
 
