@@ -6,9 +6,12 @@
 #include <QButtonGroup>
 #include <QDateTime>
 
+#ifdef Q_OS_WIN
 #include <windows.h>
 #include <windowsx.h>
+#endif
 
+#ifdef Q_OS_WIN
 /**
  * @brief 根据鼠标在窗口中的位置，返回 Windows 命中区域值
  * @param pos   鼠标在窗口本地坐标系中的位置
@@ -50,6 +53,7 @@ static int getHitArea(const QPoint &pos, const QRect &rect,
     // 其他区域
     return HTCLIENT;
 }
+#endif
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -202,7 +206,6 @@ bool MainWindow::nativeEvent(const QByteArray &eventType, void *message, qintptr
             ui->closeButton
         };
         for (QWidget *btn : buttons) {
-            QRect btnRect = btn->geometry();
             // 将按钮坐标转换为相对于 centralwidget 的坐标
             QPoint btnGlobal = btn->mapTo(this, QPoint(0, 0));
             QRect btnRectInWindow(btnGlobal, btn->size());
