@@ -175,6 +175,7 @@ void MainWindow::updateTime()
 
 bool MainWindow::nativeEvent(const QByteArray &eventType, void *message, qintptr *result)
 {
+#ifdef Q_OS_WIN
     // 只处理 Windows 原生消息
     if (eventType != "windows_generic_MSG")
         return QMainWindow::nativeEvent(eventType, message, result);
@@ -227,4 +228,7 @@ bool MainWindow::nativeEvent(const QByteArray &eventType, void *message, qintptr
 
     *result = hitArea;
     return true;
+#else
+    return QMainWindow::nativeEvent(eventType, message, result);
+#endif
 }
