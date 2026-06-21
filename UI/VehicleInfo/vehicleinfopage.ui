@@ -6,9 +6,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1140</width>
-    <height>780</height>
+    <width>932</width>
+    <height>658</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>804</width>
+    <height>658</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>932</width>
+    <height>658</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>VehicleInfoPage</string>
@@ -31,9 +43,6 @@
    </property>
    <item>
     <widget class="QGroupBox" name="searchGroup">
-     <property name="title">
-      <string>查询条件</string>
-     </property>
      <property name="styleSheet">
       <string notr="true">QGroupBox {
     font-size: 14px;
@@ -48,6 +57,9 @@ QGroupBox::title {
     left: 15px;
     padding: 0 5px;
 }</string>
+     </property>
+     <property name="title">
+      <string>查询条件</string>
      </property>
      <layout class="QHBoxLayout" name="searchLayout">
       <property name="spacing">
@@ -74,9 +86,6 @@ QGroupBox::title {
       </item>
       <item>
        <widget class="QLineEdit" name="editPlate">
-        <property name="placeholderText">
-         <string>请输入车牌号</string>
-        </property>
         <property name="minimumSize">
          <size>
           <width>200</width>
@@ -93,6 +102,9 @@ QGroupBox::title {
 QLineEdit:focus {
     border-color: #3498db;
 }</string>
+        </property>
+        <property name="placeholderText">
+         <string>请输入车牌号</string>
         </property>
        </widget>
       </item>
@@ -190,7 +202,7 @@ QComboBox:focus {
       <item>
        <spacer name="searchSpacer">
         <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+         <enum>Qt::Orientation::Horizontal</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>
@@ -287,11 +299,11 @@ QHeaderView::section {
     font-size: 14px;
 }</string>
      </property>
-     <property name="selectionBehavior">
-      <enum>QAbstractItemView::SelectRows</enum>
-     </property>
      <property name="alternatingRowColors">
       <bool>true</bool>
+     </property>
+     <property name="selectionBehavior">
+      <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
      </property>
     </widget>
    </item>

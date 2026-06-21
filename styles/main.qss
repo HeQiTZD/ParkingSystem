@@ -1,7 +1,267 @@
-/* ==================== LoginDialog 样式 ==================== */
-/* 作用域限制：仅影响 MainWindow */
+/*==============================================
+  MainWindow 主页面样式表
+  功能模块:
+  1. 侧边栏容器
+  2. 用户信息区域
+  3. 导航栏按钮
+  4. 顶部栏
+  5. 窗口控制按钮
+  6. 摄像头区域
+  7. 车位统计区域
+  8. 搜索区域
+  9. 最新记录区域
+  10. 视频控制按钮
+  11. 底部信息区域
+==============================================*/
 
-/* 对话框容器 */
 #MainWindow {
     background-color: #ffffff;
+}
+
+/*------------------  1. 侧边栏容器  ------------------*/
+
+#MainWindow #sidebarWidget {
+    border-right: 1px solid #e0e0e0;
+}
+
+
+/*------------------  2. 用户信息区域  ------------------*/
+
+/* 用户头像 */
+#MainWindow #userAvatarLabel {
+    background-color: #3498db;
+    border-radius: 12px;
+    color: white;
+    padding: 5px;
+}
+
+/* 用户角色标签 */
+#MainWindow #userRoleLabel {
+    color: #000000;
+    font-weight: bold;
+}
+
+/* 在线状态标签 */
+#MainWindow #onlineStatusLabel {
+    color: #000000;
+}
+
+
+/*------------------  3. 导航栏按钮  ------------------*/
+
+/* 基础状态 */
+#MainWindow #dashboardButton,
+#MainWindow #vehicleInfoButton,
+#MainWindow #userManagementButton,
+#MainWindow #cameraManagementButton,
+#MainWindow #logoutButton {
+    background-color: transparent;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 16px;
+    color: #5f6368;
+    text-align: left;
+    font-size: 14px;
+}
+
+/* 悬浮状态 */
+#MainWindow #dashboardButton:hover,
+#MainWindow #vehicleInfoButton:hover,
+#MainWindow #userManagementButton:hover,
+#MainWindow #cameraManagementButton:hover,
+#MainWindow #logoutButton:hover {
+    background-color: #f1f3f4;
+    color: #202124;
+}
+
+/* 选中状态 */
+#MainWindow #dashboardButton:checked,
+#MainWindow #vehicleInfoButton:checked,
+#MainWindow #userManagementButton:checked,
+#MainWindow #cameraManagementButton:checked {
+    background-color: #e1e8fd;
+    color: #7d8395;
+}
+
+
+/*------------------  4. 顶部栏  ------------------*/
+
+/* 顶部栏容器 */
+#MainWindow #topBarWidget {
+    border-bottom: 1px solid #e0e0e0;
+}
+
+/* 时间标签 */
+#MainWindow #timeLabel {
+    color: #000000;
+}
+
+
+/*------------------  5. 窗口控制按钮  ------------------*/
+
+/* 基础状态 */
+#MainWindow #setButton,
+#MainWindow #minimizeButton,
+#MainWindow #maximizeButton,
+#MainWindow #closeButton {
+    background-color: transparent;
+    border: none;
+}
+
+/* 关闭按钮悬浮 */
+#MainWindow #closeButton:hover {
+    background-color: #f22828;
+}
+
+/* 关闭按钮按下 */
+#MainWindow #closeButton:pressed {
+    background-color: #f35c5c;
+}
+
+/* 其他窗口按钮悬浮 */
+#MainWindow #minimizeButton:hover,
+#MainWindow #maximizeButton:hover,
+#MainWindow #setButton:hover {
+    background-color: #e0e0e0;
+}
+
+/* 其他窗口按钮按下 */
+#MainWindow #minimizeButton:pressed,
+#MainWindow #maximizeButton:pressed,
+#MainWindow #setButton:pressed {
+    background-color: #c0c0c0;
+}
+
+
+/*------------------  6. 摄像头区域  ------------------*/
+
+/* 摄像头标题 */
+#MainWindow #cameraTitleLabel {
+    color: #000000;
+}
+
+/* 摄像头状态 */
+#MainWindow #cameraStatusLabel {
+    color: #000000;
+}
+
+
+/*------------------  7. 车位统计区域  ------------------*/
+
+/* 统计标题和标签 */
+#MainWindow #parkingStatsTitleLabel,
+#MainWindow #usedSpacesLabel,
+#MainWindow #remainingSpacesLabel,
+#MainWindow #totalSpacesLabel,
+#MainWindow #usedSpacesValueLabel,
+#MainWindow #remainingSpacesValueLabel,
+#MainWindow #totalSpacesValueLabel {
+    color: #000000;
+}
+
+
+/*------------------  8. 搜索区域  ------------------*/
+
+/* 搜索标签 */
+#MainWindow #entrySearchLabel,
+#MainWindow #exitSearchLabel {
+    color: #000000;
+}
+
+
+/*------------------  9. 最新记录区域  ------------------*/
+
+/* 记录标题 */
+#MainWindow #recentRecordsTitleLabel {
+    color: #000000;
+}
+
+
+/*------------------  10. 视频控制按钮  ------------------*/
+
+/* 基础状态 */
+#MainWindow #cameraCtrlBtn1,
+#MainWindow #cameraCtrlBtn2,
+#MainWindow #cameraCtrlBtn3,
+#MainWindow #cameraCtrlBtn4,
+#MainWindow #cameraCtrlBtn5 {
+    background-color: #dae2fd;
+    border: none;
+    border-radius: 4px;
+    padding: 4px;
+}
+
+/* 悬浮状态 */
+#MainWindow #cameraCtrlBtn1:hover,
+#MainWindow #cameraCtrlBtn2:hover,
+#MainWindow #cameraCtrlBtn3:hover,
+#MainWindow #cameraCtrlBtn4:hover,
+#MainWindow #cameraCtrlBtn5:hover {
+    background-color: #9bb0f4;
+    color: #003fb3;
+}
+
+
+/*------------------  11. 底部信息区域  ------------------*/
+
+/* 版权标签 */
+#MainWindow #appVersionLabel {
+    color: #8e9098;
+}
+
+/* 隐私政策、技术支持标签 */
+#MainWindow #sidebarInfoLeft,
+#MainWindow #sidebarInfoRight {
+    color: #4f4954;
+}
+
+#MainWindow #exitSearchButton,
+#MainWindow #entrySearchButton{
+    background-color: #003fb1;
+    color: #ffffff;
+}
+
+#MainWindow #exitPlateInput,
+#MainWindow #entryPlateInput{
+    border: 1px solid #e0e0e0;
+    background: transparent;
+    color: #000000;
+    font-weight: bold;
+}
+
+#MainWindow #entrySearchWidget,
+#MainWindow #exitSearchWidget {
+    border: 1px solid #e0e0e0;
+}
+
+#MainWindow #usedSpacesWidget {
+    border: 1px solid #e0e0e0;
+    background-color: #e0e0e0;
+}
+
+#MainWindow #remainingSpacesWidget {
+    border: 1px solid #e0e0e0;
+    background-color: #e0e0e0;
+
+}
+
+#MainWindow #totalSpacesWidget {
+    border: 1px solid #e0e0e0;
+    background-color: #e0e0e0;
+
+}
+
+
+#MainWindow #videoDurationlabel {
+    color: #000000;
+}
+
+
+#MainWindow #recentRecordsWidget {
+    border: 1px solid #e0e0e0;
+}
+
+#MainWindow #parkingStatsWidget {
+    border: 1px solid #e0e0e0;
+    border-top: none;
 }

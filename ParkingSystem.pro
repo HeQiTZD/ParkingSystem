@@ -1,20 +1,26 @@
 QT += widgets sql gui core uitools
 
-#多媒体模块
+# 多媒体模块（摄像头相关）
 QT += multimedia multimediawidgets
 
-#图表模块
+# 图表模块
 QT += charts
 
-#作用：指定生成的目标文件名（不含扩展名）。
-#结果：在 Windows 上生成 ParkingSystem.exe，在 Linux 上生成 ParkingSystem（可执行文件），或生成 libParkingSystem.so（如果是库）。
+# SVG模块（图标渲染）
+QT += svg
+
+# 作用：指定生成的目标文件名（不含扩展名）
+# 结果：在 Windows 上生成 ParkingSystem.exe，在 Linux 上生成 ParkingSystem
 TARGET = ParkingSystem
 
-#作用：启用 C++11 标准 支持。
-#效果：qmake 会根据编译器自动添加对应的编译选项（如 GCC/Clang 的 -std=c++11，MSVC 的 /std:c++11 等效项）。这是推荐的标准写法。
+# 作用：启用 C++11 标准，支持 auto、lambda 等特性
 CONFIG += c++11
 
-# ==================== 警告抑制 ====================
+# 源文件和翻译文件的编码格式（解决 qss 等资源文件中文乱码/解析失败）
+CODECFORTR = UTF-8
+CODECFORSRC = UTF-8
+
+# ==================== 编译警告抑制 ====================
 # 去除"未使用参数"警告（第三方库代码会触发）
 QMAKE_CXXFLAGS += -Wno-unused-parameter
 # 去除"未使用变量"警告
@@ -23,13 +29,13 @@ QMAKE_CXXFLAGS += -Wno-unused-variable
 QMAKE_CXXFLAGS_WARN_ON -= -Wunused-function
 QMAKE_CXXFLAGS += -Wno-unused-function
 
-# ==================== OpenMP 并行支持 ====================
+# ==================== OpenMP 并行加速 ====================
 # 用于图像处理加速（Sobel、形态学操作等）
 QMAKE_CXXFLAGS += -fopenmp
 QMAKE_LFLAGS += -fopenmp
 LIBS += -fopenmp
 
-# Windows系统库依赖
+# Windows 系统库依赖
 LIBS += -lmsvcrt -lole32 -luuid
 
 # You can make your code fail to compile if it uses deprecated APIs.
@@ -42,7 +48,8 @@ SOURCES += \
     UI/Login/logindialog.cpp \
     UI/Login/passwordedit.cpp \
     UI/Login/usernameedit.cpp \
-    UI/MainWindow/mainwindow.cpp\
+    UI/MainWindow/circleprogress.cpp \
+    UI/MainWindow/mainwindow.cpp \
     UI/ManagePage/managepage.cpp \
     UI/Register/registerdialog.cpp \
     UI/VehicleInfo/vehicleinfopage.cpp \
@@ -85,6 +92,7 @@ HEADERS += \
     UI/Login/logindialog.h \
     UI/Login/passwordedit.h \
     UI/Login/usernameedit.h \
+    UI/MainWindow/circleprogress.h \
     UI/MainWindow/mainwindow.h \
     UI/ManagePage/managepage.h \
     UI/Register/registerdialog.h \
@@ -129,17 +137,13 @@ HEADERS += \
     thirdparty/textDetect/erfilter.hpp \
     thirdparty/xmlParser/xmlParser.h
 
-# ==================== 资源文件 ====================
-# RESOURCES += \
-#     UI/resources/resources.qrc
-
 # ==================== OpenCV 库配置 ====================
-# 【重要】修改为本机的OpenCV安装路径
+# 【重要】修改为本机的 OpenCV 安装路径
 INCLUDEPATH += C:\OpenCV-MinGW-Build-OpenCV-3.4.8-x64\include \
                C:\OpenCV-MinGW-Build-OpenCV-3.4.8-x64\include\opencv2 \
                C:\OpenCV-MinGW-Build-OpenCV-3.4.8-x64\include\opencv \
-               UI\
-               UI\Login
+               UI\ \
+               UI\Login \
                .
 
 LIBS += -L C:\OpenCV-MinGW-Build-OpenCV-3.4.8-x64\x64\mingw\lib\libopencv_*.a
@@ -162,7 +166,3 @@ FORMS += \
 RESOURCES += \
     UI/imageQrc/image.qrc \
     styles/styles.qrc
-
-DISTFILES += \
-    docs/Databast.md \
-    styles/main.qss

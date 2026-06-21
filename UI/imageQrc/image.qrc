@@ -11,5 +11,21 @@
         <file>close.svg</file>
         <file>minied.svg</file>
         <file>account_circle.svg</file>
+        <file>home.svg</file>
+        <file>directions.svg</file>
+        <file>group.svg</file>
+        <file>videocam.svg</file>
+        <file>logout.svg</file>
+        <file>settings.svg</file>
+        <file>expand.svg</file>
+        <file>collapse.svg</file>
+        <file>photo_camera.svg</file>
+        <file>play_arrow.svg</file>
+        <file>pause.svg</file>
+        <file>replay_10.svg</file>
+        <file>forward_10.svg</file>
+        <file>upload.svg</file>
+        <file>login.svg</file>
+        <file>pie_chart.svg</file>
     </qresource>
 </RCC>
