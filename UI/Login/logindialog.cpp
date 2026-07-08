@@ -2,6 +2,8 @@
 #include "ui_logindialog.h"
 #include "usernameedit.h"
 #include "passwordedit.h"
+#include "UI/Register/registerdialog.h"
+#include "src/utils/utils.h"
 
 #include <QFile>
 #include <QMouseEvent>
@@ -32,6 +34,7 @@ LoginDialog::LoginDialog(QWidget *parent, DatabaseManager *m_db)
     }
 
     connect(ui->loginButton,&QPushButton::clicked,this,&LoginDialog::onLoginButton);
+    connect(ui->registerButton,&QPushButton::clicked,this,&LoginDialog::onRegisterButton);
 }
 
 LoginDialog::~LoginDialog()
@@ -58,7 +61,7 @@ void LoginDialog::onLoginButton()
     }
 
     QString username = ui->usernameEdit->text().trimmed();
-    QString password = ui->passwordEdit->text();
+    QString password = encryptPassword(ui->passwordEdit->text());
 
     // 检查输入是否为空
     if (username.isEmpty() || password.isEmpty()) {
@@ -75,6 +78,12 @@ void LoginDialog::onLoginButton()
         ui->passwordEdit->clear();
         ui->passwordEdit->setFocus();
     }
+}
+
+void LoginDialog::onRegisterButton()
+{
+    RegisterDialog registerDialog(nullptr,m_dbManager);
+    registerDialog.exec();
 }
 
 void LoginDialog::mousePressEvent(QMouseEvent *event)

@@ -6,7 +6,7 @@
 
 ---
 
-## 1. USER 表（用户表）
+## 1. User 表（用户表）
 
 存储系统用户信息，支持管理员和普通用户角色。
 
@@ -25,7 +25,7 @@
 - `idx_username` - username 字段
 
 ```sql
-CREATE TABLE IF NOT EXISTS USER(
+CREATE TABLE IF NOT EXISTS User(
     id INT PRIMARY KEY AUTO_INCREMENT,
     username VARCHAR(50) UNIQUE NOT NULL COMMENT '用户名',
     password VARCHAR(64) NOT NULL COMMENT '密码(SHA256)',
@@ -176,7 +176,7 @@ DO DELETE FROM reservations WHERE TIMESTAMPDIFF(MINUTE, create_at, NOW()) > 30;
 
 ```
 ┌─────────────┐       ┌─────────────┐       ┌─────────────┐
-│    USER     │       │   PARKING   │       │     CAR     │
+│    User     │       │   PARKING   │       │     CAR     │
 ├─────────────┤       ├─────────────┤       ├─────────────┤
 │ id (PK)     │       │ P_id (PK)   │       │ id (PK)     │
 │ username    │       │ P_name (UQ) │◄──┐   │ license_plate│
@@ -204,7 +204,7 @@ DO DELETE FROM reservations WHERE TIMESTAMPDIFF(MINUTE, create_at, NOW()) > 30;
 
 | 操作 | 影响的表 | 说明 |
 |------|----------|------|
-| 用户注册 | USER | 插入新用户记录 |
+| 用户注册 | User | 插入新用户记录 |
 | 车辆入场 | CAR | 插入车辆记录，PARKING.P_now_count + 1 |
 | 车辆出场 | CAR | 更新出库时间和费用，PARKING.P_now_count - 1 |
 | 车辆预约 | RESERVATIONS | 插入预约记录，触发器自动更新 PARKING.P_reserve_count |

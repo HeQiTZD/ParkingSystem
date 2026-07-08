@@ -3,7 +3,7 @@
 
 #include <QDialog>
 
-#include "databasemanager.h"
+#include "src/database/databasemanager.h"
 namespace Ui {
 class LoginDialog;
 }
@@ -23,6 +23,7 @@ public slots:
     void on_closeButton_clicked();
     void on_miniButton_clicked();
     void onLoginButton();
+    void onRegisterButton();
     
 protected:
     void mousePressEvent(QMouseEvent *event) override;

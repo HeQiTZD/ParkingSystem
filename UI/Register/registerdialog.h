@@ -2,6 +2,7 @@
 #define REGISTERDIALOG_H
 
 #include <QDialog>
+#include "src/database/databasemanager.h"
 
 namespace Ui {
 class RegisterDialog;
@@ -12,7 +13,7 @@ class RegisterDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit RegisterDialog(QWidget *parent = nullptr);
+    explicit RegisterDialog(QWidget *parent = nullptr, DatabaseManager *db = nullptr);
     ~RegisterDialog();
 
 private slots:
@@ -22,6 +23,9 @@ private slots:
 private:
     Ui::RegisterDialog *ui;
     bool validateInputs();
+
+private:
+    DatabaseManager *m_db;
 };
 
 #endif // REGISTERDIALOG_H

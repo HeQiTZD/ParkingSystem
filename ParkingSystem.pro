@@ -55,14 +55,20 @@ SOURCES += \
     UI/VehicleInfo/vehicleinfopage.cpp \
     UI/CameraPage/camerapage.cpp \
     UI/ConfigInit/configinitdialog.cpp \
-    camerathread.cpp \
-    car.cpp \
-    initfile.cpp \
-    main.cpp \
-    mysqlinit.cpp \
-    platerecognize.cpp \
-    pthreadpool.cpp \
-    databasemanager.cpp \
+    # ==================== 应用程序核心代码 ====================
+    src/app/main.cpp \
+    src/app/car.cpp \
+    src/app/platerecognize.cpp \
+    # ==================== 数据库相关 ====================
+    src/database/databasemanager.cpp \
+    src/database/mysqlinit.cpp \
+    # ==================== 摄像头相关 ====================
+    src/camera/camerathread.cpp \
+    # ==================== 工具和基础设施 ====================
+    src/utils/initfile.cpp \
+    src/utils/pthreadpool.cpp \
+    src/utils/notificationdialog.cpp \
+    src/utils/toastwidget.cpp \
     # ==================== EasyPR 核心识别库（第三方库） ====================
     src/core/chars_identify.cpp \
     src/core/chars_recognise.cpp \
@@ -99,14 +105,21 @@ HEADERS += \
     UI/VehicleInfo/vehicleinfopage.h \
     UI/CameraPage/camerapage.h \
     UI/ConfigInit/configinitdialog.h \
-    camerathread.h \
-    car.h \
-    initfile.h \
-    mysqlinit.h \
-    platerecognize.h \
-    pthreadpool.h \
-    databasemanager.h \
-    utils.h \
+    # ==================== 应用程序核心代码 ====================
+    src/app/car.h \
+    src/app/platerecognize.h \
+    # ==================== 数据库相关 ====================
+    src/database/databasemanager.h \
+    src/database/mysqlinit.h \
+    # ==================== 摄像头相关 ====================
+    src/camera/camerathread.h \
+    # ==================== 工具和基础设施 ====================
+    src/utils/initfile.h \
+    src/utils/pthreadpool.h \
+    src/utils/utils.h \
+    src/utils/notificationdialog.h \
+    src/utils/toastwidget.h \
+    src/utils/notification_global.h \
     # ==================== EasyPR 核心头文件（第三方库） ====================
     include/easypr/core/character.hpp \
     include/easypr/core/chars_identify.h \
@@ -144,6 +157,7 @@ INCLUDEPATH += C:\OpenCV-MinGW-Build-OpenCV-3.4.8-x64\include \
                C:\OpenCV-MinGW-Build-OpenCV-3.4.8-x64\include\opencv \
                UI\ \
                UI\Login \
+               generated \
                .
 
 LIBS += -L C:\OpenCV-MinGW-Build-OpenCV-3.4.8-x64\x64\mingw\lib\libopencv_*.a
@@ -152,6 +166,10 @@ LIBS += -L C:\OpenCV-MinGW-Build-OpenCV-3.4.8-x64\x64\mingw\lib\libopencv_*.a
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+# ==================== UI 文件生成配置 ====================
+# 指定 uic 工具生成的 ui_*.h 文件输出目录
+UI_DIR = generated
 
 FORMS += \
     UI/HomePage/homepage.ui \
@@ -162,6 +180,20 @@ FORMS += \
     UI/VehicleInfo/vehicleinfopage.ui \
     UI/CameraPage/camerapage.ui \
     UI/ConfigInit/configinitdialog.ui
+
+# ==================== DLL 复制配置 ====================
+# 构建完成后将 OpenCV DLL 复制到可执行文件目录
+OPENCV_DLL_DIR = C:/OpenCV-MinGW-Build-OpenCV-3.4.8-x64/x64/mingw/bin
+
+# 根据构建模式选择目标目录（debug 或 release）
+CONFIG(debug, debug|release) {
+    DLL_TARGET_DIR = $$OUT_PWD/debug
+} else {
+    DLL_TARGET_DIR = $$OUT_PWD/release
+}
+
+# 复制 OpenCV DLL 文件到可执行文件所在目录
+QMAKE_POST_LINK += $$quote(copy /Y \"$$OPENCV_DLL_DIR\\*.dll\" \"$$DLL_TARGET_DIR\" $$escape_expand(\n\t))
 
 RESOURCES += \
     UI/imageQrc/image.qrc \

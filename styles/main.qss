@@ -1,31 +1,39 @@
 /*==============================================
   MainWindow 主页面样式表
+
   功能模块:
-  1. 侧边栏容器
-  2. 用户信息区域
-  3. 导航栏按钮
-  4. 顶部栏
-  5. 窗口控制按钮
-  6. 摄像头区域
-  7. 车位统计区域
-  8. 搜索区域
-  9. 最新记录区域
-  10. 视频控制按钮
-  11. 底部信息区域
+  1. 全局样式
+  2. 侧边栏容器
+  3. 用户信息区域
+  4. 导航栏按钮
+  5. 顶部栏
+  6. 窗口控制按钮
+  7. 摄像头区域
+  8. 车位统计区域
+  9. 搜索区域
+  10. 最新记录区域
+  11. 视频控制按钮
+  12. 底部信息区域
 ==============================================*/
 
+
+/*------------------  1. 全局样式  ------------------*/
+
+/* 主窗口背景 */
 #MainWindow {
     background-color: #ffffff;
 }
 
-/*------------------  1. 侧边栏容器  ------------------*/
 
+/*------------------  2. 侧边栏容器  ------------------*/
+
+/* 侧边栏边框 */
 #MainWindow #sidebarWidget {
     border-right: 1px solid #e0e0e0;
 }
 
 
-/*------------------  2. 用户信息区域  ------------------*/
+/*------------------  3. 用户信息区域  ------------------*/
 
 /* 用户头像 */
 #MainWindow #userAvatarLabel {
@@ -47,7 +55,7 @@
 }
 
 
-/*------------------  3. 导航栏按钮  ------------------*/
+/*------------------  4. 导航栏按钮  ------------------*/
 
 /* 基础状态 */
 #MainWindow #dashboardButton,
@@ -84,7 +92,7 @@
 }
 
 
-/*------------------  4. 顶部栏  ------------------*/
+/*------------------  5. 顶部栏  ------------------*/
 
 /* 顶部栏容器 */
 #MainWindow #topBarWidget {
@@ -97,7 +105,7 @@
 }
 
 
-/*------------------  5. 窗口控制按钮  ------------------*/
+/*------------------  6. 窗口控制按钮  ------------------*/
 
 /* 基础状态 */
 #MainWindow #setButton,
@@ -133,7 +141,7 @@
 }
 
 
-/*------------------  6. 摄像头区域  ------------------*/
+/*------------------  7. 摄像头区域  ------------------*/
 
 /* 摄像头标题 */
 #MainWindow #cameraTitleLabel {
@@ -146,21 +154,52 @@
 }
 
 
-/*------------------  7. 车位统计区域  ------------------*/
+/*------------------  8. 车位统计区域  ------------------*/
 
-/* 统计标题和标签 */
-#MainWindow #parkingStatsTitleLabel,
-#MainWindow #usedSpacesLabel,
-#MainWindow #remainingSpacesLabel,
-#MainWindow #totalSpacesLabel,
+/* 车位统计容器 */
+#MainWindow #parkingStatsWidget {
+    border: 1px solid #e0e0e0;
+    border-top: none;
+}
+
+/* 统计标题 */
+#MainWindow #parkingStatsTitleLabel {
+    color: #000000;
+}
+
+/* 统计数值标签 */
 #MainWindow #usedSpacesValueLabel,
 #MainWindow #remainingSpacesValueLabel,
 #MainWindow #totalSpacesValueLabel {
     color: #000000;
 }
 
+/* 已用车位容器 */
+#MainWindow #usedSpacesWidget {
+    border: 1px solid #e0e0e0;
+    background-color: #e0e0e0;
+}
 
-/*------------------  8. 搜索区域  ------------------*/
+/* 剩余车位容器 */
+#MainWindow #remainingSpacesWidget {
+    border: 1px solid #e0e0e0;
+    background-color: #e0e0e0;
+}
+
+/* 总车位容器 */
+#MainWindow #totalSpacesWidget {
+    border: 1px solid #e0e0e0;
+    background-color: #e0e0e0;
+}
+
+
+/*------------------  9. 搜索区域  ------------------*/
+
+/* 搜索容器 */
+#MainWindow #entrySearchWidget,
+#MainWindow #exitSearchWidget {
+    border: 1px solid #e0e0e0;
+}
 
 /* 搜索标签 */
 #MainWindow #entrySearchLabel,
@@ -168,8 +207,55 @@
     color: #000000;
 }
 
+/* 搜索输入框 */
+#MainWindow #entryPlateInput,
+#MainWindow #exitPlateInput {
+    border: 1px solid #e0e0e0;
+    background: transparent;
+    color: #000000;
+    font-weight: bold;
+}
 
-/*------------------  9. 最新记录区域  ------------------*/
+/* 搜索按钮 - 基础状态 */
+#MainWindow #entrySearchButton {
+    background-color: #003fb1;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+}
+
+#MainWindow #exitSearchButton {
+    background-color: #f50f0f;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+}
+
+/* 搜索按钮 - 悬浮状态 */
+#MainWindow #entrySearchButton:hover {
+    background-color: #0052cc;
+}
+
+#MainWindow #exitSearchButton:hover {
+    background-color: #ff2d2d;
+}
+
+/* 搜索按钮 - 按下状态 */
+#MainWindow #entrySearchButton:pressed {
+    background-color: #002d80;
+}
+
+#MainWindow #exitSearchButton:pressed {
+    background-color: #cc0000;
+}
+
+
+/*------------------  10. 最新记录区域  ------------------*/
+
+/* 最新记录容器 */
+#MainWindow #recentRecordsWidget {
+    border: 1px solid #e0e0e0;
+}
 
 /* 记录标题 */
 #MainWindow #recentRecordsTitleLabel {
@@ -177,7 +263,7 @@
 }
 
 
-/*------------------  10. 视频控制按钮  ------------------*/
+/*------------------  11. 视频控制按钮  ------------------*/
 
 /* 基础状态 */
 #MainWindow #cameraCtrlBtn1,
@@ -201,8 +287,13 @@
     color: #003fb3;
 }
 
+/* 视频时长标签 */
+#MainWindow #videoDurationlabel {
+    color: #000000;
+}
 
-/*------------------  11. 底部信息区域  ------------------*/
+
+/*------------------  12. 底部信息区域  ------------------*/
 
 /* 版权标签 */
 #MainWindow #appVersionLabel {
@@ -213,55 +304,4 @@
 #MainWindow #sidebarInfoLeft,
 #MainWindow #sidebarInfoRight {
     color: #4f4954;
-}
-
-#MainWindow #exitSearchButton,
-#MainWindow #entrySearchButton{
-    background-color: #003fb1;
-    color: #ffffff;
-}
-
-#MainWindow #exitPlateInput,
-#MainWindow #entryPlateInput{
-    border: 1px solid #e0e0e0;
-    background: transparent;
-    color: #000000;
-    font-weight: bold;
-}
-
-#MainWindow #entrySearchWidget,
-#MainWindow #exitSearchWidget {
-    border: 1px solid #e0e0e0;
-}
-
-#MainWindow #usedSpacesWidget {
-    border: 1px solid #e0e0e0;
-    background-color: #e0e0e0;
-}
-
-#MainWindow #remainingSpacesWidget {
-    border: 1px solid #e0e0e0;
-    background-color: #e0e0e0;
-
-}
-
-#MainWindow #totalSpacesWidget {
-    border: 1px solid #e0e0e0;
-    background-color: #e0e0e0;
-
-}
-
-
-#MainWindow #videoDurationlabel {
-    color: #000000;
-}
-
-
-#MainWindow #recentRecordsWidget {
-    border: 1px solid #e0e0e0;
-}
-
-#MainWindow #parkingStatsWidget {
-    border: 1px solid #e0e0e0;
-    border-top: none;
 }

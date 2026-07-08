@@ -5,55 +5,7 @@
 #include <QFile>
 #include <QButtonGroup>
 #include <QDateTime>
-
-#ifdef Q_OS_WIN
-#include <windows.h>
-#include <windowsx.h>
-#endif
-
-#ifdef Q_OS_WIN
-/**
- * @brief 根据鼠标在窗口中的位置，返回 Windows 命中区域值
- * @param pos   鼠标在窗口本地坐标系中的位置
- * @param rect  窗口矩形（0,0 为原点）
- * @param borderWidth  边缘拉伸感应宽度（像素）
- * @param titleBarHeight  标题栏高度（像素）
- * @return Windows HT* 命中区域值
- *
- * 优先级：角 > 边 > 标题栏 > 客户区
- */
-static int getHitArea(const QPoint &pos, const QRect &rect,
-                      int borderWidth, int titleBarHeight)
-{
-    int x = pos.x();
-    int y = pos.y();
-    int w = rect.width();
-    int h = rect.height();
-
-    bool onLeft   = (x >= 0 && x < borderWidth);
-    bool onRight  = (x >= w - borderWidth && x < w);
-    bool onTop    = (y >= 0 && y < borderWidth);
-    bool onBottom = (y >= h - borderWidth && y < h);
-
-    // 角部优先于边
-    if (onTop && onLeft)        return HTTOPLEFT;
-    if (onTop && onRight)       return HTTOPRIGHT;
-    if (onBottom && onLeft)     return HTBOTTOMLEFT;
-    if (onBottom && onRight)    return HTBOTTOMRIGHT;
-
-    // 边
-    if (onLeft)                 return HTLEFT;
-    if (onRight)                return HTRIGHT;
-    if (onTop)                  return HTTOP;
-    if (onBottom)               return HTBOTTOM;
-
-    // 标题栏区域（可拖动）
-    if (y >= 0 && y < titleBarHeight) return HTCAPTION;
-
-    // 其他区域
-    return HTCLIENT;
-}
-#endif
+#include <QMouseEvent>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -61,6 +13,10 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     setWindowFlag(Qt::FramelessWindowHint);
+    setMinimumSize(400, 300);
+    setMouseTracking(true);
+    if (centralWidget())
+        centralWidget()->setMouseTracking(true);
 
     QFile styleFile(":/styles/main.qss");
     if (styleFile.open(QFile::ReadOnly)) {
@@ -152,6 +108,11 @@ MainWindow::MainWindow(QWidget *parent)
     ui->entrySearchLabel->setText("<img src=':/icons/login.svg' width='16' height='16' style='vertical-align: middle;'/> <span style='font-size: 14px; vertical-align: middle;'>出库</span>");
     ui->exitSearchLabel->setText("<img src=':/icons/logout.svg' width='16' height='16' style='vertical-align: middle;'/> <span style='font-size: 14px; vertical-align: middle;'>入库</span>");
 
+    // 设置车位统计标签图标（使用富文本）
+    ui->usedSpacesLabel->setText("<span style='color:#4169E1;'>■</span> <span style='font-size: 14px; color: #333333;'>已用车位</span>");
+    ui->remainingSpacesLabel->setText("<span style='color:#9a9999;'>■</span> <span style='font-size: 14px; color: #333333;'>剩余车位</span>");
+    ui->totalSpacesLabel->setText("<img src=':/icons/directions.svg' width='14' height='14' style='vertical-align: middle;'/> <span style='font-size: 14px; color: #333333;'>总车位</span>");
+
     m_parkingChart = new CircleProgress(ui->parkingChartWidget);
 
     // 手动设置固定位置和大小（x, y, width, height）
@@ -159,11 +120,74 @@ MainWindow::MainWindow(QWidget *parent)
 
     m_parkingChart->setProgress(70);
     m_parkingChart->setUsedText("已用空间");
+
+    // 摄像头初始化
+    m_videoLabel = new QLabel(ui->cameraViewWidget);
+    m_videoLabel->setGeometry(ui->cameraViewWidget->rect());
+    m_videoLabel->setAlignment(Qt::AlignCenter);
+    m_videoLabel->setScaledContents(false);
+
+    m_cameraThread = new CameraThread(0, this);
+    connect(m_cameraThread,&CameraThread::newFrameCaptured,this,&MainWindow::updateFrame);
+    m_cameraThread->start();
+
+    ui->cameraViewWidget->installEventFilter(this);
+
+    connect(ui->closeButton,&QPushButton::clicked,this,&MainWindow::onCloseButton);
+    connect(ui->minimizeButton,&QPushButton::clicked,this,&MainWindow::onMinButton);
+    connect(ui->maximizeButton,&QPushButton::clicked,this,&MainWindow::onMaxButton);
+    connect(ui->setButton,&QPushButton::clicked,this,&MainWindow::onSetButton);
 }
 
 MainWindow::~MainWindow()
 {
+    if(m_cameraThread){
+        m_cameraThread->quit();
+        m_cameraThread->wait();
+    }
     delete ui;
+}
+
+void MainWindow::updateFrame(cv::Mat frame)
+{
+    if(frame.empty()) return;
+
+    // BGR->RGB
+    cv::cvtColor(frame, frame, cv::COLOR_BGR2RGB);
+    QImage img(frame.data, frame.cols, frame.rows, frame.step, QImage::Format_RGB888);
+
+    QPixmap pixmap = QPixmap::fromImage(img);
+    m_videoLabel->setPixmap(pixmap.scaled(
+        m_videoLabel->size(), 
+        Qt::KeepAspectRatio, 
+        Qt::SmoothTransformation));}
+
+void MainWindow::onCloseButton()
+{
+    close();
+}
+
+void MainWindow::onMinButton()
+{
+    showMinimized();
+}
+
+void MainWindow::onMaxButton()
+{
+    QSize windowBtnSize(16,16);
+    ui->maximizeButton->setIconSize(windowBtnSize);
+    if(isMaximized()){
+        showNormal();
+        ui->maximizeButton->setIcon(QIcon(":/icons/expand.svg"));
+    }else{
+        showMaximized();
+        ui->maximizeButton->setIcon(QIcon(":/icons/collapse.svg"));
+    }
+}
+
+void MainWindow::onSetButton()
+{
+    return;
 }
 
 void MainWindow::updateTime()
@@ -173,62 +197,145 @@ void MainWindow::updateTime()
     ui->timeLabel->setText(timeStr);
 }
 
-bool MainWindow::nativeEvent(const QByteArray &eventType, void *message, qintptr *result)
+bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 {
-#ifdef Q_OS_WIN
-    // 只处理 Windows 原生消息
-    if (eventType != "windows_generic_MSG")
-        return QMainWindow::nativeEvent(eventType, message, result);
-
-    MSG *msg = static_cast<MSG*>(message);
-    if (msg->message != WM_NCHITTEST)
-        return QMainWindow::nativeEvent(eventType, message, result);
-
-    // 获取鼠标全局坐标并转换为窗口本地坐标
-    QPoint globalPos(GET_X_LPARAM(msg->lParam), GET_Y_LPARAM(msg->lParam));
-    QPoint localPos = mapFromGlobal(globalPos);
-
-    // 窗口矩形（本地坐标系，原点为 0,0）
-    QRect rect(0, 0, width(), height());
-
-    // 标题栏高度：topBarWidget 的高度（31px，与 UI 文件一致）
-    int titleBarHeight = 31;
-
-    // 获取命中区域
-    int hitArea = getHitArea(localPos, rect, m_borderWidth, titleBarHeight);
-
-    // 如果命中标题栏，需要排除按钮区域
-    if (hitArea == HTCAPTION) {
-        // 检查鼠标是否在窗口控制按钮上
-        QWidget *buttons[] = {
-            ui->setButton,
-            ui->minimizeButton,
-            ui->maximizeButton,
-            ui->closeButton
-        };
-        for (QWidget *btn : buttons) {
-            // 将按钮坐标转换为相对于 centralwidget 的坐标
-            QPoint btnGlobal = btn->mapTo(this, QPoint(0, 0));
-            QRect btnRectInWindow(btnGlobal, btn->size());
-            if (btnRectInWindow.contains(localPos)) {
-                hitArea = HTCLIENT;
-                break;
-            }
-        }
+    if (obj == ui->cameraViewWidget && event->type() == QEvent::Resize) {
+        m_videoLabel->setGeometry(ui->cameraViewWidget->rect());
     }
 
-    // 最大化时禁用拉伸，只保留拖动（HTCAPTION）
-    if (isMaximized() && hitArea != HTCAPTION && hitArea != HTCLIENT) {
-        hitArea = HTCLIENT;
+    // 在所有子控件上检测鼠标移动，更新拉伸光标
+    if (event->type() == QEvent::MouseMove && m_mouseArea == NoArea) {
+        QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+        // 将子控件坐标转换为窗口坐标
+        QWidget *widget = qobject_cast<QWidget*>(obj);
+        QPoint windowPos = widget ? widget->mapTo(this, mouseEvent->pos()) : mouseEvent->pos();
+        MouseArea hover = getMouseArea(windowPos);
+        setCursorShape(hover);
     }
 
-    // 如果是客户区，交给 Qt 默认处理
-    if (hitArea == HTCLIENT)
-        return QMainWindow::nativeEvent(eventType, message, result);
+    return QMainWindow::eventFilter(obj, event);
+}
 
-    *result = hitArea;
-    return true;
-#else
-    return QMainWindow::nativeEvent(eventType, message, result);
-#endif
+MainWindow::MouseArea MainWindow::getMouseArea(const QPoint &pos) const
+{
+    int x = pos.x(), y = pos.y();
+    int w = width(), h = height();
+    bool top    = y < kResizeBorder;
+    bool bottom = y > h - kResizeBorder;
+    bool left   = x < kResizeBorder;
+    bool right  = x > w - kResizeBorder;
+
+    if (top && left)     return ResizeTopLeft;
+    if (top && right)    return ResizeTopRight;
+    if (bottom && left)  return ResizeBottomLeft;
+    if (bottom && right) return ResizeBottomRight;
+    if (top)    return ResizeTop;
+    if (bottom) return ResizeBottom;
+    if (left)   return ResizeLeft;
+    if (right)  return ResizeRight;
+    return NoArea;
+}
+
+void MainWindow::setCursorShape(MouseArea area)
+{
+    switch (area) {
+    case ResizeTop:
+    case ResizeBottom:
+        setCursor(Qt::SizeVerCursor); break;
+    case ResizeLeft:
+    case ResizeRight:
+        setCursor(Qt::SizeHorCursor); break;
+    case ResizeTopLeft:
+    case ResizeBottomRight:
+        setCursor(Qt::SizeFDiagCursor); break;
+    case ResizeTopRight:
+    case ResizeBottomLeft:
+        setCursor(Qt::SizeBDiagCursor); break;
+    default:
+        unsetCursor(); break;
+    }
+}
+
+void MainWindow::mousePressEvent(QMouseEvent *event)
+{
+    if (event->button() != Qt::LeftButton) return;
+
+    QPoint pos = event->position().toPoint();
+
+    m_mouseArea = getMouseArea(pos);
+
+    if (m_mouseArea == NoArea && pos.y() < m_dragBarHeight) {
+        m_mouseArea = DragArea;
+    }
+
+    if (m_mouseArea == DragArea && isMaximized()) {
+        onMaxButton();
+    }
+
+    if (m_mouseArea != NoArea) {
+        m_dragPos = event->globalPosition().toPoint();
+        m_resizeGeo = geometry();
+        event->accept();
+    }
+}
+
+void MainWindow::mouseMoveEvent(QMouseEvent *event)
+{
+    if (m_mouseArea == NoArea) {
+        QPoint pos = event->position().toPoint();
+        MouseArea hover = getMouseArea(pos);
+        setCursorShape(hover);
+        return;
+    }
+
+    QPoint current = event->globalPosition().toPoint();
+    QPoint delta = current - m_dragPos;
+
+    switch (m_mouseArea) {
+    case DragArea:
+        move(m_resizeGeo.topLeft() + delta);
+        break;
+    case ResizeTop:
+        setGeometry(m_resizeGeo.x(), m_resizeGeo.y() + delta.y(),
+                    m_resizeGeo.width(), m_resizeGeo.height() - delta.y());
+        break;
+    case ResizeBottom:
+        setGeometry(m_resizeGeo.x(), m_resizeGeo.y(),
+                    m_resizeGeo.width(), m_resizeGeo.height() + delta.y());
+        break;
+    case ResizeLeft:
+        setGeometry(m_resizeGeo.x() + delta.x(), m_resizeGeo.y(),
+                    m_resizeGeo.width() - delta.x(), m_resizeGeo.height());
+        break;
+    case ResizeRight:
+        setGeometry(m_resizeGeo.x(), m_resizeGeo.y(),
+                    m_resizeGeo.width() + delta.x(), m_resizeGeo.height());
+        break;
+    case ResizeTopLeft:
+        setGeometry(m_resizeGeo.x() + delta.x(), m_resizeGeo.y() + delta.y(),
+                    m_resizeGeo.width() - delta.x(), m_resizeGeo.height() - delta.y());
+        break;
+    case ResizeTopRight:
+        setGeometry(m_resizeGeo.x(), m_resizeGeo.y() + delta.y(),
+                    m_resizeGeo.width() + delta.x(), m_resizeGeo.height() - delta.y());
+        break;
+    case ResizeBottomLeft:
+        setGeometry(m_resizeGeo.x() + delta.x(), m_resizeGeo.y(),
+                    m_resizeGeo.width() - delta.x(), m_resizeGeo.height() + delta.y());
+        break;
+    case ResizeBottomRight:
+        setGeometry(m_resizeGeo.x(), m_resizeGeo.y(),
+                    m_resizeGeo.width() + delta.x(), m_resizeGeo.height() + delta.y());
+        break;
+    default:
+        break;
+    }
+    event->accept();
+}
+
+void MainWindow::mouseReleaseEvent(QMouseEvent *event)
+{
+    m_mouseArea = NoArea;
+    unsetCursor();
+    event->accept();
 }

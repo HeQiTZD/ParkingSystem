@@ -1,10 +1,12 @@
 #include "registerdialog.h"
 #include "ui_registerdialog.h"
+#include "src/utils/utils.h"
 #include <QMessageBox>
 
-RegisterDialog::RegisterDialog(QWidget *parent) :
+RegisterDialog::RegisterDialog(QWidget *parent, DatabaseManager *db) :
     QDialog(parent),
-    ui(new Ui::RegisterDialog)
+    ui(new Ui::RegisterDialog),
+    m_db(db)
 {
     ui->setupUi(this);
     setFixedSize(800, 500);
@@ -55,9 +57,13 @@ bool RegisterDialog::validateInputs()
 void RegisterDialog::on_btnRegister_clicked()
 {
     if (validateInputs()) {
-        // TODO: 实现注册逻辑
-        QMessageBox::information(this, "成功", "注册成功");
-        accept();
+        QString password = encryptPassword(ui->txtPassword->text());
+        if(m_db->registerUser(ui->txtUsername->text(),password,ui->txtName->text(),ui->txtPhone->text())){
+            QMessageBox::information(this, "成功", "注册成功");
+            accept();
+        }
+    }else{
+        QMessageBox::critical(this,"失败","注册失败");
     }
 }
 

@@ -1,6 +1,6 @@
 #include "configinitdialog.h"
 #include "ui_configinitdialog.h"
-#include "initfile.h"
+#include "src/utils/initfile.h"
 #include <QMessageBox>
 #include <QFile>
 #include <QGraphicsDropShadowEffect>

@@ -621,7 +621,7 @@
                       </size>
                      </property>
                      <property name="styleSheet">
-                      <string notr="true">background-color: rgb(170, 0, 0);</string>
+                      <string notr="true">background-color: rgb(0, 0, 0);</string>
                      </property>
                     </widget>
                    </item>
@@ -891,6 +891,12 @@
                     </item>
                     <item>
                      <widget class="QPushButton" name="entrySearchButton">
+                      <property name="minimumSize">
+                       <size>
+                        <width>0</width>
+                        <height>40</height>
+                       </size>
+                      </property>
                       <property name="text">
                        <string>确认入库</string>
                       </property>
@@ -950,6 +956,12 @@
                     </item>
                     <item>
                      <widget class="QPushButton" name="exitSearchButton">
+                      <property name="minimumSize">
+                       <size>
+                        <width>0</width>
+                        <height>40</height>
+                       </size>
+                      </property>
                       <property name="text">
                        <string>确认出库</string>
                       </property>
