@@ -41,6 +41,9 @@ private slots:
     void onMaxButton();
     void onSetButton();
 
+    // void onEntrySearchButton();
+    // void onExitSearchButton();
+
 private:
     MouseArea getMouseArea(const QPoint &pos) const;
     void setCursorShape(MouseArea area);

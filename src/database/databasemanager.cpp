@@ -1,5 +1,6 @@
 #include "databasemanager.h"
 #include "src/utils/utils.h"
+#include "src/utils/notification_global.h"
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QCoreAppLication>
@@ -69,10 +70,10 @@ QSqlQuery DatabaseManager::executeQuery(const QString &sql)
 
 bool DatabaseManager::validateUser(const QString &username, const QString &password, QString &userRole)
 {
-    if(!connected){
-        qDebug() << "数据库未连接！";
+    if(!isConnected()){
+        qDebug() << "数据库未连接";
         return false;
-    } 
+    }
 
     //使用预处理语句防止sql注入
     QSqlQuery query(db);
@@ -81,15 +82,17 @@ bool DatabaseManager::validateUser(const QString &username, const QString &passw
     query.bindValue(":password",password);
 
     if(!query.exec()){
-        qDebug() << "用户验证查询失败" << query.lastError().text();
+        qDebug() << "验证用户操作失败" << query.lastError().text();
         return false;
     }
 
     if(query.next()){
         userRole = query.value("role").toString();
         return true;
+    }else{
+        emit messageBox(MessageType::Type::Info, "用户名或密码错误!");
+        return false;
     }
-    return false;
 }
 
 bool DatabaseManager::isUsernameExists(const QString &username)
@@ -113,11 +116,6 @@ bool DatabaseManager::registerUser(const QString &username, const QString &passw
 {
     if(!connected){
         qDebug() << "数据库未连接！";
-        return false;
-    }
-
-    if(isUsernameExists(username)){
-        qDebug() << "用户名已被占用";
         return false;
     }
 

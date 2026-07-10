@@ -4,6 +4,7 @@
 #include "passwordedit.h"
 #include "UI/Register/registerdialog.h"
 #include "src/utils/utils.h"
+#include "src/utils/notification_global.h"
 
 #include <QFile>
 #include <QMouseEvent>
@@ -35,6 +36,7 @@ LoginDialog::LoginDialog(QWidget *parent, DatabaseManager *m_db)
 
     connect(ui->loginButton,&QPushButton::clicked,this,&LoginDialog::onLoginButton);
     connect(ui->registerButton,&QPushButton::clicked,this,&LoginDialog::onRegisterButton);
+    connect(m_dbManager, &DatabaseManager::messageBox, this, &LoginDialog::onMessageBox);
 }
 
 LoginDialog::~LoginDialog()
@@ -56,25 +58,24 @@ void LoginDialog::onLoginButton()
 {
     // 检查数据库管理器是否有效
     if (!m_dbManager) {
-        QMessageBox::critical(this, "错误", "数据库未初始化！");
+        qDebug() << "数据库未连接";
+        return;
+    }
+
+    // 检查输入是否为空
+    if (ui->usernameEdit->text().isEmpty() || ui->passwordEdit->text().isEmpty()) {
+        notifyInfo(this, QStringLiteral("请输入用户名和密码!"));
         return;
     }
 
     QString username = ui->usernameEdit->text().trimmed();
     QString password = encryptPassword(ui->passwordEdit->text());
 
-    // 检查输入是否为空
-    if (username.isEmpty() || password.isEmpty()) {
-        QMessageBox::warning(this, "提示", "请输入用户名和密码！");
-        return;
-    }
-
     // 验证用户
     if (m_dbManager->validateUser(username, password, userRole)) {
-        qDebug() << "登录成功，角色:" << userRole;
+        notifySuccess(this,"登录成功!");
         accept(); // 关闭对话框，返回 QDialog::Accepted
     } else {
-        QMessageBox::warning(this, "登录失败", "用户名或密码错误，请重试！");
         ui->passwordEdit->clear();
         ui->passwordEdit->setFocus();
     }
@@ -83,7 +84,32 @@ void LoginDialog::onLoginButton()
 void LoginDialog::onRegisterButton()
 {
     RegisterDialog registerDialog(nullptr,m_dbManager);
-    registerDialog.exec();
+    if(registerDialog.exec() == QDialog::Accepted){
+        ui->usernameEdit->setText(registerDialog.getUserName());
+        ui->passwordEdit->setText(registerDialog.getPassword());
+    }
+}
+
+void LoginDialog::onMessageBox(MessageType::Type type, const QString &msg, const QString &title)
+{
+    switch(type){
+        case MessageType::Type::Success : notifySuccess(this, msg);
+            break;
+        case MessageType::Type::Failure : notifyFailure(this, msg);
+            break;
+        case MessageType::Type::Info : notifyInfo(this, msg);
+            break;
+        case MessageType::Type::ToastWarning : notifyToastWarning(this, msg);
+            break;
+       case MessageType::Type::Warning : notifyWarning(this, title, msg);
+            break;
+       case MessageType::Type::Error : notifyError(this, title, msg);
+            break;
+       case MessageType::Type::Confirm : notifyConfirm(this, title, msg);
+            break;
+       default:
+            break;
+    }
 }
 
 void LoginDialog::mousePressEvent(QMouseEvent *event)

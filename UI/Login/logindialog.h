@@ -4,6 +4,7 @@
 #include <QDialog>
 
 #include "src/database/databasemanager.h"
+#include "src/utils/messageType.h"
 namespace Ui {
 class LoginDialog;
 }
@@ -24,6 +25,9 @@ public slots:
     void on_miniButton_clicked();
     void onLoginButton();
     void onRegisterButton();
+
+    // 错误消息接收槽函数
+    void onMessageBox(MessageType::Type type, const QString &msg, const QString &title = QString());
     
 protected:
     void mousePressEvent(QMouseEvent *event) override;

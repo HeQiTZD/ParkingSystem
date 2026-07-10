@@ -1,0 +1,30 @@
+{
+    "camera": {
+        "fps": 30,
+        "height": 1080,
+        "index": 0,
+        "width": 1920
+    },
+    "database": {
+        "host": "localhost",
+        "name": "car",
+        "password": "root",
+        "port": 3306,
+        "username": "root"
+    },
+    "parking": {
+        "capacity": 500,
+        "freeMinutes": 15,
+        "name": "停车chang1",
+        "price": 12
+    },
+    "recognition": {
+        "confidenceThreshold": 0.7,
+        "modelpath": "./model/"
+    },
+    "system": {
+        "appName": "停车场管理系统",
+        "language": "zh_CN",
+        "version": "1.0.0"
+    }
+}

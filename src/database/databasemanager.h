@@ -8,6 +8,7 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QDateTime>
+#include "src/utils/messageType.h"
 
 struct ParkingStats {
     int totalSpaces;      // 总车位数
@@ -74,6 +75,7 @@ public:
 
 signals:
     void connectionStatusChanged(bool connected);
+    void messageBox(MessageType::Type, const QString &msg, const QString &title = QString());
 
 private:
     QSqlDatabase db;

@@ -9,12 +9,11 @@ const QString Car::PLATE_LETTERS = "ABCDEFGHJKLMNPQRSTUVWXYZ";
 
 Car::Car() : m_id(0), m_fee(0.0) {}
 
-Car::Car(const QString &licensePlate, const QDateTime &checkInTime, const QString &location)
+Car::Car(const QString &licensePlate, const QDateTime &checkInTime)
     : m_id(0)
     , m_licensePlate(licensePlate)
     , m_checkInTime(checkInTime)
     , m_fee(0.0)
-    , m_location(location)
 {}
 
 Car::Car(const Car &other)
@@ -23,7 +22,6 @@ Car::Car(const Car &other)
     , m_checkInTime(other.m_checkInTime)
     , m_checkOutTime(other.m_checkOutTime)
     , m_fee(other.m_fee)
-    , m_location(other.m_location)
 {}
 
 Car &Car::operator=(const Car &other)
@@ -34,7 +32,6 @@ Car &Car::operator=(const Car &other)
         m_checkInTime = other.m_checkInTime;
         m_checkOutTime = other.m_checkOutTime;
         m_fee = other.m_fee;
-        m_location = other.m_location;
     }
     return *this;
 }
@@ -79,18 +76,17 @@ bool Car::isValidLicensePlate(const QString &plate)
     return regex.match(plate).hasMatch();
 }
 
-double Car::calculateFee(double hourlyRate) const
+double Car::calculateFee(double hourlyRate ,int freeMinutes) const
 {
-    double duration = getParkingDuration();
+    qint64 totalMinutes = m_checkInTime.secsTo(m_checkOutTime.isValid() ? m_checkOutTime : QDateTime::currentDateTime()) / 60;
 
-    //小于30分钟免费
-    if(duration < 0.5){
+    double billableMinutes = qMax(0LL, totalMinutes - freeMinutes);
+    if(billableMinutes <= 0.0){
         return 0.0;
     }
 
-    // 向上取整计算费用
-    int hours = static_cast<int>(duration) + (duration > static_cast<int>(duration) ? 1 : 0);
-    return hours * hourlyRate;
+    int halfHours = static_cast<int>(std::ceil(billableMinutes / 30.0));
+    return halfHours * hourlyRate / 2.0;
 }
 
 QVariantMap Car::toMap() const
@@ -101,7 +97,6 @@ QVariantMap Car::toMap() const
     map["check_in_time"] = m_checkInTime;
     map["check_out_time"] = m_checkOutTime;
     map["fee"] = m_fee;
-    map["location"] = m_location;
     return map;
 }
 
@@ -113,17 +108,15 @@ Car Car::fromMap(const QVariantMap &map)
     car.m_checkInTime = map["check_in_time"].toDateTime();
     car.m_checkOutTime = map["check_out_time"].toDateTime();
     car.m_fee = map["fee"].toDouble();
-    car.m_location = map["location"].toString();
     return car;
 }
 
 QString Car::toString() const
 {
-    return QString("Car[id=%1, plate=%2, in=%3, out=%4, fee=%5, location=%6]")
+    return QString("Car[id=%1, plate=%2, in=%3, out=%4, fee=%5]")
         .arg(m_id)
         .arg(m_licensePlate)
         .arg(m_checkInTime.toString("yyyy-MM-dd hh:mm:ss"))
         .arg(m_checkOutTime.isValid() ? m_checkOutTime.toString("yyyy-MM-dd hh:mm:ss") : "未出库")
-        .arg(m_fee, 0, 'f', 2)
-        .arg(m_location);
+        .arg(m_fee, 0, 'f', 2);
 }

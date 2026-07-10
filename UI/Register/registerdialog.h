@@ -16,6 +16,9 @@ public:
     explicit RegisterDialog(QWidget *parent = nullptr, DatabaseManager *db = nullptr);
     ~RegisterDialog();
 
+    QString getUserName() const;
+    QString getPassword() const;
+
 private slots:
     void on_btnRegister_clicked();
     void on_btnBack_clicked();

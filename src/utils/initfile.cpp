@@ -158,17 +158,24 @@ int InitFile::getParkingCapacity() const
     return configData["parking"].toObject()["capacity"].toInt();
 }
 
-void InitFile::setParkingConfig(const QString &name, double price, int capacity)
+int InitFile::getFreeMinutes() const
+{
+    // 兜底默认15分钟，兼容旧版config.json缺少该字段的情况
+    return configData["parking"].toObject()["freeMinutes"].toInt(15);
+}
+
+void InitFile::setParkingConfig(const QString &name, double price, int capacity, int freeMinutes)
 {
     QJsonObject parkingConfig;
     parkingConfig["name"] = name;
     parkingConfig["price"] = price;
     parkingConfig["capacity"] = capacity;
+    parkingConfig["freeMinutes"] = freeMinutes;
 
     configData["parking"] = parkingConfig;
 
     // 发射信号，通知停车场配置变更
-    emit parkingConfigChanged(name, price, capacity);
+    emit parkingConfigChanged(name, price, capacity, freeMinutes);
 
     qDebug() << QStringLiteral("停车场配置已更新");
 }
@@ -304,6 +311,7 @@ QJsonObject InitFile::getDefaultConfig() const
     parkingConfig["name"] = "";
     parkingConfig["price"] = 0.0;
     parkingConfig["capacity"] = 0;
+    parkingConfig["freeMinutes"] = 15;
     defaultConfig["parking"] = parkingConfig;
 
     //系统默认配置
@@ -348,7 +356,7 @@ bool InitFile::validateConfig(const QJsonObject &config) const
     //检查停车场配置
     QJsonObject parkingConfig = config["parking"].toObject();
     if(!parkingConfig.contains("name") || !parkingConfig.contains("price") ||
-       !parkingConfig.contains("capacity")){
+       !parkingConfig.contains("capacity") || !parkingConfig.contains("freeMinutes")){
         qDebug() << QStringLiteral("停车场配置不完整");
         return false;
     }

@@ -45,7 +45,8 @@ public:
     QString getParkingName() const;//获取停车场名称
     double getParkingPrice() const;//获取停车价格（每小时）
     int getParkingCapacity() const;//获取停车场容量
-    void setParkingConfig(const QString &name, double price, int capacity);
+    int getFreeMinutes() const;//获取免费停车时长(分钟)
+    void setParkingConfig(const QString &name, double price, int capacity, int freeMinutes = 15);
 
     //识别配置
     QString getModelPath() const;//获取当前使用的识别模型文件路径。
@@ -61,7 +62,7 @@ signals:
     void configLoaded();//配置加载完成信号
     void configSaved();//配置保持完成信号
     void configError(const QString &errorMsg);//配置错误信号
-    void parkingConfigChanged(const QString &name, double price, int capacity);// 配置改变信号
+    void parkingConfigChanged(const QString &name, double price, int capacity, int freeMinutes);// 配置改变信号
 
 private:
     QJsonObject configData;//存储配置数据

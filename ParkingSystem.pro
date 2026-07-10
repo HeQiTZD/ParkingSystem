@@ -44,16 +44,12 @@ LIBS += -lmsvcrt -lole32 -luuid
 
 SOURCES += \
     # ==================== 核心业务模块 ====================
-    UI/HomePage/homepage.cpp \
     UI/Login/logindialog.cpp \
     UI/Login/passwordedit.cpp \
     UI/Login/usernameedit.cpp \
     UI/MainWindow/circleprogress.cpp \
     UI/MainWindow/mainwindow.cpp \
-    UI/ManagePage/managepage.cpp \
     UI/Register/registerdialog.cpp \
-    UI/VehicleInfo/vehicleinfopage.cpp \
-    UI/CameraPage/camerapage.cpp \
     UI/ConfigInit/configinitdialog.cpp \
     # ==================== 应用程序核心代码 ====================
     src/app/main.cpp \
@@ -94,16 +90,12 @@ SOURCES += \
 
 HEADERS += \
     # ==================== 核心业务模块 ====================
-    UI/HomePage/homepage.h \
     UI/Login/logindialog.h \
     UI/Login/passwordedit.h \
     UI/Login/usernameedit.h \
     UI/MainWindow/circleprogress.h \
     UI/MainWindow/mainwindow.h \
-    UI/ManagePage/managepage.h \
     UI/Register/registerdialog.h \
-    UI/VehicleInfo/vehicleinfopage.h \
-    UI/CameraPage/camerapage.h \
     UI/ConfigInit/configinitdialog.h \
     # ==================== 应用程序核心代码 ====================
     src/app/car.h \
@@ -120,6 +112,7 @@ HEADERS += \
     src/utils/notificationdialog.h \
     src/utils/toastwidget.h \
     src/utils/notification_global.h \
+    src/utils/messageType.h \
     # ==================== EasyPR 核心头文件（第三方库） ====================
     include/easypr/core/character.hpp \
     include/easypr/core/chars_identify.h \
@@ -172,13 +165,9 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 UI_DIR = generated
 
 FORMS += \
-    UI/HomePage/homepage.ui \
     UI/Login/logindialog.ui \
     UI/MainWindow/mainwindow.ui \
-    UI/ManagePage/managepage.ui \
     UI/Register/registerdialog.ui \
-    UI/VehicleInfo/vehicleinfopage.ui \
-    UI/CameraPage/camerapage.ui \
     UI/ConfigInit/configinitdialog.ui
 
 # ==================== DLL 复制配置 ====================

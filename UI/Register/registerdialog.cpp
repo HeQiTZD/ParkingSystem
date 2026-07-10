@@ -1,7 +1,9 @@
 #include "registerdialog.h"
 #include "ui_registerdialog.h"
 #include "src/utils/utils.h"
+#include "src/utils/notification_global.h"
 #include <QMessageBox>
+#include <QRegularExpression>
 
 RegisterDialog::RegisterDialog(QWidget *parent, DatabaseManager *db) :
     QDialog(parent),
@@ -29,41 +31,69 @@ RegisterDialog::~RegisterDialog()
     delete ui;
 }
 
+QString RegisterDialog::getUserName() const
+{
+    return ui->txtUsername->text();
+}
+
+QString RegisterDialog::getPassword() const
+{
+    return ui->txtPassword->text();
+}
+
 bool RegisterDialog::validateInputs()
 {
     if (ui->txtUsername->text().isEmpty()) {
-        QMessageBox::warning(this, "警告", "请输入用户名");
+        notifyInfo(this,"请输入用户名");
         return false;
     }
     if (ui->txtPassword->text().isEmpty()) {
-        QMessageBox::warning(this, "警告", "请输入密码");
+        notifyInfo(this,"请输入密码");
         return false;
     }
     if (ui->txtPassword->text() != ui->txtConfirmPassword->text()) {
-        QMessageBox::warning(this, "警告", "两次输入的密码不一致");
+        notifyInfo(this,"两次输入的密码不一致");
         return false;
     }
     if (ui->txtName->text().isEmpty()) {
-        QMessageBox::warning(this, "警告", "请输入姓名");
+        notifyInfo(this,"请输入姓名");
         return false;
     }
     if (ui->txtPhone->text().isEmpty()) {
-        QMessageBox::warning(this, "警告", "请输入手机号");
+        notifyInfo(this,"请输入手机号");
         return false;
     }
+
+    if(ui->txtPassword->text().length() < 6){
+        notifyInfo(this,"密码长度不能小于6位");
+        ui->txtPassword->clear();
+        return false;
+    }
+
+    QRegularExpression phoneRegex("^1[3-9]\\d{9}$");
+    if(!phoneRegex.match(ui->txtPhone->text()).hasMatch()){
+        notifyInfo(this,"手机号格式错误,请输入正确的手机号");
+        return false;
+    }
+
     return true;
 }
 
 void RegisterDialog::on_btnRegister_clicked()
 {
-    if (validateInputs()) {
-        QString password = encryptPassword(ui->txtPassword->text());
-        if(m_db->registerUser(ui->txtUsername->text(),password,ui->txtName->text(),ui->txtPhone->text())){
-            QMessageBox::information(this, "成功", "注册成功");
-            accept();
-        }
+    if(!validateInputs()) return;
+
+    if(m_db->isUsernameExists(ui->txtUsername->text())){
+        notifyInfo(this, QStringLiteral("用户名已被占用"));
+        return;
+    }
+
+    QString password = encryptPassword(ui->txtPassword->text());
+    if(m_db->registerUser(ui->txtUsername->text(), password, ui->txtName->text(), ui->txtPhone->text())){
+        notifySuccess(this, QStringLiteral("注册成功"));
+        accept();
     }else{
-        QMessageBox::critical(this,"失败","注册失败");
+        notifyFailure(this, QStringLiteral("注册失败"));
     }
 }
 

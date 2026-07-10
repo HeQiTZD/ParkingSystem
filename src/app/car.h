@@ -29,9 +29,8 @@ public:
      * @brief 参数化构造函数
      * @param licensePlate 车牌号
      * @param checkInTime 入库时间
-     * @param location 停车位置
      */
-    Car(const QString &licensePlate, const QDateTime &checkInTime, const QString &location);
+    Car(const QString &licensePlate, const QDateTime &checkInTime);
 
     /**
      * @brief 拷贝构造函数
@@ -54,14 +53,12 @@ public:
     QDateTime getCheckInTime() const {return m_checkInTime;}
     QDateTime getCheckOutTime() const {return m_checkOutTime;}
     double getFee() const {return m_fee;}
-    QString getLocation() const;
 
     // ========== Setter方法 ==========
     void setLicensePlate(const QString &plate) {m_licensePlate = plate;}
     void setCheckInTime(const QDateTime &time) {m_checkInTime = time;}
     void setCheckOutTime(const QDateTime &time) {m_checkOutTime = time;}
     void setFee(double fee) {m_fee = fee;}
-    void setLocation(const QString &location) {m_location = location;}
 
     // ========== 业务方法 ==========
     /**
@@ -94,7 +91,7 @@ public:
      * @param hourlyRate 每小时费率
      * @return 费用
      */
-    double calculateFee(double hourlyRate) const;
+    double calculateFee(double hourlyRate, int freeMinutes = 15) const;
 
     /**
      * @brief 转换为QVariantMap（用于数据库操作）
@@ -117,7 +114,6 @@ private:
     QDateTime m_checkInTime;// 入库时间
     QDateTime m_checkOutTime;// 出库时间
     double m_fee;// 停车费用
-    QString m_location;// 停车位置
 
     /**
      * @brief 省份简称列表（用于车牌验证）

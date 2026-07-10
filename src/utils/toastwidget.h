@@ -7,6 +7,7 @@
 #include <QPropertyAnimation>
 #include <QQueue>
 #include <QTimer>
+#include <QGraphicsOpacityEffect>
 
 /**
  * @brief Toast 自动消失提示框
@@ -23,6 +24,7 @@
 class ToastWidget : public QWidget
 {
     Q_OBJECT
+    Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity)
 public:
     // 枚举四种提示类型
     enum ToastType { Success, Failure, Info, Warning };
@@ -42,19 +44,28 @@ protected:
 
 private:
     void buildUi(const QString &msg, ToastType type);
-    // 滑入动画
-    void slideIn();
-    // 滑出动画 + 完成回调
-    void slideOut(const std::function<void()> &onFinished);
+    void slideIn();// 从目标位置上方滑入 + 淡入
+    void slideOut(const std::function<void()> &onFinished);// 淡出 + 完成回调
+    void restackAll(); // 把全部活跃 Toast 重排到队列中的对应行(顶部 row=0 保持最新)
 
     /** Toast 实例化后调用，显示在 parent 右上角 */
     void showImmediatly(const QString &msg, ToastType type, int durationMs);
 
+    /** 根据队列索引计算 Toast 应处的绝对屏幕坐标 */
+    QPoint targetPosition(int row) const;
+
+    // opacity 属性读写
+    qreal opacity() const { return m_opacity; }
+    void setOpacity(qreal o);
+
     QLabel      *m_iconLabel;// 图标
     QLabel      *m_msgLabel;// 提示文字
     QPushButton *m_closeButton;// 右侧 X 关闭按钮
-    QPropertyAnimation *m_posAnim;// 位置动画
-    QPropertyAnimation *m_opaAnim;// 透明度动画(淡入淡出)
+    QPropertyAnimation *m_posAnim;// 位置动画（入场滑入 + 挤开旧 Toast）
+    QPropertyAnimation *m_opaAnim;// 透明度动画
+    QGraphicsOpacityEffect *m_opacityEffect; // 透明度效果器
+    qreal m_opacity = 0.0;   // 当前透明度（动画驱动）
+    QPoint  m_targetPos;     // 入场滑入的目标位置(绝对屏幕坐标)
 
     // ── 全局活跃队列 ─────────────────────────────────────
     /*
@@ -68,8 +79,10 @@ private:
     static constexpr int kSpacing     = 10;
     static constexpr int kMarginRight = 20;
     static constexpr int kMarginTop   = 60;   // 避开自定义标题栏
-    static constexpr int kSlideMs     = 200;
-    static constexpr int kFadeMs      = 250;
+    static constexpr int kFadeMs      = 250;   // 淡出时长
+    static constexpr int kPushMs      = 200;   // 挤开旧 Toast 的位移时长
+    static constexpr int kSlideInMs   = 280;   // 入场滑入时长
+    static constexpr int kSlideOffset = 60;    // 入场起点相对目标位置的向下偏移
 };
 
 #endif // TOASTWIDGET_H
