@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 #include "circleprogress.h"
 #include "src/camera/camerathread.h"
+#include "src/database/databasemanager.h"
 #include <QMainWindow>
 #include <QTimer>
 #include <QLabel>
@@ -16,7 +17,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = nullptr);
+    explicit MainWindow(QWidget *parent = nullptr, DatabaseManager *db = nullptr);
     ~MainWindow();
 
     enum MouseArea {
@@ -41,8 +42,8 @@ private slots:
     void onMaxButton();
     void onSetButton();
 
-    // void onEntrySearchButton();
-    // void onExitSearchButton();
+    void onEntrySearchButton();// 入库
+    void onExitSearchButton();// 出库
 
 private:
     MouseArea getMouseArea(const QPoint &pos) const;
@@ -66,6 +67,8 @@ private:
     MouseArea m_mouseArea = NoArea;
     int m_dragBarHeight = 50;
     static const int kResizeBorder = 5;
+
+    DatabaseManager *m_db;
 };
 
 #endif // MAINWINDOW_H

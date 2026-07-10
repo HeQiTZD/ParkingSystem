@@ -87,11 +87,18 @@ public:
     static bool isValidLicensePlate(const QString &plate);
 
     /**
-     * @brief 计算停车费用
-     * @param hourlyRate 每小时费率
-     * @return 费用
+     * @brief 计算停车费用（静态方法，费率与免费时长自动从配置文件读取）
+     *
+     * 计费规则：
+     * 1. 按"半小时"为递进单位，不足半小时按半小时计
+     * 2. 先扣除免费时长后，对剩余分钟向上取整到最近的半小时阶梯
+     * 3. 费用 = 阶梯数 × (每小时费率 / 2)
+     *
+     * @param checkInTime  入库时间
+     * @param checkOutTime 出库时间（无效时按当前时间实时计费）
+     * @return 费用（元），未超过免费时长时返回 0
      */
-    double calculateFee(double hourlyRate, int freeMinutes = 15) const;
+    static double calculateFee(const QDateTime &checkInTime, const QDateTime &checkOutTime);
 
     /**
      * @brief 转换为QVariantMap（用于数据库操作）

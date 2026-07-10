@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
 
     QString userRole = loginDialog.getUserRole();
 
-    MainWindow mainWindow;
+    MainWindow mainWindow(nullptr, &dbManager);
     mainWindow.show();
 
     return app.exec();

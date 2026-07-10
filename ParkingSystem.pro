@@ -181,8 +181,8 @@ CONFIG(debug, debug|release) {
     DLL_TARGET_DIR = $$OUT_PWD/release
 }
 
-# 复制 OpenCV DLL 文件到可执行文件所在目录
-QMAKE_POST_LINK += $$quote(copy /Y \"$$OPENCV_DLL_DIR\\*.dll\" \"$$DLL_TARGET_DIR\" $$escape_expand(\n\t))
+# 复制 OpenCV DLL 文件到可执行文件所在目录（cmd /c 保证在 sh/cmd 终端均可执行）
+QMAKE_POST_LINK += $$quote(cmd /c copy /Y \"$$OPENCV_DLL_DIR\\*.dll\" \"$$DLL_TARGET_DIR\" $$escape_expand(\n\t))
 
 RESOURCES += \
     UI/imageQrc/image.qrc \

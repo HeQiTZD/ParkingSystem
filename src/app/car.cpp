@@ -1,5 +1,5 @@
 ﻿#include "car.h"
-
+#include "src/utils/initfile.h"
 #include <QRegularExpression>
 #include <QDebug>
 
@@ -76,15 +76,23 @@ bool Car::isValidLicensePlate(const QString &plate)
     return regex.match(plate).hasMatch();
 }
 
-double Car::calculateFee(double hourlyRate ,int freeMinutes) const
+// 计算停车费用：从配置文件读取费率与免费时长，按半小时递进计费
+double Car::calculateFee(const QDateTime &checkInTime, const QDateTime &checkOutTime)
 {
-    qint64 totalMinutes = m_checkInTime.secsTo(m_checkOutTime.isValid() ? m_checkOutTime : QDateTime::currentDateTime()) / 60;
+    InitFile cfg;
+    cfg.loadConfig();
 
+    double hourlyRate = cfg.getParkingPrice();
+    int freeMinutes = cfg.getFreeMinutes();
+
+    // 总停车分钟数（出库时间无效时按当前时间计）
+    qint64 totalMinutes = checkInTime.secsTo(checkOutTime.isValid() ? checkOutTime : QDateTime::currentDateTime()) / 60;
+
+    // 扣除免费时长后的计费分钟数，负值钳位到 0
     double billableMinutes = qMax(0LL, totalMinutes - freeMinutes);
-    if(billableMinutes <= 0.0){
-        return 0.0;
-    }
+    if(billableMinutes <= 0.0) return 0.0;
 
+    // 按半小时阶梯向上取整 × 半小时费率（每小时费率的一半）
     int halfHours = static_cast<int>(std::ceil(billableMinutes / 30.0));
     return halfHours * hourlyRate / 2.0;
 }

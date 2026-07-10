@@ -428,6 +428,29 @@ QList<QVariantList> DatabaseManager::searchCars(const QString &plate, const QDat
     return resultList;
 }
 
+QDateTime DatabaseManager::getVehicleCheckInTime(const QString &licensePlate)
+{
+    if(!connected) {
+        return QDateTime();
+    }
+
+    QString sql = R"(SELECT check_in_time FROM CAR WHERE license_plate = :plate AND check_out_time IS NULL)";
+    QSqlQuery query(db);
+    query.prepare(sql);
+    query.bindValue(":plate", licensePlate);
+
+    if(!query.exec()){
+        qDebug() << "执行失败" << query.lastError().text();
+        return QDateTime();
+    }
+
+    if(query.next()){
+        return query.value(0).toDateTime();
+    }else{
+        return QDateTime();
+    }
+}
+
 bool DatabaseManager::deleteCarRecord(int id)
 {
     if(!isConnected()){

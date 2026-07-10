@@ -62,6 +62,9 @@ public:
     QList<QVariantList> searchCars(const QString &plate, const QDateTime &startTime,
                                     const QDateTime &endTime, int status);
     
+    // 获取入库时间
+    QDateTime getVehicleCheckInTime(const QString &licensePlate);
+
     //车辆信息删除
     bool deleteCarRecord(int id);
 

@@ -1,15 +1,17 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "circleprogress.h"
-
+#include "src/app/car.h"
+#include "src/utils/notification_global.h"
 #include <QFile>
 #include <QButtonGroup>
 #include <QDateTime>
 #include <QMouseEvent>
 
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(QWidget *parent, DatabaseManager *db)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+    , m_db(db)
 {
     ui->setupUi(this);
     setWindowFlag(Qt::FramelessWindowHint);
@@ -137,6 +139,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->minimizeButton,&QPushButton::clicked,this,&MainWindow::onMinButton);
     connect(ui->maximizeButton,&QPushButton::clicked,this,&MainWindow::onMaxButton);
     connect(ui->setButton,&QPushButton::clicked,this,&MainWindow::onSetButton);
+    connect(ui->entrySearchButton,&QPushButton::clicked,this,&MainWindow::onEntrySearchButton);
+    connect(ui->exitSearchButton,&QPushButton::clicked,this,&MainWindow::onExitSearchButton);
 }
 
 MainWindow::~MainWindow()
@@ -188,6 +192,90 @@ void MainWindow::onMaxButton()
 void MainWindow::onSetButton()
 {
     return;
+}
+
+void MainWindow::onEntrySearchButton()
+{
+    if(!m_db){
+        qDebug() << "数据库未连接";
+        return;
+    }
+
+    // 车牌号验证
+    QString plate = ui->entryPlateInput->text().trimmed();
+    if(plate.isEmpty()){
+        notifyInfo(this, QStringLiteral("请输入车牌号"));
+        return;
+    }
+    if(!Car::isValidLicensePlate(plate)){
+        notifyInfo(this, QStringLiteral("请输入正确的车牌号"));
+        ui->entryPlateInput->clear();
+        return;
+    }
+
+    if(m_db->isVehicleInPark(plate)){
+        notifyInfo(this, QStringLiteral("车辆已入库"));
+        return;
+    }
+
+    if(m_db->checkIn(plate)){
+        notifySuccess(this, QStringLiteral("%1 入库成功").arg(plate));
+        ui->entryPlateInput->clear();
+        return;
+    }else{
+        notifyFailure(this, "入库失败");
+        return;
+    }
+}
+
+void MainWindow::onExitSearchButton()
+{
+    if(!m_db){
+        qDebug() << "数据库未连接";
+        return;
+    }
+
+    // 车牌号验证
+    QString plate = ui->exitPlateInput->text().trimmed();
+    if(plate.isEmpty()){
+        notifyInfo(this, QStringLiteral("请输入车牌号"));
+        return;
+    }
+    if(!Car::isValidLicensePlate(plate)){
+        notifyInfo(this, QStringLiteral("请输入正确的车牌号"));
+        ui->exitPlateInput->clear();
+        return;
+    }
+
+    //检查车辆是否已在库中
+    if(!m_db->isVehicleInPark(plate)){
+        notifyInfo(this, QStringLiteral("%1 车辆未入库").arg(plate));
+        return;
+    }
+
+    QDateTime intTime = m_db->getVehicleCheckInTime(plate);
+    QDateTime outTime = QDateTime::currentDateTime();
+
+    // 计算总时长
+    qint64 totalMinutes = intTime.secsTo(outTime) / 60;
+    int hours = totalMinutes / 60;
+    int minutes = totalMinutes % 60;
+
+    double cost = Car::calculateFee(intTime, QDateTime());// 计算费用
+
+    // 构造消息
+    QString msg = QStringLiteral("停车时长: %1 小时 %2 分钟, 费用 %3 元").arg(hours).arg(minutes).arg(cost, 0, 'f', 2);
+    if(!notifyConfirm(this, QStringLiteral("停车时长与费用"), msg)){
+        return;
+    }
+
+    if(m_db->checkOut(plate, cost)){
+        notifySuccess(this, QStringLiteral("%1 出库成功").arg(plate));
+        return;
+    }else{
+        notifyFailure(this, QStringLiteral("%1 出库失败").arg(plate));
+        return;
+    }
 }
 
 void MainWindow::updateTime()
