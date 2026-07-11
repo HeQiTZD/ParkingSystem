@@ -3,6 +3,7 @@
 #include "circleprogress.h"
 #include "src/app/car.h"
 #include "src/utils/notification_global.h"
+#include "src/utils/initfile.h"
 #include <QFile>
 #include <QButtonGroup>
 #include <QDateTime>
@@ -15,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent, DatabaseManager *db)
 {
     ui->setupUi(this);
     setWindowFlag(Qt::FramelessWindowHint);
-    setMinimumSize(400, 300);
+    setMinimumSize(1200, 700);
     setMouseTracking(true);
     if (centralWidget())
         centralWidget()->setMouseTracking(true);
@@ -123,6 +124,9 @@ MainWindow::MainWindow(QWidget *parent, DatabaseManager *db)
     m_parkingChart->setProgress(70);
     m_parkingChart->setUsedText("已用空间");
 
+    // 初始化更新车位情况
+    onUpdateParkingCount();
+
     // 摄像头初始化
     m_videoLabel = new QLabel(ui->cameraViewWidget);
     m_videoLabel->setGeometry(ui->cameraViewWidget->rect());
@@ -141,6 +145,7 @@ MainWindow::MainWindow(QWidget *parent, DatabaseManager *db)
     connect(ui->setButton,&QPushButton::clicked,this,&MainWindow::onSetButton);
     connect(ui->entrySearchButton,&QPushButton::clicked,this,&MainWindow::onEntrySearchButton);
     connect(ui->exitSearchButton,&QPushButton::clicked,this,&MainWindow::onExitSearchButton);
+    connect(ui->logoutButton,&QPushButton::clicked,this,&MainWindow::onlogoutButton);
 }
 
 MainWindow::~MainWindow()
@@ -168,7 +173,10 @@ void MainWindow::updateFrame(cv::Mat frame)
 
 void MainWindow::onCloseButton()
 {
-    close();
+    // 通知 ApplicationManager 结束整个应用。
+    // 不在这里 close()：主窗口是常驻对象，由 ApplicationManager
+    // 通过 qApp->quit() 退出后随父对象一起析构。
+    emit appExitRequested();
 }
 
 void MainWindow::onMinButton()
@@ -192,6 +200,13 @@ void MainWindow::onMaxButton()
 void MainWindow::onSetButton()
 {
     return;
+}
+
+void MainWindow::onlogoutButton()
+{
+    // 通知 ApplicationManager 切回登录框。
+    // 不在这里 close()：主窗口是常驻对象，由 ApplicationManager 隐藏后复用。
+    emit logoutRequested();
 }
 
 void MainWindow::onEntrySearchButton()
@@ -261,7 +276,7 @@ void MainWindow::onExitSearchButton()
     int hours = totalMinutes / 60;
     int minutes = totalMinutes % 60;
 
-    double cost = Car::calculateFee(intTime, QDateTime());// 计算费用
+    double cost = Car::calculateFee(intTime, outTime);// 计算费用
 
     // 构造消息
     QString msg = QStringLiteral("停车时长: %1 小时 %2 分钟, 费用 %3 元").arg(hours).arg(minutes).arg(cost, 0, 'f', 2);
@@ -271,11 +286,43 @@ void MainWindow::onExitSearchButton()
 
     if(m_db->checkOut(plate, cost)){
         notifySuccess(this, QStringLiteral("%1 出库成功").arg(plate));
+        ui->exitPlateInput->clear();
         return;
     }else{
         notifyFailure(this, QStringLiteral("%1 出库失败").arg(plate));
         return;
     }
+}
+
+void MainWindow::onUpdateParkingCount()
+{
+
+    if(!m_db){
+        return;
+    }
+
+    InitFile initFile;
+    if(!initFile.loadConfig()){
+        qWarning() << "配置文件加载失败";
+        return;
+    }
+    QString name = initFile.getParkingName();
+    if(name.isEmpty()){
+        qWarning() << "配置文件中停车场名称为空";
+        return;
+    }
+
+    ParkingStats parkingCount(m_db->getParkingStats(name));
+    if(parkingCount.totalSpaces == 0){
+        qWarning() << "未找到停车场:" << name;
+        return;
+    }
+
+    int percentage = (parkingCount.totalSpaces > 0) ? static_cast<int>(static_cast<double>(parkingCount.usedSpaces) / parkingCount.totalSpaces * 100) : 0;
+    m_parkingChart->setProgress(percentage);
+    ui->usedSpacesValueLabel->setText(QString::number(parkingCount.usedSpaces));
+    ui->remainingSpacesValueLabel->setText(QString::number(parkingCount.freeSpaces));
+    ui->totalSpacesValueLabel->setText(QString::number(parkingCount.totalSpaces));
 }
 
 void MainWindow::updateTime()

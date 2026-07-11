@@ -240,26 +240,7 @@ bool Car::isValidLicensePlate(const QString &plate)
     QRegularExpression regex("^[京津沪渝...][A-Z][A-Z0-9]{5,6}$");
     return regex.match(plate).hasMatch();
 }
-5. 触发器和事件
-5.1 触发器（Trigger）
-
-CREATE TRIGGER trg_reservation_insert
-AFTER INSERT ON reservations
-FOR EACH ROW
-BEGIN
-    UPDATE PARKING SET P_reserve_count = P_reserve_count + 1
-    WHERE P_name = NEW.P_name;
-END
-作用：当表数据变化时，自动执行相关操作。
-
-5.2 定时事件（Event）
-
-CREATE EVENT clean_reservations
-ON SCHEDULE EVERY 1 MINUTE
-DO DELETE FROM reservations WHERE TIMESTAMPDIFF(MINUTE, created_at, NOW()) > 30;
-作用：定期执行清理任务。
-
-6. 索引优化
+5. 索引优化
 
 -- 单列索引
 INDEX idx_license_plate (license_plate)
@@ -285,11 +266,7 @@ ORDER BY排序的列
     ↓
 创建车辆记录表 (CAR)
     ↓
-创建预约表 (reservations)
-    ↓
 初始化停车场数据
-    ↓
-创建触发器和事件
     ↓
 初始化完成
 车辆入库流程

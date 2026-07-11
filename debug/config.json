@@ -15,7 +15,7 @@
     "parking": {
         "capacity": 500,
         "freeMinutes": 15,
-        "name": "停车chang1",
+        "name": "停车场1",
         "price": 12
     },
     "recognition": {

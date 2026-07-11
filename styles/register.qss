@@ -1,0 +1,111 @@
+/* ==================== RegisterDialog 样式 ==================== */
+
+/* 对话框容器 */
+#RegisterDialog {
+    background-color: #ffffff;
+    border-radius: 12px;          /* 窗口圆角 */
+    border: 1px solid #e0e0e0;    /* 可选：淡色边框增强边界感 */
+}
+
+/* 主标题 - 22pt 蓝色粗体 */
+#RegisterDialog #titleLabel {
+    color: #1E90FF;
+    font-size: 22pt;
+    font-weight: bold;
+}
+
+/* 表单标签 - 11pt 深灰 */
+#RegisterDialog #usernameLabel,
+#RegisterDialog #passwordLabel,
+#RegisterDialog #confirmPasswordLabel,
+#RegisterDialog #nameLabel,
+#RegisterDialog #phoneLabel {
+    color: #333333;
+    font-size: 11pt;
+}
+
+/* -------------------- 输入框 -------------------- */
+#RegisterDialog QLineEdit {
+    border: 1px solid #D3D3D3;
+    border-radius: 6px;
+    padding: 8px 12px;
+    background-color: #ffffff;
+    font-size: 11pt;
+    color: #000000;
+}
+
+/* 输入框悬停 */
+#RegisterDialog QLineEdit:hover {
+    border-color: #1E90FF;
+}
+
+/* 输入框聚焦 */
+#RegisterDialog QLineEdit:focus {
+    border-color: #1E90FF;
+}
+
+/* -------------------- 窗口控制按钮 -------------------- */
+#RegisterDialog #minimizeButton {
+    background-color: transparent;
+    border: none;
+}
+
+#RegisterDialog #minimizeButton:hover {
+    background-color: #e0e0e0;
+}
+
+#RegisterDialog #minimizeButton:pressed {
+    background-color: #c0c0c0;
+}
+
+#RegisterDialog #closeButton {
+    background-color: transparent;
+    border: none;
+}
+
+#RegisterDialog #closeButton:hover {
+    background-color: #f22828;
+}
+
+#RegisterDialog #closeButton:pressed {
+    background-color: #f35c5c;
+}
+
+/* -------------------- 注册按钮（主按钮）-------------------- */
+#RegisterDialog #btnRegister {
+    color: #ffffff;
+    background-color: #1E90FF;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+}
+
+#RegisterDialog #btnRegister:hover {
+    background-color: #1a7ee6;
+}
+
+#RegisterDialog #btnRegister:pressed {
+    background-color: #166fcc;
+}
+
+#RegisterDialog #btnRegister:disabled {
+    background-color: #a0a0a0;
+    color: #e0e0e0;
+}
+
+/* -------------------- 返回按钮（次按钮）-------------------- */
+#RegisterDialog #btnBack {
+    color: #333333;
+    background-color: #E0E0E0;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+}
+
+#RegisterDialog #btnBack:hover {
+    background-color: #c0c0c0;
+}
+
+#RegisterDialog #btnBack:pressed {
+    background-color: #a0a0a0;
+}

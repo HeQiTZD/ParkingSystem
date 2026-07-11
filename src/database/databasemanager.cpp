@@ -317,7 +317,7 @@ QSqlQuery DatabaseManager::queryVehicle(const QString &licensePlate, bool onlyIn
 
 ParkingStats DatabaseManager::getParkingStats(const QString &parkingName)
 {
-    ParkingStats stats = {0, 0, 0, 0};
+    ParkingStats stats = {0, 0, 0};
 
     if (!connected) {
         qDebug() << "数据库未连接！";
@@ -325,7 +325,7 @@ ParkingStats DatabaseManager::getParkingStats(const QString &parkingName)
     }
 
     QSqlQuery query(db);
-    query.prepare("SELECT P_all_count, P_now_count, P_reserve_count "
+    query.prepare("SELECT P_all_count, P_now_count "
                   "FROM PARKING WHERE P_name = :name");
     query.bindValue(":name", parkingName);
 
@@ -337,7 +337,6 @@ ParkingStats DatabaseManager::getParkingStats(const QString &parkingName)
     if (query.next()) {
         stats.totalSpaces = query.value("P_all_count").toInt();
         stats.usedSpaces = query.value("P_now_count").toInt();
-        stats.reservedSpaces = query.value("P_reserve_count").toInt();
         stats.freeSpaces = stats.totalSpaces - stats.usedSpaces;
     } else {
         qDebug() << "未找到停车场:" << parkingName;
@@ -445,7 +444,10 @@ QDateTime DatabaseManager::getVehicleCheckInTime(const QString &licensePlate)
     }
 
     if(query.next()){
-        return query.value(0).toDateTime();
+        QDateTime dt = query.value(0).toDateTime();
+        // 数据库存的是本地时间（无时区字符串），修正 offset 为当前本地时区，避免被 Qt 误解析为 UTC
+        dt.setTimeSpec(Qt::LocalTime);
+        return dt;
     }else{
         return QDateTime();
     }

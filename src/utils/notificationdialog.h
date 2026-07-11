@@ -59,8 +59,10 @@ private:
     QPropertyAnimation *m_scaleAnim;
     QPropertyAnimation *m_opaAnim;
 
-    static constexpr int kDialogWidth  = 400;
-    static constexpr int kDialogHeight = 220;
+    static constexpr int kDialogWidth     = 440;    // 弹窗默认宽度（消息区约 28 个汉字/行）
+    static constexpr int kDialogHeight    = 280;    // 弹窗默认高度（消息区约 5.5 行）
+    static constexpr int kMaxDialogWidth  = 520;    // 弹窗最大宽度兜底
+    static constexpr int kMaxDialogHeight = 400;    // 弹窗最大高度兜底
 };
 
 #endif // NOTIFICATIONDIALOG_H

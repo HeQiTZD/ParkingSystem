@@ -14,7 +14,6 @@ struct ParkingStats {
     int totalSpaces;      // 总车位数
     int usedSpaces;       // 已用车位（现有车辆数）
     int freeSpaces;       // 空闲车位
-    int reservedSpaces;   // 预约车位数
 };
 
 class DatabaseManager : public QObject

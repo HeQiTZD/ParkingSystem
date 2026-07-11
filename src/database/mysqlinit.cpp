@@ -45,24 +45,11 @@ bool MySQLInit::initAll()
         return false;
     }
 
-    // 4. 创建预约表
-    emit initProgress("创建预约表", 70);
-    if(!createReservationTable()){
-        emit initFinished(false, "创建预约表失败");
-        return false;
-    }
-
-    // 5. 初始化停车场数据
-    emit initProgress("初始化停车场数据", 85);
+    // 4. 初始化停车场数据
+    emit initProgress("初始化停车场数据", 75);
     if(!initParkingData("默认停车场", 100, 5.0)){
         emit initFinished(false, "初始化停车场数据失败");
         return false;
-    }
-
-    // 6. 创建触发器
-    emit initProgress("创建触发器...", 90);
-    if(!createTriggers()){
-        qDebug() << QStringLiteral("创建触发器失败,但不影响主要功能");
     }
 
     emit initProgress("初始化完成", 100);
@@ -114,7 +101,6 @@ bool MySQLInit::createParkingTable()
     P_id INT PRIMARY KEY AUTO_INCREMENT,
     P_name VARCHAR(100) UNIQUE NOT NULL COMMENT '停车场',
     P_now_count INT DEFAULT 0 COMMENT '现有车辆数',
-    P_reserve_count INT DEFAULT 0 COMMENT '预约车辆数',
     P_all_count INT NOT NULL COMMENT '总车位数',
     P_fee DECIMAL(10,2) NOT NULL COMMENT '每小时费用',
     create_at DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'
@@ -122,21 +108,6 @@ bool MySQLInit::createParkingTable()
     )";
 
     return executeSql(sql,"创建停车场表");
-}
-
-bool MySQLInit::createReservationTable()
-{
-    QString sql = R"(
-        CREATE TABLE IF NOT EXISTS reservations(
-        id INT PRIMARY KEY AUTO_INCREMENT,
-        license_plate VARCHAR(20) NOT NULL COMMENT '车牌号',
-        P_name VARCHAR(100) NOT NULL COMMENT '停车场名称',
-        create_at DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '预约时间',
-        UNIQUE INDEX idx_license_plate (license_plate)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='预约表'
-    )";
-
-    return executeSql(sql, "创建预约表");
 }
 
 bool MySQLInit::initParkingData(const QString &parkingName, int totalSpace, double fee)
@@ -159,8 +130,8 @@ bool MySQLInit::initParkingData(const QString &parkingName, int totalSpace, doub
     //插入初始数据
     QSqlQuery inserQuery;
     inserQuery.prepare(R"(
-        INSERT INTO PARKING (P_name, P_now_count, P_reserve_count, P_all_count, P_fee)
-        VALUES (:name, 0, 0, :all_count, :fee)
+        INSERT INTO PARKING (P_name, P_now_count, P_all_count, P_fee)
+        VALUES (:name, 0, :all_count, :fee)
     )");
 
     inserQuery.bindValue(":name", parkingName);
@@ -212,45 +183,6 @@ bool MySQLInit::initAdminUser()
 
     qDebug() << QStringLiteral("初始化默认管理员成功（用户名: admin, 密码: admin123）");
     return true;
-}
-
-bool MySQLInit::createTriggers()
-{
-    bool success = true;
-
-    // 1.开启事件调度器
-    success &= executeSql("SET GLOBAL event_scheduler = ON", "开启事件调度器");
-
-    // 2. 创建定时清理过期预约的任务（每分钟执行，清理30分钟前的预约）
-    success &= executeSql(R"(
-        CREATE EVENT IF NOT EXISTS clean_reservations
-        ON SCHEDULE EVERY 1 MINUTE
-        DO DELETE FROM reservations WHERE TIMESTAMPDIFF(MINUTE, create_at, NOW()) >30
-        )", "创建定时清理过期预约任务");
-
-    // 3. 创建预约时插入触发器（预约数+1）
-    success &= executeSql(R"(
-        CREATE TRIGGER IF NOT EXISTS trg_reservation_insert
-        AFTER INSERT ON reservations
-        FOR EACH ROW
-        BEGIN
-            UPDATE PARKING SET P_reserve_count = P_reserve_count +1
-            WHERE P_name = NEW.P_name;
-            END
-        )", "创建预约插入触发器");
-
-    // 4. 创建预约删除触发器（预约数-1）
-    success &= executeSql(R"(
-        CREATE TRIGGER IF NOT EXISTS trg_reservation_delete
-        AFTER DELETE ON reservations
-        FOR EACH ROW
-        BEGIN
-            UPDATE PARKING SET P_reserve_count = P_reserve_count -1
-            WHERE P_name = OLD.P_name;
-            END
-        )", "创建预约删除触发器");
-
-    return success;
 }
 
 bool MySQLInit::isTableExists(const QString &tableName)

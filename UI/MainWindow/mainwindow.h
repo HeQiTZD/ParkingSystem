@@ -33,6 +33,10 @@ public:
         ResizeBottomRight
     };
 
+signals:
+    void logoutRequested();// 退出登录
+    void appExitRequested();// 关闭整个应用
+
 private slots:
     void updateTime();
     void updateFrame(cv::Mat frame);
@@ -41,9 +45,12 @@ private slots:
     void onMinButton();
     void onMaxButton();
     void onSetButton();
+    void onlogoutButton();
 
     void onEntrySearchButton();// 入库
     void onExitSearchButton();// 出库
+
+    void onUpdateParkingCount();// 更新车位使用情况
 
 private:
     MouseArea getMouseArea(const QPoint &pos) const;

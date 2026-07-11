@@ -55,6 +55,7 @@ SOURCES += \
     src/app/main.cpp \
     src/app/car.cpp \
     src/app/platerecognize.cpp \
+    src/app/ApplicationManager.cpp \
     # ==================== 数据库相关 ====================
     src/database/databasemanager.cpp \
     src/database/mysqlinit.cpp \
@@ -100,6 +101,7 @@ HEADERS += \
     # ==================== 应用程序核心代码 ====================
     src/app/car.h \
     src/app/platerecognize.h \
+    src/app/ApplicationManager.h \
     # ==================== 数据库相关 ====================
     src/database/databasemanager.h \
     src/database/mysqlinit.h \

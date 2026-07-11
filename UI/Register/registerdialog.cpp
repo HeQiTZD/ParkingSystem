@@ -2,7 +2,11 @@
 #include "ui_registerdialog.h"
 #include "src/utils/utils.h"
 #include "src/utils/notification_global.h"
+#include <QFile>
 #include <QMessageBox>
+#include <QMouseEvent>
+#include <QPainter>
+#include <QPainterPath>
 #include <QRegularExpression>
 
 RegisterDialog::RegisterDialog(QWidget *parent, DatabaseManager *db) :
@@ -11,8 +15,29 @@ RegisterDialog::RegisterDialog(QWidget *parent, DatabaseManager *db) :
     m_db(db)
 {
     ui->setupUi(this);
-    setFixedSize(800, 500);
+    setWindowFlag(Qt::FramelessWindowHint);        // 无边框
+    setAttribute(Qt::WA_TranslucentBackground);    // 透明背景（圆角必需）
+    setFixedSize(480, 420);                        // 固定大小
+    m_dragArea = QRect(0, 0, width(), 50);         // 顶部 50px 区域可拖动
     setWindowTitle("用户注册");
+
+    // 标题栏按钮图标（与登录窗口一致）
+    ui->minimizeButton->setIcon(QIcon(":/icons/minied.svg"));
+    ui->minimizeButton->setIconSize(QSize(16, 16));
+    ui->closeButton->setIcon(QIcon(":/icons/close.svg"));
+    ui->closeButton->setIconSize(QSize(16, 16));
+
+    // 标题栏按钮信号连接
+    connect(ui->minimizeButton, &QPushButton::clicked, this, &QWidget::showMinimized);
+    connect(ui->closeButton, &QPushButton::clicked, this, &QWidget::close);
+
+    // 加载 QSS 样式表（与登录窗口一致）
+    QFile styleFile(":/styles/register.qss");
+    if (styleFile.open(QFile::ReadOnly)) {
+        QString styleSheet = QLatin1String(styleFile.readAll());
+        setStyleSheet(styleSheet);
+        styleFile.close();
+    }
 
     // 设置密码输入框模式
     ui->txtPassword->setEchoMode(QLineEdit::Password);
@@ -100,4 +125,44 @@ void RegisterDialog::on_btnRegister_clicked()
 void RegisterDialog::on_btnBack_clicked()
 {
     reject();
+}
+
+// 绘制圆角白色背景（WA_TranslucentBackground 下 QSS background 不生效）
+void RegisterDialog::paintEvent(QPaintEvent *event)
+{
+    Q_UNUSED(event);
+    QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing);
+
+    QPainterPath path;
+    path.addRoundedRect(rect(), 12, 12);   // 与 QSS border-radius 一致
+    painter.setClipPath(path);
+
+    painter.fillPath(path, QColor(0xffffff));
+}
+
+// 无边框窗口手动拖动：鼠标按下
+void RegisterDialog::mousePressEvent(QMouseEvent *event)
+{
+    if (event->button() == Qt::LeftButton && m_dragArea.contains(event->pos())) {
+        m_dragging = true;
+        m_dragPos = event->globalPosition().toPoint() - frameGeometry().topLeft();
+        event->accept();
+    }
+}
+
+// 无边框窗口手动拖动：鼠标移动
+void RegisterDialog::mouseMoveEvent(QMouseEvent *event)
+{
+    if (m_dragging && (event->buttons() & Qt::LeftButton)) {
+        move(event->globalPosition().toPoint() - m_dragPos);
+        event->accept();
+    }
+}
+
+// 无边框窗口手动拖动：鼠标释放
+void RegisterDialog::mouseReleaseEvent(QMouseEvent *event)
+{
+    if (event->button() == Qt::LeftButton)
+        m_dragging = false;
 }

@@ -80,11 +80,24 @@ NotificationDialog::NotificationDialog(QWidget *parent, DialogType type,
     setWindowFlag(Qt::FramelessWindowHint);
     setAttribute(Qt::WA_TranslucentBackground);
     setModal(true);
-    setFixedSize(kDialogWidth, kDialogHeight);
+    // 尺寸改为最小/最大约束，允许按消息长度自适应（修复长文本显示不全）
+    setMinimumSize(kDialogWidth, kDialogHeight);
+    setMaximumSize(kMaxDialogWidth, kMaxDialogHeight);
 
     setStyleSheet(QString::fromLatin1(kDialogQss));
 
     buildUi();
+    adjustSize();   // 按内容重新计算尺寸
+
+    // 尺寸变化后重新居中（playShowAnimation 内也居中，但基于原始 kDialogWidth/Height）
+    QWidget *top = parentWidget() ? parentWidget()->window() : nullptr;
+    if (top) {
+        move(top->frameGeometry().center() - rect().center());
+    } else {
+        QScreen *screen = QGuiApplication::primaryScreen();
+        move(screen->availableGeometry().center() - rect().center());
+    }
+
     playShowAnimation();
 }
 
@@ -98,7 +111,7 @@ void NotificationDialog::buildUi()
     // 消息
     m_msgLabel->setObjectName("notifMsg");
     m_msgLabel->setAlignment(Qt::AlignCenter);
-    m_msgLabel->setWordWrap(true);
+    m_msgLabel->setWordWrap(false);   // 单行显示，弹窗自动适应宽度
 
     // 图标
     m_iconLabel->setFixedSize(48, 48);

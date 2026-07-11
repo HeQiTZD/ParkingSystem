@@ -3,5 +3,6 @@
         <file alias="config.qss">config.qss</file>
         <file alias="login.qss">login.qss</file>
         <file alias="main.qss">main.qss</file>
+        <file alias="register.qss">register.qss</file>
     </qresource>
 </RCC>

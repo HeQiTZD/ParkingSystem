@@ -10,16 +10,14 @@
 /**
  * @brief 数据库初始化类
  *
- * 负责创建数据库表结构、初始化数据、建立索引和触发器。
+ * 负责创建数据库表结构、初始化数据、建立索引。
  * 在系统首次运行或数据库重置时调用。
  *
  * 主要功能：
  * 1. 创建用户表（User）
  * 2. 创建车辆记录表（CAR）
  * 3. 创建停车场信息表（PARKING）
- * 4. 创建预约表（reservations）
- * 5. 初始化停车场数据
- * 6. 创建触发器和定时任务
+ * 4. 初始化停车场数据
  */
 class MySQLInit : public QObject
 {
@@ -69,23 +67,10 @@ public:
      * - P_id: 主键，自增
      * - P_name: 停车场名称，唯一
      * - P_now_count: 现有车辆数
-     * - P_reserve_count: 预约车辆数
      * - P_all_count: 总车位数
      * - P_fee: 每小时费用
      */
     bool createParkingTable();
-
-    /**
-     * @brief 创建预约表
-     * @return 是否成功
-     *
-     * 表结构：
-     * - id: 主键，自增
-     * - license_plate: 车牌号，唯一
-     * - P_name: 停车场名称
-     * - created_at: 创建时间
-     */
-    bool createReservationTable();
 
     /**
      * @brief 初始化停车场数据
@@ -103,16 +88,6 @@ public:
      * @return 是否成功
      */
     bool initAdminUser();
-
-    /**
-     * @brief 创建触发器和定时任务
-     * @return 是否成功
-     *
-     * 功能：
-     * 1. 预约数量自动增减触发器
-     * 2. 过期预约自动清理任务（30分钟）
-     */
-    bool createTriggers();
 
 signals:
     /**

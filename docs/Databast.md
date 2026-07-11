@@ -85,7 +85,6 @@ CREATE TABLE IF NOT EXISTS CAR(
 | P_id | INT | PRIMARY KEY, AUTO_INCREMENT | - | 停车场ID |
 | P_name | VARCHAR(100) | UNIQUE, NOT NULL | - | 停车场名称 |
 | P_now_count | INT | - | 0 | 现有车辆数 |
-| P_reserve_count | INT | - | 0 | 预约车辆数 |
 | P_all_count | INT | NOT NULL | - | 总车位数 |
 | P_fee | DECIMAL(10,2) | NOT NULL | - | 每小时费用 |
 | create_at | DATETIME | - | CURRENT_TIMESTAMP | 创建时间 |
@@ -95,7 +94,6 @@ CREATE TABLE IF NOT EXISTS PARKING(
     P_id INT PRIMARY KEY AUTO_INCREMENT,
     P_name VARCHAR(100) UNIQUE NOT NULL COMMENT '停车场名称',
     P_now_count INT DEFAULT 0 COMMENT '现有车辆数',
-    P_reserve_count INT DEFAULT 0 COMMENT '预约车辆数',
     P_all_count INT NOT NULL COMMENT '总车位数',
     P_fee DECIMAL(10,2) NOT NULL COMMENT '每小时费用',
     create_at DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'
@@ -104,109 +102,29 @@ CREATE TABLE IF NOT EXISTS PARKING(
 
 ---
 
-## 4. RESERVATIONS 表（预约表）
-
-存储车辆预约信息，支持自动清理过期预约。
-
-| 字段名 | 类型 | 约束 | 默认值 | 说明 |
-|--------|------|------|--------|------|
-| id | INT | PRIMARY KEY, AUTO_INCREMENT | - | 预约ID |
-| license_plate | VARCHAR(20) | NOT NULL | - | 车牌号 |
-| P_name | VARCHAR(100) | NOT NULL | - | 停车场名称 |
-| create_at | DATETIME | - | CURRENT_TIMESTAMP | 预约时间 |
-
-**索引：**
-- `idx_license_plate` - license_plate 字段（UNIQUE）
-
-```sql
-CREATE TABLE IF NOT EXISTS reservations(
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    license_plate VARCHAR(20) NOT NULL COMMENT '车牌号',
-    P_name VARCHAR(100) NOT NULL COMMENT '停车场名称',
-    create_at DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '预约时间',
-    UNIQUE INDEX idx_license_plate (license_plate)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='预约表';
-```
-
----
-
-## 5. 触发器与定时任务
-
-### 5.1 预约插入触发器
-
-当有新预约插入时，自动更新停车场的预约数量。
-
-```sql
-CREATE TRIGGER IF NOT EXISTS trg_reservation_insert
-AFTER INSERT ON reservations
-FOR EACH ROW
-BEGIN
-    UPDATE PARKING SET P_reserve_count = P_reserve_count + 1
-    WHERE P_name = NEW.P_name;
-END;
-```
-
-### 5.2 预约删除触发器
-
-当预约被删除时，自动减少停车场的预约数量。
-
-```sql
-CREATE TRIGGER IF NOT EXISTS trg_reservation_delete
-AFTER DELETE ON reservations
-FOR EACH ROW
-BEGIN
-    UPDATE PARKING SET P_reserve_count = P_reserve_count - 1
-    WHERE P_name = OLD.P_name;
-END;
-```
-
-### 5.3 定时清理任务
-
-每分钟自动清理超过30分钟的过期预约。
-
-```sql
-CREATE EVENT IF NOT EXISTS clean_reservations
-ON SCHEDULE EVERY 1 MINUTE
-DO DELETE FROM reservations WHERE TIMESTAMPDIFF(MINUTE, create_at, NOW()) > 30;
-```
-
----
-
-## 6. ER 关系图
+## 4. ER 关系图
 
 ```
 ┌─────────────┐       ┌─────────────┐       ┌─────────────┐
 │    User     │       │   PARKING   │       │     CAR     │
 ├─────────────┤       ├─────────────┤       ├─────────────┤
 │ id (PK)     │       │ P_id (PK)   │       │ id (PK)     │
-│ username    │       │ P_name (UQ) │◄──┐   │ license_plate│
-│ password    │       │ P_now_count │   │   │ check_in_time│
-│ telephone   │       │ P_reserve   │   │   │ check_out    │
-│ truename    │       │ P_all_count │   │   │ fee          │
-│ role        │       │ P_fee       │   │   │ location     │
-│ create_at   │       │ create_at   │   │   │ create_at    │
-│ updated_at  │       └─────────────┘   │   └─────────────┘
-└─────────────┘                         │
-                                        │
-┌─────────────────────┐                 │
-│    RESERVATIONS     │                 │
-├─────────────────────┤                 │
-│ id (PK)             │                 │
-│ license_plate (UQ)  │─────────────────┘
-│ P_name              │
-│ create_at           │
-└─────────────────────┘
+│ username    │       │ P_name (UQ) │       │ license_plate│
+│ password    │       │ P_now_count │       │ check_in_time│
+│ telephone   │       │ P_all_count │       │ check_out    │
+│ truename    │       │ P_fee       │       │ fee          │
+│ role        │       │ create_at   │       │ location     │
+│ create_at   │       └─────────────┘       │ create_at    │
+│ updated_at  │                             └──────────────┘
+└─────────────┘
 ```
 
 ---
 
-## 7. 数据流说明
+## 5. 数据流说明
 
 | 操作 | 影响的表 | 说明 |
 |------|----------|------|
 | 用户注册 | User | 插入新用户记录 |
-| 车辆入场 | CAR | 插入车辆记录，PARKING.P_now_count + 1 |
-| 车辆出场 | CAR | 更新出库时间和费用，PARKING.P_now_count - 1 |
-| 车辆预约 | RESERVATIONS | 插入预约记录，触发器自动更新 PARKING.P_reserve_count |
-| 取消预约 | RESERVATIONS | 删除预约记录，触发器自动更新 PARKING.P_reserve_count |
-| 过期清理 | RESERVATIONS | 定时任务自动删除过期预约 |
+| 车辆入场 | CAR | 插入车辆记录 |
+| 车辆出场 | CAR | 更新出库时间和费用 |

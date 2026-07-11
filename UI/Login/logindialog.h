@@ -20,6 +20,9 @@ public:
     // 获取登录成功后的用户角色
     QString getUserRole() const { return userRole; }
 
+    // 复用登录框前的状态重置：清空输入、重置焦点
+    void reset();
+
 public slots:
     void on_closeButton_clicked();
     void on_miniButton_clicked();

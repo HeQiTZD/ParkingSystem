@@ -5,6 +5,7 @@
 #include "src/database/databasemanager.h"
 #include "src/database/mysqlinit.h"
 #include "src/utils/messageType.h"
+#include "src/app/ApplicationManager.h"
 #include <QApplication>
 #include <QStyleFactory>
 #include <QMessageBox>
@@ -44,6 +45,12 @@ bool loadConfigWithRetry(InitFile *initFile){
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+    // 关键：关闭"最后一个窗口关闭即退出应用"的默认行为。
+    // ApplicationManager 靠 LoginDialog/MainWindow 轮流显示切换窗口，
+    // 关闭主窗口回到登录框时，会瞬间没有任何可见顶层窗口，
+    // 若保留默认值，Qt 会发出 lastWindowClosed → app 退出，
+    // 导致 loop.exec() 退出后 LoginDialog::exec() 再也起不来 → 程序卡死。
+    app.setQuitOnLastWindowClosed(false);
 
     InitFile initFile;
     DatabaseManager dbManager;
@@ -91,15 +98,8 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    LoginDialog loginDialog(nullptr, &dbManager);
-    if(loginDialog.exec() != QDialog::Accepted){
-        return 0;
-    }
+    ApplicationManager applicationManager(dbManager);
+    applicationManager.start();   // 创建窗口、连信号、显示登录框
 
-    QString userRole = loginDialog.getUserRole();
-
-    MainWindow mainWindow(nullptr, &dbManager);
-    mainWindow.show();
-
-    return app.exec();
+    return app.exec();            // 标准全局事件循环
 }

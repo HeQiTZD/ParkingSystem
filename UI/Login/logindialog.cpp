@@ -44,6 +44,14 @@ LoginDialog::~LoginDialog()
     delete ui;
 }
 
+void LoginDialog::reset()
+{
+    // 复用登录框时清空上次输入，避免残留密码
+    ui->usernameEdit->clear();
+    ui->passwordEdit->clear();
+    ui->usernameEdit->setFocus();
+}
+
 void LoginDialog::on_closeButton_clicked()
 {
     close();
