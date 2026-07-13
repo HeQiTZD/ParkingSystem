@@ -164,7 +164,8 @@ RESOURCES += \
     styles/styles.qrc
 
 # ==================== 模型文件部署 ====================
-# EasyPR 模型（project/model/）复制到运行时目录
+# HyperLPR 模型已直接部署到 debug/model/
+# 此部署规则已无实际文件可复制（model/ 目录已删除）
 model.files = model/*
 model.path = $$OUT_PWD/model
 INSTALLS += model
