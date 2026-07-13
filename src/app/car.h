@@ -87,7 +87,7 @@ public:
     static bool isValidLicensePlate(const QString &plate);
 
     /**
-     * @brief 计算停车费用（静态方法，费率与免费时长自动从配置文件读取）
+     * @brief 计算停车费用（静态方法）
      *
      * 计费规则：
      * 1. 按"半小时"为递进单位，不足半小时按半小时计
@@ -96,9 +96,14 @@ public:
      *
      * @param checkInTime  入库时间
      * @param checkOutTime 出库时间（无效时按当前时间实时计费）
+     * @param hourlyRate   每小时费率（外部注入）
+     * @param freeMinutes  免费时长分钟数（外部注入）
      * @return 费用（元），未超过免费时长时返回 0
      */
-    static double calculateFee(const QDateTime &checkInTime, const QDateTime &checkOutTime);
+    static double calculateFee(const QDateTime &checkInTime,
+                              const QDateTime &checkOutTime,
+                              double hourlyRate,
+                              int freeMinutes);
 
     /**
      * @brief 转换为QVariantMap（用于数据库操作）
@@ -114,6 +119,15 @@ public:
      * @brief 转换为可读字符串
      */
     QString toString() const;
+
+    static QString normalizePlate(const QString &input);
+
+    /**
+     * @brief 把 normalize 掉分隔符的车牌拼回"苏A·11111"的显示形式
+     * @param plate 可能是"苏A·11111"或"苏A11111"
+     * @return 统一为"苏A·11111";长度异常时原样返回
+     */
+    static QString displayPlate(const QString &plate);
 
 private:
     int m_id;// 记录ID

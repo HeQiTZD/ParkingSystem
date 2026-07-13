@@ -1,9 +1,14 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "circleprogress.h"
+#include "vehicleentryexitwidget.h"
 #include "src/app/car.h"
 #include "src/utils/notification_global.h"
 #include "src/utils/initfile.h"
+#include "src/camera/framequeue.h"
+#include "src/app/recognizethread.h"
+#include "src/app/plateconfirmtracker.h"
+#include "src/app/platerecognize.h"
 #include <QFile>
 #include <QButtonGroup>
 #include <QDateTime>
@@ -146,14 +151,67 @@ MainWindow::MainWindow(QWidget *parent, DatabaseManager *db)
     connect(ui->entrySearchButton,&QPushButton::clicked,this,&MainWindow::onEntrySearchButton);
     connect(ui->exitSearchButton,&QPushButton::clicked,this,&MainWindow::onExitSearchButton);
     connect(ui->logoutButton,&QPushButton::clicked,this,&MainWindow::onlogoutButton);
+
+    // ========== 自动识别模块初始化 ==========
+    //
+    // 初始化顺序：
+    // 1. FrameQueue（通道）→ 2. 注入 CameraThread（生产者）
+    // → 3. RecognizeThread（消费者）→ 4. PlateConfirmTracker（校验器）
+    // → 5. 信号连接 → 6. 加载模型 → 7. 启动识别线程
+    
+    // 1. 创建帧队列
+    m_frameQueue = new FrameQueue();
+
+    // 2. 注入 CameraThread（使其成为生产者）
+    m_cameraThread->setFrameQueue(m_frameQueue);
+
+    // 3. 创建识别消费者线程
+    m_recognizeThread = new RecognizeThread(this);
+    m_recognizeThread->setFrameQueue(m_frameQueue);
+    m_recognizeThread->setSamplingInterval(1500);// 1.5秒采样间隔
+
+    // 4. 创建防重复校验器
+    m_confirmTracker = new PlateConfirmTracker();
+
+    // 5. 连接识别结果信号（跨线程，Qt 自动使用 QueuedConnection）
+    connect(m_recognizeThread, &RecognizeThread::plateRecognized, this, &MainWindow::onPlateRecognized);
+
+    // 6. 加载 EasyPR 模型（如果尚未加载）
+    PlateRecognize *recognizer = PlateRecognize::instance();
+    if(!recognizer->isModelsLoaded()){
+        // 模型路径：项目根目录下的 resources/model
+        QString modelPath = QCoreApplication::applicationDirPath() + "/resources/model";
+        recognizer->loadModels(modelPath);
+    }
+
+    // 7. 连接自动识别开关
+    // 注意：你需要在 mainwindow.ui 中添加一个名为 autoRecognizeCheckBox 的 QCheckBox
+    // 放置在摄像头画面区域附近，文字为"自动识别"
+    connect(ui->autoRecognizeCheckBox, &QCheckBox::toggled, this, &MainWindow::onAutoRecognizeToggled);
 }
 
 MainWindow::~MainWindow()
 {
+    // 先停止识别线程（依赖 FrameQueue，必须在 FrameQueue 释放前停止）
+    if(m_recognizeThread){
+        m_recognizeThread->stop();
+        m_recognizeThread->wait(3000);
+    }
+
+    // 再停止摄像头线程
     if(m_cameraThread){
         m_cameraThread->quit();
         m_cameraThread->wait();
     }
+
+    // 释放帧队列（两个线程都已停止，安全释放）
+    delete m_frameQueue;
+    m_frameQueue = nullptr;
+
+    // 释放校验器
+    delete m_confirmTracker;
+    m_confirmTracker = nullptr;
+
     delete ui;
 }
 
@@ -217,7 +275,7 @@ void MainWindow::onEntrySearchButton()
     }
 
     // 车牌号验证
-    QString plate = ui->entryPlateInput->text().trimmed();
+    QString plate = Car::normalizePlate(ui->entryPlateInput->text());
     if(plate.isEmpty()){
         notifyInfo(this, QStringLiteral("请输入车牌号"));
         return;
@@ -233,8 +291,16 @@ void MainWindow::onEntrySearchButton()
         return;
     }
 
-    if(m_db->checkIn(plate)){
+    // 从配置文件读取停车场名称（仅一次，向下传递）
+    QString parkingName = getParkingNameFromConfig();
+    if(m_db->checkIn(plate, parkingName)){
         notifySuccess(this, QStringLiteral("%1 入库成功").arg(plate));
+        onUpdateParkingCount();
+        // 入库成功 → 推一条实时记录进「最新记录」卡片(事件驱动,不再查库)
+        if (ui->vehicleEntryExitWidget) {
+            ui->vehicleEntryExitWidget->prependEntry(
+                {Car::displayPlate(plate), QDateTime::currentDateTime(), VehicleEntryStatus::In});
+        }
         ui->entryPlateInput->clear();
         return;
     }else{
@@ -251,7 +317,7 @@ void MainWindow::onExitSearchButton()
     }
 
     // 车牌号验证
-    QString plate = ui->exitPlateInput->text().trimmed();
+    QString plate = Car::normalizePlate(ui->exitPlateInput->text());
     if(plate.isEmpty()){
         notifyInfo(this, QStringLiteral("请输入车牌号"));
         return;
@@ -276,7 +342,11 @@ void MainWindow::onExitSearchButton()
     int hours = totalMinutes / 60;
     int minutes = totalMinutes % 60;
 
-    double cost = Car::calculateFee(intTime, outTime);// 计算费用
+    // 从单例读取费率与免费时长（内存读取，无磁盘IO）
+    double cost = Car::calculateFee(intTime, outTime,
+                                    InitFile::instance().getParkingPrice(),
+                                    InitFile::instance().getFreeMinutes());
+    QString parkingName = InitFile::instance().getParkingName();
 
     // 构造消息
     QString msg = QStringLiteral("停车时长: %1 小时 %2 分钟, 费用 %3 元").arg(hours).arg(minutes).arg(cost, 0, 'f', 2);
@@ -284,8 +354,14 @@ void MainWindow::onExitSearchButton()
         return;
     }
 
-    if(m_db->checkOut(plate, cost)){
+    if(m_db->checkOut(plate, parkingName, cost)){
         notifySuccess(this, QStringLiteral("%1 出库成功").arg(plate));
+        onUpdateParkingCount();
+        // 出库成功 → 推一条实时记录进「最新记录」卡片(事件驱动,不再查库)
+        if (ui->vehicleEntryExitWidget) {
+            ui->vehicleEntryExitWidget->prependEntry(
+                {Car::displayPlate(plate), QDateTime::currentDateTime(), VehicleEntryStatus::Out});
+        }
         ui->exitPlateInput->clear();
         return;
     }else{
@@ -301,12 +377,8 @@ void MainWindow::onUpdateParkingCount()
         return;
     }
 
-    InitFile initFile;
-    if(!initFile.loadConfig()){
-        qWarning() << "配置文件加载失败";
-        return;
-    }
-    QString name = initFile.getParkingName();
+    // 从单例读取停车场名称（内存读取，无磁盘IO）
+    QString name = InitFile::instance().getParkingName();
     if(name.isEmpty()){
         qWarning() << "配置文件中停车场名称为空";
         return;
@@ -323,6 +395,12 @@ void MainWindow::onUpdateParkingCount()
     ui->usedSpacesValueLabel->setText(QString::number(parkingCount.usedSpaces));
     ui->remainingSpacesValueLabel->setText(QString::number(parkingCount.freeSpaces));
     ui->totalSpacesValueLabel->setText(QString::number(parkingCount.totalSpaces));
+}
+
+// 从单例读取停车场名称（UI 层职责，不侵入数据库层）
+QString MainWindow::getParkingNameFromConfig() const
+{
+    return InitFile::instance().getParkingName();
 }
 
 void MainWindow::updateTime()
@@ -349,6 +427,124 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
     }
 
     return QMainWindow::eventFilter(obj, event);
+}
+
+/*
+ * 自动识别结果处理流程：
+ *
+ *   RecognizeThread 发射 plateRecognized 信号
+ *     │
+ *     ▼  (QueuedConnection 跨线程投递到主线程)
+ *   onPlateRecognized(plate, plateImg)
+ *     │
+ *     ├── 自动模式关闭？ → return
+ *     ├── 数据库未连接？ → return
+ *     │
+ *     ├── PlateConfirmTracker::report(plate)
+ *     │   ├── 冷却中 → return
+ *     │   ├── 连续次数不足 → return
+ *     │   └── 确认通过 ↓
+ *     │
+ *     ├── 判断方向：isVehicleInPark(plate)?
+ *     │   ├── 否 → 入库流程 (checkIn)
+ *     │   └── 是 → 出库流程 (计算费用 + checkOut，不弹窗确认)
+ *     │
+ *     ├── markActioned(plate) — 记录冷却起点
+ *     │
+ *     └── 更新 UI：记录卡片 + 车位统计 + Toast
+ */
+void MainWindow::onPlateRecognized(const QString &plate, const cv::Mat &plateImg)
+{
+    Q_UNUSED(plateImg);
+
+    // 自动模式关闭时忽略识别结果
+    if(!m_autoRecognizeEnabled){
+        return;
+    }
+
+    if(!m_db){
+        qDebug() << QStringLiteral("自动识别：数据库未连接");
+        return;
+    }
+
+    // ===== 防重复校验（双重保护） =====
+    // 先经 PlateConfirmTracker 校验（冷却时间 + 多次确认），未通过则静默忽略
+    if(!m_confirmTracker->report(plate)){
+        return;
+    }
+
+    QString normalizedPlate = Car::normalizePlate(plate);
+    if(normalizedPlate.isEmpty() || !Car::isValidLicensePlate(normalizedPlate)){
+        qDebug() << QStringLiteral("自动识别：车牌格式无效") << plate;
+        return;
+    }
+
+    QString parkingName = getParkingNameFromConfig();
+
+    if(!m_db->isVehicleInPark(normalizedPlate)){
+        // ===== 入库流程 =====
+        if(m_db->checkIn(normalizedPlate, parkingName)){
+            m_confirmTracker->markActioned(normalizedPlate);
+            notifySuccess(this, QStringLiteral("[自动] %1 入库成功").arg(normalizedPlate));
+            onUpdateParkingCount();
+            if(ui->vehicleEntryExitWidget){
+                ui->vehicleEntryExitWidget->prependEntry({Car::displayPlate(normalizedPlate), QDateTime::currentDateTime(), VehicleEntryStatus::In});
+            }
+        }else{
+            notifyFailure(this, QStringLiteral("[自动] %1 入库失败").arg(normalizedPlate));
+        }
+    }else{
+        // ===== 出库流程（不弹窗确认，直接计算费用并出库） =====
+        QDateTime inTime = m_db->getVehicleCheckInTime(normalizedPlate);
+        QDateTime outTime = QDateTime::currentDateTime();
+
+        double cost = Car::calculateFee(inTime, outTime, InitFile::instance().getParkingPrice(), InitFile::instance().getFreeMinutes());
+
+        if(m_db->checkOut(normalizedPlate, parkingName, cost)){
+            m_confirmTracker->markActioned(normalizedPlate);
+
+            // 计算时长用于 Toast 展示
+        qint64 totalMinutes = inTime.secsTo(outTime) / 60;
+        int hours = totalMinutes / 60;
+        int minutes = totalMinutes % 60;
+
+        notifySuccess(this, QStringLiteral("[自动] %1 出库成功 | %2时%3分 | %4元").arg(normalizedPlate).arg(hours).arg(minutes).arg(cost, 0, 'f', 2));
+        onUpdateParkingCount();
+        if(ui->vehicleEntryExitWidget){
+            ui->vehicleEntryExitWidget->prependEntry({Car::displayPlate(normalizedPlate), QDateTime::currentDateTime(), VehicleEntryStatus::Out});
+        }
+        }else{
+            notifyFailure(this, QStringLiteral("[自动] %1 出库失败").arg(normalizedPlate));
+        }
+    }
+}
+
+/*
+ * 自动识别开关逻辑：
+ *
+ *   checked = true  → 启动 RecognizeThread，开始自动识别
+ *   checked = false → 停止 RecognizeThread，切回纯手动模式
+ *
+ * 停止后重新开启时，RecognizeThread 需要重新 start()。
+ * QThread 的规则：run() 返回后线程结束，可以再次 start()。
+ */
+void MainWindow::onAutoRecognizeToggled(bool checked)
+{
+    m_autoRecognizeEnabled = checked;
+    if(checked){
+        // 启动识别线程
+        if(m_recognizeThread && !m_recognizeThread->isRunning()){
+            m_recognizeThread->start();
+        }
+        notifyInfo(this, QStringLiteral("自动识别已开启"));
+    }else{
+        // 停止识别线程
+        if(m_recognizeThread && m_recognizeThread->isRunning()){
+            m_recognizeThread->stop();
+            m_recognizeThread->wait(3000);
+        }
+        notifyInfo(this, QStringLiteral("自动识别已关闭"));
+    }
 }
 
 MainWindow::MouseArea MainWindow::getMouseArea(const QPoint &pos) const

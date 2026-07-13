@@ -6,6 +6,7 @@
 #include <QSqlError>
 #include <QDebug>
 #include "databasemanager.h"
+#include "src/utils/initfile.h"
 
 /**
  * @brief 数据库初始化类
@@ -23,7 +24,7 @@ class MySQLInit : public QObject
 {
     Q_OBJECT
 public:
-    explicit MySQLInit(DatabaseManager* dbManager, QObject* parent = nullptr);
+    explicit MySQLInit(DatabaseManager* dbManager, InitFile* initFile, QObject* parent = nullptr);
     ~MySQLInit();
 
     /**
@@ -106,6 +107,7 @@ signals:
 
 private:
     DatabaseManager *m_dbManager;// 数据库管理器
+    InitFile        *m_initFile; // 配置文件管理器，用于读取用户在初始化窗口填写的停车场信息
 
     /**
      * @brief 检查表是否存在

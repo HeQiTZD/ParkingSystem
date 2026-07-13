@@ -49,6 +49,7 @@ SOURCES += \
     UI/Login/usernameedit.cpp \
     UI/MainWindow/circleprogress.cpp \
     UI/MainWindow/mainwindow.cpp \
+    UI/MainWindow/vehicleentryexitwidget.cpp \
     UI/Register/registerdialog.cpp \
     UI/ConfigInit/configinitdialog.cpp \
     # ==================== 应用程序核心代码 ====================
@@ -56,11 +57,14 @@ SOURCES += \
     src/app/car.cpp \
     src/app/platerecognize.cpp \
     src/app/ApplicationManager.cpp \
+    src/app/recognizethread.cpp \
+    src/app/plateconfirmtracker.cpp \
     # ==================== 数据库相关 ====================
     src/database/databasemanager.cpp \
     src/database/mysqlinit.cpp \
     # ==================== 摄像头相关 ====================
     src/camera/camerathread.cpp \
+    src/camera/framequeue.cpp \
     # ==================== 工具和基础设施 ====================
     src/utils/initfile.cpp \
     src/utils/pthreadpool.cpp \
@@ -96,17 +100,22 @@ HEADERS += \
     UI/Login/usernameedit.h \
     UI/MainWindow/circleprogress.h \
     UI/MainWindow/mainwindow.h \
+    UI/MainWindow/vehicleentry.h \
+    UI/MainWindow/vehicleentryexitwidget.h \
     UI/Register/registerdialog.h \
     UI/ConfigInit/configinitdialog.h \
     # ==================== 应用程序核心代码 ====================
     src/app/car.h \
     src/app/platerecognize.h \
     src/app/ApplicationManager.h \
+    src/app/recognizethread.h \
+    src/app/plateconfirmtracker.h \
     # ==================== 数据库相关 ====================
     src/database/databasemanager.h \
     src/database/mysqlinit.h \
     # ==================== 摄像头相关 ====================
     src/camera/camerathread.h \
+    src/camera/framequeue.h \
     # ==================== 工具和基础设施 ====================
     src/utils/initfile.h \
     src/utils/pthreadpool.h \
@@ -152,6 +161,7 @@ INCLUDEPATH += C:\OpenCV-MinGW-Build-OpenCV-3.4.8-x64\include \
                C:\OpenCV-MinGW-Build-OpenCV-3.4.8-x64\include\opencv \
                UI\ \
                UI\Login \
+               UI\MainWindow \
                generated \
                .
 

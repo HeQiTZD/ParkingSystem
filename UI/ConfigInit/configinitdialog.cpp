@@ -136,8 +136,9 @@ bool ConfigInitDialog::validateInputs()
 
 void ConfigInitDialog::saveConfig()
 {
-    InitFile initFile;
-    initFile.loadConfig();
+    // 复用全局单例：setParkingConfig 发射的 parkingConfigChanged 信号
+    // 可被 main.cpp 中连接的 lambda 接收，自动同步到数据库。
+    InitFile &initFile = InitFile::instance();
 
     // 保存数据库配置
     initFile.setDbConfig(ui->txtIP->text(),

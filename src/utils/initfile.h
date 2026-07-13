@@ -16,7 +16,9 @@ class InitFile : public QObject
 {
     Q_OBJECT
 public:
-    explicit InitFile(QObject *parent = nullptr);
+    // 获取单例实例（首次调用时构造，进程退出时自动析构）
+    static InitFile &instance();
+
     ~InitFile();
 
     //配置文件操作
@@ -74,6 +76,13 @@ private:
     QJsonObject getDefaultConfig() const;//
     bool validateConfig(const QJsonObject &config) const;//
 
+private:
+    // 单例：构造/拷贝/移动均私有，禁止外部实例化
+    explicit InitFile(QObject *parent = nullptr);
+    InitFile(const InitFile &) = delete;
+    InitFile &operator=(const InitFile &) = delete;
+    InitFile(InitFile &&) = delete;
+    InitFile &operator=(InitFile &&) = delete;
 };
 
 #endif // INITFILE_H
@@ -82,7 +91,7 @@ private:
 /*
 代码设计原理和作用解释
 1. 类设计原理
-单例模式应用：配置文件管理类通常采用单例模式，确保整个应用程序中只有一个配置实例，避免配置冲突。
+单例模式：配置文件管理类已采用单例模式（InitFile::instance()），确保整个应用程序中只有一个配置实例，避免多实例内存副本冲突与无意义的重复磁盘读写。
 封装性：将配置相关的所有操作封装在一个类中，提供统一的接口，便于维护和扩展。
 信号槽机制：使用Qt的信号槽机制来通知配置状态变化，实现松耦合的设计。
 

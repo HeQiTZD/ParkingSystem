@@ -1,5 +1,4 @@
 ﻿#include "car.h"
-#include "src/utils/initfile.h"
 #include <QRegularExpression>
 #include <QDebug>
 
@@ -76,15 +75,10 @@ bool Car::isValidLicensePlate(const QString &plate)
     return regex.match(plate).hasMatch();
 }
 
-// 计算停车费用：从配置文件读取费率与免费时长，按半小时递进计费
-double Car::calculateFee(const QDateTime &checkInTime, const QDateTime &checkOutTime)
+// 计算停车费用：按半小时递进计费（费率与免费时长由调用方注入，不再读配置文件）
+double Car::calculateFee(const QDateTime &checkInTime, const QDateTime &checkOutTime,
+                         double hourlyRate, int freeMinutes)
 {
-    InitFile cfg;
-    cfg.loadConfig();
-
-    double hourlyRate = cfg.getParkingPrice();
-    int freeMinutes = cfg.getFreeMinutes();
-
     // 总停车分钟数（出库时间无效时按当前时间计）
     qint64 totalMinutes = checkInTime.secsTo(checkOutTime.isValid() ? checkOutTime : QDateTime::currentDateTime()) / 60;
 
@@ -127,4 +121,29 @@ QString Car::toString() const
         .arg(m_checkInTime.toString("yyyy-MM-dd hh:mm:ss"))
         .arg(m_checkOutTime.isValid() ? m_checkOutTime.toString("yyyy-MM-dd hh:mm:ss") : "未出库")
         .arg(m_fee, 0, 'f', 2);
+}
+
+QString Car::normalizePlate(const QString &input)
+{
+    QString plate = input.trimmed();
+    plate.remove(QStringLiteral("·"));
+    plate.remove(QStringLiteral(" "));
+    plate.remove(QStringLiteral("-"));
+    plate = plate.toUpper();
+    return plate;
+}
+
+QString Car::displayPlate(const QString &plate)
+{
+    QString p = plate.trimmed();
+    p.remove(QStringLiteral("·"));
+    p.remove(QStringLiteral(" "));
+    p.remove(QStringLiteral("-"));
+    p = p.toUpper();
+
+    // 普通车牌 7 位 / 新能源 8 位 → 第 2 位后插入"·"
+    if (p.size() == 7 || p.size() == 8) {
+        return p.left(2) + QStringLiteral("·") + p.mid(2);
+    }
+    return plate;
 }

@@ -50,8 +50,8 @@ public:
 
     //车辆管理
     bool isVehicleInPark(const QString &licensePlate);
-    bool checkIn(const QString &licensePlate);
-    bool checkOut(const QString &licensePlate, double fee);
+    bool checkIn(const QString &licensePlate, const QString &parkingName);
+    bool checkOut(const QString &licensePlate, const QString &parkingName, double fee);
     QSqlQuery queryVehicle(const QString &licensePlate, bool onlyInPark = true);
 
     //车位统计

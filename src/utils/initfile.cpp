@@ -1,5 +1,12 @@
 ﻿#include "initfile.h"
 
+InitFile &InitFile::instance()
+{
+    // Meyers 单例：首次调用时构造，进程退出时自动析构，线程安全（C++11 保证）
+    static InitFile instance;
+    return instance;
+}
+
 InitFile::InitFile(QObject *parent) : QObject(parent) {
     //设置文件路径
     configFilePath = getConfigFilePath();
@@ -8,8 +15,8 @@ InitFile::InitFile(QObject *parent) : QObject(parent) {
 
 InitFile::~InitFile()
 {
-    //析构时自动保存
-    saveConfig();
+    // 保存由 setter 调用方显式触发，析构不自动写盘。
+    // 避免只读场景下局部/临时实例析构时把内存副本无意义地回写磁盘。
 }
 
 //加载配置文件

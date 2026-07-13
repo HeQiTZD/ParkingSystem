@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QElapsedTimer>
 #include <QDateTime>
+#include "framequeue.h"
 
 CameraThread::CameraThread(int cameraIndex, QObject *parent)
     : QThread(parent)
@@ -81,6 +82,13 @@ void CameraThread::run()
     m_running = true;
     m_lastFpsTime = QDateTime::currentMSecsSinceEpoch();
 
+    // ===== 新增：采样计数器 =====
+    // 每 sampleEveryN 帧向 FrameQueue 投递一帧供识别线程消费。
+    // 30fps 下每 15 帧 ≈ 0.5 秒投递一次。
+    // 投递频率高于识别频率（~1.5秒/帧），中间帧被覆盖，消费者始终拿最新帧。
+    int sampleCounter = 0;
+    const int sampleEveryN = 15;
+
     // 计算每帧的延迟时间（毫秒）
     int frameDelay = 1000 / m_targetFps;
 
@@ -116,9 +124,14 @@ void CameraThread::run()
         // 发射新帧信号
         emit newFrameCaptured(frame.clone());
 
+        // ===== 新增：定期向识别队列投递 =====
+        if(m_frameQueue && ++sampleCounter >= sampleEveryN){
+            m_frameQueue->push(frame.clone());
+            sampleCounter = 0;
+        }
+        
         // 计算帧率
         calculateFps();
-
         // 帧率控制：休眠以达到目标帧率
         QThread::msleep(frameDelay);
     }

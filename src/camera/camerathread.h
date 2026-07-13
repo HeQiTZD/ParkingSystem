@@ -7,6 +7,9 @@
 #include <QImage>
 #include <QQueue>
 #include <opencv2/opencv.hpp>
+//#include "framequeue.h"
+
+class FrameQueue;   // 前向声明，避免引入头文件
 
 /**
  * @brief 摄像头线程类
@@ -72,6 +75,16 @@ public:
      * @brief 恢复捕获
      */
      void resume();
+
+    /**
+     * @brief 设置帧队列（用于向识别线程投递采样帧）
+     *
+     * 如果不设置（保持 nullptr），CameraThread 的行为与原来完全一致，
+     * 不会向任何队列投递帧。这保证了向后兼容。
+     *
+     * @param queue 帧队列指针，生命周期由调用方管理
+     */
+    void setFrameQueue(FrameQueue *queue) {m_frameQueue = queue;}
 
     /**
      * @brief 获取最新一帧（线程安全）
@@ -156,6 +169,8 @@ private:
     // 帧率计算相关
     int m_frameCount; //帧计数器
     qint64 m_lastFpsTime; //上次帧率计算时间
+
+    FrameQueue *m_frameQueue = nullptr; // 识别队列
 };
 
 #endif // CAMERATHREAD_H

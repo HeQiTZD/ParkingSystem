@@ -1,10 +1,7 @@
 #include "databasemanager.h"
 #include "src/utils/utils.h"
 #include "src/utils/notification_global.h"
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QCoreAppLication>
-#include <QFile>
+#include "src/utils/initfile.h"
 
 DatabaseManager::DatabaseManager(QObject *parent): QObject(parent), connected(false){}
 
@@ -208,7 +205,7 @@ bool DatabaseManager::isVehicleInPark(const QString &licensePlate)
     return query.value(0).toInt() > 0;
 }
 
-bool DatabaseManager::checkIn(const QString &licensePlate)
+bool DatabaseManager::checkIn(const QString &licensePlate, const QString &parkingName)
 {
     if (!connected) {
         qDebug() << "数据库未连接！";
@@ -232,6 +229,19 @@ bool DatabaseManager::checkIn(const QString &licensePlate)
         return false;
     }
 
+    // 同步 PARKING 表计数：P_now_count + 1
+    if (!parkingName.isEmpty()) {
+        QSqlQuery countQuery(db);
+        countQuery.prepare("UPDATE PARKING SET P_now_count = P_now_count + 1 "
+                          "WHERE P_name = :name");
+        countQuery.bindValue(":name", parkingName);
+        if (!countQuery.exec()) {
+            qDebug() << "更新车位计数失败:" << countQuery.lastError().text();
+            db.rollback();
+            return false;
+        }
+    }
+
     // 提交事务
     if (!db.commit()) {
         qDebug() << "提交事务失败:" << db.lastError().text();
@@ -243,7 +253,7 @@ bool DatabaseManager::checkIn(const QString &licensePlate)
     return true;
 }
 
-bool DatabaseManager::checkOut(const QString &licensePlate, double fee)
+bool DatabaseManager::checkOut(const QString &licensePlate, const QString &parkingName, double fee)
 {
     if (!connected) {
         qDebug() << "数据库未连接！";
@@ -281,6 +291,20 @@ bool DatabaseManager::checkOut(const QString &licensePlate, double fee)
         qDebug() << "出库更新失败:" << updateQuery.lastError().text();
         db.rollback();
         return false;
+    }
+
+    // 同步 PARKING 表计数：P_now_count - 1
+    if (!parkingName.isEmpty()) {
+        QSqlQuery countQuery(db);
+        countQuery.prepare("UPDATE PARKING SET P_now_count = "
+                          "CASE WHEN P_now_count > 0 THEN P_now_count - 1 ELSE 0 END "
+                          "WHERE P_name = :name");
+        countQuery.bindValue(":name", parkingName);
+        if (!countQuery.exec()) {
+            qDebug() << "更新车位计数失败:" << countQuery.lastError().text();
+            db.rollback();
+            return false;
+        }
     }
 
     // 提交事务
@@ -475,13 +499,8 @@ bool DatabaseManager::deleteCarRecord(int id)
         checkOutTime = searchCarId.value(0).toDateTime();
     }
 
-    // 获取停车场名称
-    QString path = QCoreApplication::applicationDirPath() + "/config.json";
-    QFile file(path);
-    if(!file.open(QIODevice::ReadOnly)) return false;
-    QJsonDocument doc = QJsonDocument::fromJson(file.readAll());
-    file.close();
-    QString parkingName = doc.object()["parking"].toObject()["name"].toString();
+    // 获取停车场名称（通过 InitFile 单例，避免绕过封装直接读 JSON）
+    QString parkingName = InitFile::instance().getParkingName();
 
     if(!db.transaction()){
             qDebug() << "数据库事务开启失败";

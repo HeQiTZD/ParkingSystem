@@ -52,12 +52,12 @@ int main(int argc, char *argv[])
     // 导致 loop.exec() 退出后 LoginDialog::exec() 再也起不来 → 程序卡死。
     app.setQuitOnLastWindowClosed(false);
 
-    InitFile initFile;
+    InitFile &initFile = InitFile::instance();
     DatabaseManager dbManager;
 
     QObject::connect(&initFile,&InitFile::parkingConfigChanged,[&dbManager](const QString &name, double price, int capacity, int freeMinutes){
                                                                             if(dbManager.isConnected()){
-                                                                                // 免费时长暂存于配置文件，数据库保留扩展 TODO: 后续设置页面接入后可同步DB
+                                                                                // freeMinutes 仅存于配置文件，数据库保留扩展 TODO: 后续设置页面接入后可同步DB
                                                                                 Q_UNUSED(freeMinutes)
                                                                                 dbManager.updateParkingConfig(name, price, capacity);
                                                                             }
@@ -91,8 +91,8 @@ int main(int argc, char *argv[])
         }
     }
 
-    //初始化表结构
-    MySQLInit mysqlInit(&dbManager);
+    //初始化表结构（注入 initFile，使数据库写入用户在配置窗口填写的停车场信息）
+    MySQLInit mysqlInit(&dbManager, &initFile);
     if(!mysqlInit.initAll()){
         QMessageBox::critical(nullptr, "错误", "数据库初始化失败!");
         return -1;

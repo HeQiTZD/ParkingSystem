@@ -2,8 +2,8 @@
 #include "src/utils/utils.h"<longcat_arg_value>
 
 //构造函数
-MySQLInit::MySQLInit(DatabaseManager *dbManager, QObject *parent)
-    :QObject(parent), m_dbManager(dbManager) {}
+MySQLInit::MySQLInit(DatabaseManager *dbManager, InitFile *initFile, QObject *parent)
+    : QObject(parent), m_dbManager(dbManager), m_initFile(initFile) {}
 
 //析构函数
 MySQLInit::~MySQLInit() {}
@@ -45,9 +45,15 @@ bool MySQLInit::initAll()
         return false;
     }
 
-    // 4. 初始化停车场数据
+    // 4. 初始化停车场数据 — 从配置文件中读取用户在初始化窗口填写的停车场信息
     emit initProgress("初始化停车场数据", 75);
-    if(!initParkingData("默认停车场", 100, 5.0)){
+    if (!m_initFile) {
+        emit initFinished(false, "配置文件管理器未注入");
+        return false;
+    }
+    if (!initParkingData(m_initFile->getParkingName(),
+                         m_initFile->getParkingCapacity(),
+                         m_initFile->getParkingPrice())) {
         emit initFinished(false, "初始化停车场数据失败");
         return false;
     }

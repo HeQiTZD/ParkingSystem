@@ -147,6 +147,22 @@ void PlateRecognize::recognizeSlot(Mat rgbImg)
     recognizePlate(rgbImg);
 }
 
+int PlateRecognize::plateRecognizeAccessor(const cv::Mat &image, std::vector<easypr::CPlate> &plates)
+{
+    if(!m_modelsLoaded || image.empty()){
+        return -1;
+    }
+
+    try{
+        cv::Mat localImg = image.clone();
+        int result = m_plateRecognize.plateRecognize(localImg, plates, 0);
+        return result;
+    }catch (const std::exception &e){
+        qDebug() << QStringLiteral("plateRecognizeAccessor 异常:") << e.what();
+        return -1;
+    }
+}
+
 /*
 1. 单例模式 (Singleton Pattern)
 

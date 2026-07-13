@@ -1,8 +1,12 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 #include "circleprogress.h"
+#include "vehicleentryexitwidget.h"
 #include "src/camera/camerathread.h"
 #include "src/database/databasemanager.h"
+#include "src/app/recognizethread.h"
+#include "src/app/plateconfirmtracker.h"
+#include "src/camera/framequeue.h"
 #include <QMainWindow>
 #include <QTimer>
 #include <QLabel>
@@ -52,9 +56,25 @@ private slots:
 
     void onUpdateParkingCount();// 更新车位使用情况
 
+    /**
+     * @brief 接收自动识别结果
+     *
+     * 由 RecognizeThread::plateRecognized 信号触发（跨线程 QueuedConnection）。
+     * 在主线程中执行：防重复校验 → 自动出入库 → 更新 UI。
+     *
+     * @param plate 识别到的车牌号
+     * @param plateImg 车牌区域图像（预留，暂未使用）
+     */
+    void onPlateRecognized(const QString &plate, const cv::Mat &plateImg);
+
+    /** @brief 自动识别开关切换 */
+    void onAutoRecognizeToggled(bool checked);
+
+
 private:
     MouseArea getMouseArea(const QPoint &pos) const;
     void setCursorShape(MouseArea area);
+    QString getParkingNameFromConfig() const;  // 供 checkIn/getParkingStats 等使用
 
 protected:
     bool eventFilter(QObject *obj, QEvent *event) override;
@@ -76,6 +96,12 @@ private:
     static const int kResizeBorder = 5;
 
     DatabaseManager *m_db;
+
+    // ===== 自动识别相关 =====
+    FrameQueue *m_frameQueue = nullptr;
+    RecognizeThread *m_recognizeThread = nullptr;
+    PlateConfirmTracker *m_confirmTracker = nullptr;
+    bool m_autoRecognizeEnabled = false;
 };
 
 #endif // MAINWINDOW_H

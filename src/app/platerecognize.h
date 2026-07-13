@@ -34,6 +34,18 @@ public:
     //设置是否显示调试信息
     void setDebugMode(bool show);
 
+    /**
+     * @brief 直接访问 EasyPR 识别结果（供 RecognizeThread 使用）
+     *
+     * 与 recognizePlate() 不同，本方法不发射信号，
+     * 而是直接返回识别到的 CPlate 向量，由调用方自行处理。
+     *
+     * @param image 输入图像
+     * @param[out] plates 输出的车牌向量
+     * @return 0=成功, -1=失败
+     */
+    int plateRecognizeAccessor(const cv::Mat &image, std::vector<easypr::CPlate> &plates);
+
 signals:
     //识别完成信号
     void recognizeFinished(cv::Mat plateImg, QString plateStr);
