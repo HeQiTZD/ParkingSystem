@@ -151,9 +151,9 @@ bool CameraThread::initCamera()
         return false;
     }
 
-    // 设置摄像头参数
-    m_capture.set(cv::CAP_PROP_FRAME_WIDTH, 640);
-    m_capture.set(cv::CAP_PROP_FRAME_HEIGHT, 480);
+    // 设置摄像头参数（优先使用 setResolution 配置的值）
+    m_capture.set(cv::CAP_PROP_FRAME_WIDTH, m_cameraWidth);
+    m_capture.set(cv::CAP_PROP_FRAME_HEIGHT, m_cameraHeight);
     m_capture.set(cv::CAP_PROP_FPS, m_targetFps);
 
     emit cameraStatusChanged(true, QStringLiteral("摄像头 %1 已连接").arg(m_cameraIndex));

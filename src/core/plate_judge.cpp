@@ -15,23 +15,22 @@ namespace easypr {
   }
 
   PlateJudge::PlateJudge() { 
+    // 延迟加载：不在构造函数中加载模型，避免硬编码路径失效导致异常
+    // SVM模型通过LoadModel()在运行时由调用方传入正确路径进行加载
+    svm_ = ml::SVM::create();
     bool useLBP = false;
     if (useLBP) {
-      LOAD_SVM_MODEL(svm_, kLBPSvmPath);
       extractFeature = getLBPFeatures;
     }
     else {
-      LOAD_SVM_MODEL(svm_, kHistSvmPath);
       extractFeature = getHistomPlusColoFeatures;
     }
   }
 
   void PlateJudge::LoadModel(std::string path) {
-    if (path != std::string(kDefaultSvmPath)) {
-      if (!svm_->empty())
-        svm_->clear();
-      LOAD_SVM_MODEL(svm_, path);
-    }
+    if (!svm_->empty())
+      svm_->clear();
+    LOAD_SVM_MODEL(svm_, path);
   }
 
   // set the score of plate

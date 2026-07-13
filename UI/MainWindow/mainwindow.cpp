@@ -139,6 +139,11 @@ MainWindow::MainWindow(QWidget *parent, DatabaseManager *db)
     m_videoLabel->setScaledContents(false);
 
     m_cameraThread = new CameraThread(0, this);
+    // 从配置文件读取摄像头分辨率，默认 1920×1080（兼容旧配置无此字段）
+    m_cameraThread->setResolution(
+        InitFile::instance().getCameraWidth(),
+        InitFile::instance().getCameraHeight());
+    m_cameraThread->setTargetFps(InitFile::instance().getCameraFps());
     connect(m_cameraThread,&CameraThread::newFrameCaptured,this,&MainWindow::updateFrame);
     m_cameraThread->start();
 
@@ -180,7 +185,7 @@ MainWindow::MainWindow(QWidget *parent, DatabaseManager *db)
     PlateRecognize *recognizer = PlateRecognize::instance();
     if(!recognizer->isModelsLoaded()){
         // 模型路径：项目根目录下的 resources/model
-        QString modelPath = QCoreApplication::applicationDirPath() + "/resources/model";
+        QString modelPath = QCoreApplication::applicationDirPath() + "/model";
         recognizer->loadModels(modelPath);
     }
 

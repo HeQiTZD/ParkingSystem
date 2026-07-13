@@ -19,38 +19,33 @@ CharsIdentify* CharsIdentify::instance() {
 }
 
 CharsIdentify::CharsIdentify() {
-  LOAD_ANN_MODEL(ann_, kDefaultAnnPath);
-  LOAD_ANN_MODEL(annChinese_, kChineseAnnPath);
-  LOAD_ANN_MODEL(annGray_, kGrayAnnPath);
+  // 延迟加载：不在构造函数中加载模型，避免硬编码路径失效导致异常
+  // ANN模型通过LoadModel/LoadChineseModel/LoadGrayChANN在运行时加载
+  ann_ = ml::ANN_MLP::create();
+  annChinese_ = ml::ANN_MLP::create();
+  annGray_ = ml::ANN_MLP::create();
 
   kv_ = std::shared_ptr<Kv>(new Kv);
-  kv_->load(kChineseMappingPath);
 
   extractFeature = getGrayPlusProject;
 }
 
 void CharsIdentify::LoadModel(std::string path) {
-  if (path != std::string(kDefaultAnnPath)) {
-    if (!ann_->empty())
-      ann_->clear();
-    LOAD_ANN_MODEL(ann_, path);
-  }
+  if (!ann_->empty())
+    ann_->clear();
+  LOAD_ANN_MODEL(ann_, path);
 }
 
 void CharsIdentify::LoadChineseModel(std::string path) {
-  if (path != std::string(kChineseAnnPath)) {
-    if (!annChinese_->empty())
-      annChinese_->clear();
-    LOAD_ANN_MODEL(annChinese_, path);
-  }
+  if (!annChinese_->empty())
+    annChinese_->clear();
+  LOAD_ANN_MODEL(annChinese_, path);
 }
 
 void CharsIdentify::LoadGrayChANN(std::string path) {
-  if (path != std::string(kGrayAnnPath)) {
-    if (!annGray_->empty())
-      annGray_->clear();
-    LOAD_ANN_MODEL(annGray_, path);
-  }
+  if (!annGray_->empty())
+    annGray_->clear();
+  LOAD_ANN_MODEL(annGray_, path);
 }
 
 void CharsIdentify::LoadChineseMapping(std::string path) {

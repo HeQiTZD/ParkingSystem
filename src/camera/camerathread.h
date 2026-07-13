@@ -40,6 +40,13 @@ public:
     explicit CameraThread(int cameraIndex = 0, QObject *parent = nullptr);
 
     /**
+     * @brief 设置摄像头采集分辨率
+     * @param width 宽度（像素），默认 640
+     * @param height 高度（像素），默认 480
+     */
+    void setResolution(int width, int height) { m_cameraWidth = width; m_cameraHeight = height; }
+
+    /**
      * @brief 析构函数
      */
     ~CameraThread();
@@ -156,6 +163,8 @@ private:
 
     // 成员变量
     int m_cameraIndex; //摄像头索引
+    int m_cameraWidth  = 640;  // 采集宽度（可通过 setResolution 覆盖）
+    int m_cameraHeight = 480;  // 采集高度
     int m_targetFps; //目标帧率
     int m_currentFps; //当前帧率
     bool m_running; //运行标志

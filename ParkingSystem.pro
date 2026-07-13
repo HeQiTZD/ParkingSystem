@@ -199,3 +199,9 @@ QMAKE_POST_LINK += $$quote(cmd /c copy /Y \"$$OPENCV_DLL_DIR\\*.dll\" \"$$DLL_TA
 RESOURCES += \
     UI/imageQrc/image.qrc \
     styles/styles.qrc
+
+# ==================== 模型文件部署 ====================
+# 把项目根目录的 model/ 复制到构建产物目录(debug/release),供运行时加载
+model.files = model/*
+model.path = $$OUT_PWD/model
+INSTALLS += model
