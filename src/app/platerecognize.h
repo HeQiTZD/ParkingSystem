@@ -2,85 +2,59 @@
 #define PLATERECOGNIZE_H
 
 #include <QObject>
-#include <opencv2/highgui.hpp>
-#include <opencv2/imgproc.hpp>
-#include <opencv2/opencv.hpp>
-#include <QImage>
+#include <QString>
+#include <opencv2/core.hpp>
+#include <vector>
 
-//引入EasyPR库
-#include "include/easypr.h"
+// ── 替换 EasyPR 的类型：轻量结果结构体 ──
+struct PlateResult {
+    cv::Mat plateImg;     // 车牌裁剪图像
+    QString  plateStr;    // 车牌号（如 "川A88888"，HyperLPR 直接返回）
+    float    score = 0.0f;// 置信度 0~1
+};
 
-using namespace easypr;
+// ── 前向声明 HyperLPR（避免在头文件暴露 Pipeline.h 中的 using namespace） ──
+namespace pr {
+    class PipelinePR;
+    class PlateInfo;
+}
 
-/**
- * @brief 车牌识别封装类
- */
 class PlateRecognize : public QObject
 {
     Q_OBJECT
 public:
-    // 获取单例实例
     static PlateRecognize* instance();
 
-    //加载识别模型
+    // 加载 HyperLPR 模型（modelPath = 包含 prototxt/caffemodel 的目录）
     bool loadModels(const QString &modelPath);
 
-    //执行车牌识别
-    int recognizePlate(const cv::Mat &image);//cv::Mat是 OpenCV 里的"图像对象"
+    // 识别图像 → 发射 recognizeFinished 信号，返回识别到的车牌数量
+    int recognizePlate(const cv::Mat &image);
 
-    //检查模型是否已加载
-    bool isModelsLoaded() const {return m_modelsLoaded;}
-
-    //设置是否显示调试信息
+    bool isModelsLoaded() const { return m_modelsLoaded; }
     void setDebugMode(bool show);
 
-    /**
-     * @brief 直接访问 EasyPR 识别结果（供 RecognizeThread 使用）
-     *
-     * 与 recognizePlate() 不同，本方法不发射信号，
-     * 而是直接返回识别到的 CPlate 向量，由调用方自行处理。
-     *
-     * @param image 输入图像
-     * @param[out] plates 输出的车牌向量
-     * @return 0=成功, -1=失败
-     */
-    int plateRecognizeAccessor(const cv::Mat &image, std::vector<easypr::CPlate> &plates);
+    // 直接获取识别结果（供 RecognizeThread 使用）
+    int plateRecognizeAccessor(const cv::Mat &image, std::vector<PlateResult> &results);
 
 signals:
-    //识别完成信号
     void recognizeFinished(cv::Mat plateImg, QString plateStr);
-
-    //识别错误信号
     void recognizeError(QString errorMsg);
-
-    //模型加载状态信号
     void modelLoadStatus(bool loaded, QString message);
 
 public slots:
-    //识别槽函数
     void recognizeSlot(cv::Mat rgbImg);
 
 private:
-    //构造函数（私有，单例模式）
     explicit PlateRecognize(QObject *parent = nullptr);
-
-    //禁止拷贝构造和赋值操作符
     PlateRecognize(const PlateRecognize&) = delete;
     PlateRecognize& operator=(const PlateRecognize&) = delete;
 
-    //解析车牌字符串
-    void parsePlateString(const std::string &plateStr, QString &color, QString &number);
+    // ── 成员变量 ──
+    pr::PipelinePR *m_prc = nullptr;   // HyperLPR 流水线（替换 EasyPR CPlateRecognize）
+    bool m_modelsLoaded = false;
+    bool m_debugMode = false;
 
-    //EasyPR识别器实例
-    easypr::CPlateRecognize m_plateRecognize;
-
-    //模型加载状态
-    bool m_modelsLoaded;
-
-    //调试模式
-    bool m_debugMode;
-
-    //单例实例
     static PlateRecognize* s_instance;
 };
 

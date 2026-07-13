@@ -16,6 +16,10 @@ TARGET = ParkingSystem
 # 作用：启用 C++11 标准，支持 auto、lambda 等特性
 CONFIG += c++11
 
+# ── 强制指定 MinGW 13.1.0 编译器（避免 PATH 中的 mingw810_64 / GCC 8.1 误链接） ──
+QMAKE_CXX = C:/Qt/Tools/mingw1310_64/bin/g++.exe
+QMAKE_LINK = C:/Qt/Tools/mingw1310_64/bin/g++.exe
+
 # 源文件和翻译文件的编码格式（解决 qss 等资源文件中文乱码/解析失败）
 CODECFORTR = UTF-8
 CODECFORSRC = UTF-8
@@ -123,8 +127,8 @@ INCLUDEPATH += thirdparty/opencv4/include \
                generated \
                .
 
-LIBS += -L thirdparty/opencv4/lib -lopencv_world4110
-LIBS += -L thirdparty/hyperlpr/lib -lhyperlpr
+# OpenCV 4.11：链接 world 导入库（Hyperlpr 改为源码直接编译，无需 -lhyperlpr）
+LIBS += -Lthirdparty/opencv4/lib -lopencv_world4110
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -153,8 +157,7 @@ CONFIG(debug, debug|release) {
 # 复制 OpenCV 4.11 world DLL（从导入库目录获取）
 QMAKE_POST_LINK += $$quote(cmd /c copy /Y \"$$PWD/thirdparty/opencv4/lib/libopencv_world4110.dll\" \"$$DLL_TARGET_DIR\" $$escape_expand(\n\t))
 
-# 复制 HyperLPR DLL
-QMAKE_POST_LINK += $$quote(cmd /c copy /Y \"$$PWD/thirdparty/hyperlpr/lib/libhyperlpr.dll\" \"$$DLL_TARGET_DIR\" $$escape_expand(\n\t))
+# 注意：Hyperlpr 改为源码直接编译进可执行文件，无需单独的 DLL，故不再复制 libhyperlpr.dll
 
 RESOURCES += \
     UI/imageQrc/image.qrc \
