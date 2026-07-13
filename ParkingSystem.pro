@@ -70,28 +70,11 @@ SOURCES += \
     src/utils/pthreadpool.cpp \
     src/utils/notificationdialog.cpp \
     src/utils/toastwidget.cpp \
-    # ==================== EasyPR 核心识别库（第三方库） ====================
-    src/core/chars_identify.cpp \
-    src/core/chars_recognise.cpp \
-    src/core/chars_segment.cpp \
-    src/core/core_func.cpp \
-    src/core/feature.cpp \
-    src/core/params.cpp \
-    src/core/plate_detect.cpp \
-    src/core/plate_judge.cpp \
-    src/core/plate_locate.cpp \
-    src/core/plate_recognize.cpp \
-    # ==================== EasyPR 工具库（第三方库） ====================
-    src/util/kv.cpp \
-    src/util/program_options.cpp \
-    src/util/util.cpp \
-    # ==================== 第三方依赖库 ====================
-    thirdparty/LBP/helper.cpp \
-    thirdparty/LBP/lbp.cpp \
-    thirdparty/mser/mser2.cpp \
-    thirdparty/svm/corrected_svm.cpp \
-    thirdparty/textDetect/erfilter.cpp \
-    thirdparty/xmlParser/xmlParser.cpp
+    # ==================== HyperLPR-2 车牌识别库（替换 EasyPR） ====================
+    thirdparty/hyperlpr/src/Pipeline.cpp \
+    thirdparty/hyperlpr/src/PlateDetection.cpp \
+    thirdparty/hyperlpr/src/PlateRecognation.cpp \
+    thirdparty/hyperlpr/src/FineTune.cpp
 
 HEADERS += \
     # ==================== 核心业务模块 ====================
@@ -124,48 +107,24 @@ HEADERS += \
     src/utils/toastwidget.h \
     src/utils/notification_global.h \
     src/utils/messageType.h \
-    # ==================== EasyPR 核心头文件（第三方库） ====================
-    include/easypr/core/character.hpp \
-    include/easypr/core/chars_identify.h \
-    include/easypr/core/chars_recognise.h \
-    include/easypr/core/chars_segment.h \
-    include/easypr/core/core_func.h \
-    include/easypr/core/feature.h \
-    include/easypr/core/params.h \
-    include/easypr/core/plate.hpp \
-    include/easypr/core/plate_detect.h \
-    include/easypr/core/plate_judge.h \
-    include/easypr/core/plate_locate.h \
-    include/easypr/core/plate_recognize.h \
-    # ==================== EasyPR 工具头文件（第三方库） ====================
-    include/easypr/util/kv.h \
-    include/easypr/util/program_options.h \
-    include/easypr/util/switch.hpp \
-    include/easypr/util/util.h \
-    include/easypr/api.hpp \
-    include/easypr/config.h \
-    include/easypr/version.h \
-    include/easypr.h \
-    # ==================== 第三方依赖库头文件 ====================
-    thirdparty/LBP/helper.hpp \
-    thirdparty/LBP/lbp.hpp \
-    thirdparty/mser/mser2.hpp \
-    thirdparty/svm/precomp.hpp \
-    thirdparty/textDetect/erfilter.hpp \
-    thirdparty/xmlParser/xmlParser.h
+    # ==================== HyperLPR-2 头文件（替换 EasyPR） ====================
+    thirdparty/hyperlpr/include/Pipeline.h \
+    thirdparty/hyperlpr/include/Platedetect.h \
+    thirdparty/hyperlpr/include/PlateRecognation.h \
+    thirdparty/hyperlpr/include/Finetune.h \
+    thirdparty/hyperlpr/include/PlateInfo.h
 
-# ==================== OpenCV 库配置 ====================
-# 【重要】修改为本机的 OpenCV 安装路径
-INCLUDEPATH += C:\OpenCV-MinGW-Build-OpenCV-3.4.8-x64\include \
-               C:\OpenCV-MinGW-Build-OpenCV-3.4.8-x64\include\opencv2 \
-               C:\OpenCV-MinGW-Build-OpenCV-3.4.8-x64\include\opencv \
-               UI\ \
-               UI\Login \
-               UI\MainWindow \
+# ==================== OpenCV 4.11 + HyperLPR 库配置（替换 3.4.8 + EasyPR） ====================
+INCLUDEPATH += thirdparty/opencv4/include \
+               thirdparty/hyperlpr/include \
+               UI/ \
+               UI/Login \
+               UI/MainWindow \
                generated \
                .
 
-LIBS += -L C:\OpenCV-MinGW-Build-OpenCV-3.4.8-x64\x64\mingw\lib\libopencv_*.a
+LIBS += -L thirdparty/opencv4/lib -lopencv_world4110
+LIBS += -L thirdparty/hyperlpr/lib -lhyperlpr
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -183,25 +142,26 @@ FORMS += \
     UI/ConfigInit/configinitdialog.ui
 
 # ==================== DLL 复制配置 ====================
-# 构建完成后将 OpenCV DLL 复制到可执行文件目录
-OPENCV_DLL_DIR = C:/OpenCV-MinGW-Build-OpenCV-3.4.8-x64/x64/mingw/bin
+# 构建完成后将 DLL 复制到可执行文件目录
 
-# 根据构建模式选择目标目录（debug 或 release）
 CONFIG(debug, debug|release) {
     DLL_TARGET_DIR = $$OUT_PWD/debug
 } else {
     DLL_TARGET_DIR = $$OUT_PWD/release
 }
 
-# 复制 OpenCV DLL 文件到可执行文件所在目录（cmd /c 保证在 sh/cmd 终端均可执行）
-QMAKE_POST_LINK += $$quote(cmd /c copy /Y \"$$OPENCV_DLL_DIR\\*.dll\" \"$$DLL_TARGET_DIR\" $$escape_expand(\n\t))
+# 复制 OpenCV 4.11 world DLL（从导入库目录获取）
+QMAKE_POST_LINK += $$quote(cmd /c copy /Y \"$$PWD/thirdparty/opencv4/lib/libopencv_world4110.dll\" \"$$DLL_TARGET_DIR\" $$escape_expand(\n\t))
+
+# 复制 HyperLPR DLL
+QMAKE_POST_LINK += $$quote(cmd /c copy /Y \"$$PWD/thirdparty/hyperlpr/lib/libhyperlpr.dll\" \"$$DLL_TARGET_DIR\" $$escape_expand(\n\t))
 
 RESOURCES += \
     UI/imageQrc/image.qrc \
     styles/styles.qrc
 
 # ==================== 模型文件部署 ====================
-# 把项目根目录的 model/ 复制到构建产物目录(debug/release),供运行时加载
+# EasyPR 模型（project/model/）复制到运行时目录
 model.files = model/*
 model.path = $$OUT_PWD/model
 INSTALLS += model
