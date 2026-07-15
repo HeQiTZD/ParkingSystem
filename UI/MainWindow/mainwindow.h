@@ -7,6 +7,7 @@
 #include "src/app/recognizethread.h"
 #include "src/app/plateconfirmtracker.h"
 #include "src/camera/framequeue.h"
+#include "UI/VehicleInformation/vehicleinformation.h"
 #include <QMainWindow>
 #include <QTimer>
 #include <QLabel>
@@ -36,6 +37,9 @@ public:
         ResizeBottomLeft,
         ResizeBottomRight
     };
+
+    void startRecognition();  // 进入主页时自动开启识别
+    void stopRecognition();   // 离开主页时自动停止识别
 
 signals:
     void logoutRequested();// 退出登录
@@ -70,7 +74,6 @@ private slots:
     /** @brief 自动识别开关切换 */
     void onAutoRecognizeToggled(bool checked);
 
-
 private:
     MouseArea getMouseArea(const QPoint &pos) const;
     void setCursorShape(MouseArea area);
@@ -102,6 +105,8 @@ private:
     RecognizeThread *m_recognizeThread = nullptr;
     PlateConfirmTracker *m_confirmTracker = nullptr;
     bool m_autoRecognizeEnabled = false;
+
+    VehicleInformation *m_vehicleInfoPage  = nullptr;  // 车辆信息页面
 };
 
 #endif // MAINWINDOW_H

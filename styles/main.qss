@@ -305,3 +305,70 @@
 #MainWindow #sidebarInfoRight {
     color: #4f4954;
 }
+
+
+/*------------------  13. 自动识别复选框  ------------------*/
+/* 对应 mainwindow.ui 中的 autoRecognizeCheckBox */
+
+#MainWindow #autoRecognizeCheckBox {
+    color: #000000;
+    spacing: 8px; /* 文字与复选框的间距 */
+}
+
+/* 复选框指示器基础样式 */
+#MainWindow #autoRecognizeCheckBox::indicator {
+    width: 15px;
+    height: 15px;
+    border: 2px solid #D3D3D3;
+    border-radius: 4px;
+    background-color: #ffffff;
+}
+
+/* 未选中状态 */
+#MainWindow #autoRecognizeCheckBox::indicator:unchecked {
+    border-color: #D3D3D3;
+    background-color: #ffffff;
+}
+
+/* 悬停状态 - 与输入框悬停效果一致 */
+#MainWindow #autoRecognizeCheckBox::indicator:unchecked:hover {
+    border-color: #1E90FF;
+    background-color: #f0f8ff;
+}
+
+/* 按下状态 */
+#MainWindow #autoRecognizeCheckBox::indicator:unchecked:pressed {
+    border-color: #1E90FF;
+    background-color: #e6f3ff;
+}
+
+/* 选中状态 - 使用登录按钮的蓝色 */
+#MainWindow #autoRecognizeCheckBox::indicator:checked {
+    border-color: #1E90FF;
+    background-color: #1E90FF;
+    image: url(:/icons/checked);
+}
+
+/* 选中悬停状态 */
+#MainWindow #autoRecognizeCheckBox::indicator:checked:hover {
+    border-color: #1E90FF;
+    background-color: #1E90FF;
+}
+
+/* 选中按下状态 */
+#MainWindow #autoRecognizeCheckBox::indicator:checked:pressed {
+    border-color: #166fcc;
+    background-color: #166fcc;
+}
+
+/* 禁用状态 */
+#MainWindow #autoRecognizeCheckBox::indicator:disabled {
+    border-color: #e0e0e0;
+    background-color: #f5f5f5;
+}
+
+/* 禁用选中状态 */
+#MainWindow #autoRecognizeCheckBox::indicator:checked:disabled {
+    border-color: #a0a0a0;
+    background-color: #a0a0a0;
+}

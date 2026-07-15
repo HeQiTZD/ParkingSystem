@@ -1,31 +1,36 @@
 <RCC>
     <qresource prefix="/icons">
+        <file>account_circle.svg</file>
+        <file>calendar_today.svg</file>
+        <file alias="checked">check.svg</file>
+        <file alias="checkmark">checkmark.svg</file>
+        <file>close.svg</file>
+        <file>collapse.svg</file>
+        <file>date_range.svg</file>
+        <file>delete.svg</file>
+        <file>directions.svg</file>
+        <file>expand.svg</file>
+        <file>forward_10.svg</file>
+        <file>group.svg</file>
+        <file>home.svg</file>
+        <file alias="icon-lock">lock.svg</file>
         <file alias="login-brand-image">Login-Brand-image.png</file>
         <file alias="login-brand-image-old">login.png</file>
-        <file alias="icon-person">person.svg</file>
-        <file alias="icon-lock">lock.svg</file>
-        <file alias="icon-security">security.svg</file>
-        <file alias="icon-visibility">visibility.svg</file>
-        <file alias="icon-visibility-off">visibility_off.svg</file>
-        <file alias="checked">check.svg</file>
-        <file>close.svg</file>
-        <file>minied.svg</file>
-        <file>account_circle.svg</file>
-        <file>home.svg</file>
-        <file>directions.svg</file>
-        <file>group.svg</file>
-        <file>videocam.svg</file>
-        <file>logout.svg</file>
-        <file>settings.svg</file>
-        <file>expand.svg</file>
-        <file>collapse.svg</file>
-        <file>photo_camera.svg</file>
-        <file>play_arrow.svg</file>
-        <file>pause.svg</file>
-        <file>replay_10.svg</file>
-        <file>forward_10.svg</file>
-        <file>upload.svg</file>
         <file>login.svg</file>
+        <file>logout.svg</file>
+        <file>minied.svg</file>
+        <file>pause.svg</file>
+        <file alias="icon-person">person.svg</file>
+        <file>photo_camera.svg</file>
         <file>pie_chart.svg</file>
+        <file>play_arrow.svg</file>
+        <file>replay_10.svg</file>
+        <file>search.svg</file>
+        <file alias="icon-security">security.svg</file>
+        <file>settings.svg</file>
+        <file>upload.svg</file>
+        <file>videocam.svg</file>
+        <file alias="icon-visibility-off">visibility_off.svg</file>
+        <file alias="icon-visibility">visibility.svg</file>
     </qresource>
 </RCC>

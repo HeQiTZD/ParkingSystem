@@ -30,7 +30,6 @@
 /* 忘记密码 - 蓝色链接风格 */
 #LoginDialog #forgotPasswordLabel {
     color: #1E90FF;
-    cursor: pointer;
 }
 
 #LoginDialog #orSeparatorLabel {

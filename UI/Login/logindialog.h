@@ -25,7 +25,7 @@ public:
 
 public slots:
     void on_closeButton_clicked();
-    void on_miniButton_clicked();
+    void on_minimizeButton_clicked();
     void onLoginButton();
     void onRegisterButton();
 
@@ -38,6 +38,10 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event) override;
 
     void paintEvent(QPaintEvent *event) override;//Qt 框架在需要重绘窗口时自动调用
+
+private:
+    void saveCredentials(); // 保存用户名和密码到配置文件
+    void loadCredentials(); // 从配置文件加载用户名和密码
 
 private:
     Ui::LoginDialog *ui;

@@ -12,6 +12,7 @@
 #include <QFile>
 #include <QButtonGroup>
 #include <QDateTime>
+#include <QTimer>
 #include <QMouseEvent>
 
 MainWindow::MainWindow(QWidget *parent, DatabaseManager *db)
@@ -193,6 +194,29 @@ MainWindow::MainWindow(QWidget *parent, DatabaseManager *db)
     // 注意：你需要在 mainwindow.ui 中添加一个名为 autoRecognizeCheckBox 的 QCheckBox
     // 放置在摄像头画面区域附近，文字为"自动识别"
     connect(ui->autoRecognizeCheckBox, &QCheckBox::toggled, this, &MainWindow::onAutoRecognizeToggled);
+
+    // ========== 导航页面注册 ==========
+    // 添加车辆信息页面到 stackedWidget（索引从 0 开始，contentWidget 是索引 0）
+    m_vehicleInfoPage = new VehicleInformation(this);
+    int vehicleInfoIndex = ui->stackedWidget->addWidget(m_vehicleInfoPage);
+
+    // 导航按钮 → 切换 stackedWidget 页面
+    // QButtonGroup 用信号携带按钮 ID 来区分哪个按钮被点击
+     connect(navButtonGroup, &QButtonGroup::idClicked, this, [this, navButtonGroup](int id) {
+        if (id == -1) return;
+        QAbstractButton *btn = navButtonGroup->button(id);
+        if (!btn) return;
+
+        // 根据按钮名映射到对应的页面索引
+        // contentWidget   → 索引 0（仪表盘，通过 objectName 查找）
+        // vehicleInfoPage → 索引 1（车辆信息）
+        if (btn == ui->dashboardButton) {
+            ui->stackedWidget->setCurrentIndex(0);
+        } else if (btn == ui->vehicleInfoButton) {
+            ui->stackedWidget->setCurrentIndex(1);
+        }
+        // 后续页面按此规律追加：userManagementButton → 索引 2, etc.
+    });
 }
 
 MainWindow::~MainWindow()
@@ -550,6 +574,16 @@ void MainWindow::onAutoRecognizeToggled(bool checked)
         }
         notifyInfo(this, QStringLiteral("自动识别已关闭"));
     }
+}
+
+void MainWindow::startRecognition()
+{
+    ui->autoRecognizeCheckBox->setChecked(true);
+}
+
+void MainWindow::stopRecognition()
+{
+    ui->autoRecognizeCheckBox->setChecked(false);
 }
 
 MainWindow::MouseArea MainWindow::getMouseArea(const QPoint &pos) const

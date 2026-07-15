@@ -25,22 +25,6 @@ VehicleEntryExitWidget::VehicleEntryExitWidget(QWidget *parent)
     setFocusPolicy(Qt::WheelFocus);
     // 控件尺寸跟随占位 QWidget(由 Designer 提升时确定最小高)
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-
-    // ── 硬编码 10 条测试数据(仅用于开发阶段验收视觉) ──
-    // 实际运行时,每当下面的 onEntrySearchButton / onExitSearchButton 成功后
-    // 会调用 addEntry() 往头部追加一条新的真实数据,旧的自动被挤出。
-    setEntries({
-        {QStringLiteral("苏A·12345"), QDateTime::fromString(QStringLiteral("2026-07-12 10:45:22"),  QStringLiteral("yyyy-MM-dd HH:mm:ss")), VehicleEntryStatus::In},
-        {QStringLiteral("浙B·88888"), QDateTime::fromString(QStringLiteral("2026-07-12 10:42:15"),  QStringLiteral("yyyy-MM-dd HH:mm:ss")), VehicleEntryStatus::Out},
-        {QStringLiteral("沪C·99999"), QDateTime::fromString(QStringLiteral("2026-07-12 10:30:00"),  QStringLiteral("yyyy-MM-dd HH:mm:ss")), VehicleEntryStatus::In},
-        {QStringLiteral("京A·00001"), QDateTime::fromString(QStringLiteral("2026-07-12 10:15:45"),  QStringLiteral("yyyy-MM-dd HH:mm:ss")), VehicleEntryStatus::Out},
-        {QStringLiteral("粤B·66666"), QDateTime::fromString(QStringLiteral("2026-07-12 10:00:00"),  QStringLiteral("yyyy-MM-dd HH:mm:ss")), VehicleEntryStatus::In},
-        {QStringLiteral("川A·11111"), QDateTime::fromString(QStringLiteral("2026-07-12 09:50:30"),  QStringLiteral("yyyy-MM-dd HH:mm:ss")), VehicleEntryStatus::Out},
-        {QStringLiteral("鄂A·22222"), QDateTime::fromString(QStringLiteral("2026-07-12 09:45:20"),  QStringLiteral("yyyy-MM-dd HH:mm:ss")), VehicleEntryStatus::In},
-        {QStringLiteral("湘A·33333"), QDateTime::fromString(QStringLiteral("2026-07-12 09:30:10"),  QStringLiteral("yyyy-MM-dd HH:mm:ss")), VehicleEntryStatus::Out},
-        {QStringLiteral("闽A·44444"), QDateTime::fromString(QStringLiteral("2026-07-12 09:20:05"),  QStringLiteral("yyyy-MM-dd HH:mm:ss")), VehicleEntryStatus::In},
-        {QStringLiteral("皖A·55555"), QDateTime::fromString(QStringLiteral("2026-07-12 09:10:00"),  QStringLiteral("yyyy-MM-dd HH:mm:ss")), VehicleEntryStatus::Out},
-    });
 }
 
 // ===== 公共 API =====

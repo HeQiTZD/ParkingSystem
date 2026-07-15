@@ -1,0 +1,71 @@
+/*==============================================
+  VehicleInformation 车辆信息页面样式表
+==============================================*/
+
+#VehicleInformation #plateLabel ,
+#VehicleInformation #startTimeLabel ,
+#VehicleInformation #endTimeLabel{
+  color: black;
+}
+
+#VehicleInformation #startTimeLineEdit,
+#VehicleInformation #plateLineEdit,
+#VehicleInformation #endTimeLineEdit {
+
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+
+  background-color: #f8f9fa;
+
+  color: #333333;
+  font-size: 14px;
+
+  padding-top: 10px;
+    padding-bottom: 10px;
+
+  min-height: 20px;
+}
+
+#VehicleInformation #startTimeLineEdit:hover,
+#VehicleInformation #plateLineEdit:hover,
+#VehicleInformation #endTimeLineEdit:hover {
+
+  border-color: #b0b0b0;
+  background-color: #ffffff;
+}
+
+#VehicleInformation #startTimeLineEdit:focus,
+#VehicleInformation #plateLineEdit:focus,
+#VehicleInformation #endTimeLineEdit:focus {
+  border-color: #1E90FF;
+  background-color: #ffffff;
+  outline: none;
+}
+
+/* ── 查询按钮 ── */
+#VehicleInformation #queryPushButton {
+    qproperty-icon: url(:/icons/search);
+    qproperty-iconSize: 18px;
+    color: #e0e0e0;
+    background-color: #003FB1;
+    border: 1px solid #003FB1
+}
+
+/* ── 删除按钮 ── */
+#VehicleInformation #deletePushButton {
+    qproperty-icon: url(:/icons/delete);
+    qproperty-iconSize: 18px;
+    color: #EA3323;
+    background-color: #ffffff;
+    border: 1px solid #EA3323;
+}
+
+#VehicleInformation #plateWidget,
+#VehicleInformation #startTimeWidget,
+#VehicleInformation #endTimeWidget {
+  border: 1px solid #e0e0e0;
+}
+
+#VehicleInformation #searchWidget {
+  border: 1px solid b0b0b0;
+}

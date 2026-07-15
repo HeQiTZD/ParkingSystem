@@ -54,6 +54,7 @@ SOURCES += \
     UI/MainWindow/circleprogress.cpp \
     UI/MainWindow/mainwindow.cpp \
     UI/MainWindow/vehicleentryexitwidget.cpp \
+    UI/VehicleInformation/vehicleinformation.cpp \
     UI/Register/registerdialog.cpp \
     UI/ConfigInit/configinitdialog.cpp \
     # ==================== 应用程序核心代码 ====================
@@ -74,6 +75,7 @@ SOURCES += \
     src/utils/pthreadpool.cpp \
     src/utils/notificationdialog.cpp \
     src/utils/toastwidget.cpp \
+    src/utils/iconlineedit.cpp \
     # ==================== HyperLPR-2 车牌识别库（替换 EasyPR） ====================
     thirdparty/hyperlpr/src/Pipeline.cpp \
     thirdparty/hyperlpr/src/PlateDetection.cpp \
@@ -89,6 +91,7 @@ HEADERS += \
     UI/MainWindow/mainwindow.h \
     UI/MainWindow/vehicleentry.h \
     UI/MainWindow/vehicleentryexitwidget.h \
+    UI/VehicleInformation/vehicleinformation.h \
     UI/Register/registerdialog.h \
     UI/ConfigInit/configinitdialog.h \
     # ==================== 应用程序核心代码 ====================
@@ -111,6 +114,7 @@ HEADERS += \
     src/utils/toastwidget.h \
     src/utils/notification_global.h \
     src/utils/messageType.h \
+    src/utils/iconlineedit.h \
     # ==================== HyperLPR-2 头文件（替换 EasyPR） ====================
     thirdparty/hyperlpr/include/Pipeline.h \
     thirdparty/hyperlpr/include/Platedetect.h \
@@ -142,6 +146,7 @@ UI_DIR = generated
 FORMS += \
     UI/Login/logindialog.ui \
     UI/MainWindow/mainwindow.ui \
+    UI/VehicleInformation/vehicleinformation.ui \
     UI/Register/registerdialog.ui \
     UI/ConfigInit/configinitdialog.ui
 
@@ -156,8 +161,6 @@ CONFIG(debug, debug|release) {
 
 # 复制 OpenCV 4.11 world DLL（从导入库目录获取）
 QMAKE_POST_LINK += $$quote(cmd /c copy /Y \"$$PWD/thirdparty/opencv4/lib/libopencv_world4110.dll\" \"$$DLL_TARGET_DIR\" $$escape_expand(\n\t))
-
-# 注意：Hyperlpr 改为源码直接编译进可执行文件，无需单独的 DLL，故不再复制 libhyperlpr.dll
 
 RESOURCES += \
     UI/imageQrc/image.qrc \

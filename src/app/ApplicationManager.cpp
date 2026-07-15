@@ -42,10 +42,12 @@ void ApplicationManager::onLoginAccepted()
 {
     m_loginDialog->hide();
     m_mainWindow->show();
+    m_mainWindow->startRecognition();
 }
 
 void ApplicationManager::onLogoutRequested()
 {
+    m_mainWindow->stopRecognition();
     m_mainWindow->hide();
     // 复用登录框：清空输入，重新弹出
     m_loginDialog->reset();

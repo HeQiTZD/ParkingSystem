@@ -12,6 +12,7 @@
 #include <QPainterPath>
 #include <QDebug>
 #include <QMessageBox>
+#include <QSettings>
 LoginDialog::LoginDialog(QWidget *parent, DatabaseManager *m_db)
     : QDialog(parent)
     , ui(new Ui::LoginDialog)
@@ -26,6 +27,7 @@ LoginDialog::LoginDialog(QWidget *parent, DatabaseManager *m_db)
     ui->closeButton->setIconSize(QSize(16, 16));
     ui->termsLabel->setCursor(Qt::PointingHandCursor);
     ui->privacyLabel->setCursor(Qt::PointingHandCursor);
+    ui->forgotPasswordLabel->setCursor(Qt::PointingHandCursor);
 
     QFile styleFile(":/styles/login.qss");
     if (styleFile.open(QFile::ReadOnly)) {
@@ -37,6 +39,8 @@ LoginDialog::LoginDialog(QWidget *parent, DatabaseManager *m_db)
     connect(ui->loginButton,&QPushButton::clicked,this,&LoginDialog::onLoginButton);
     connect(ui->registerButton,&QPushButton::clicked,this,&LoginDialog::onRegisterButton);
     connect(m_dbManager, &DatabaseManager::messageBox, this, &LoginDialog::onMessageBox);
+
+    loadCredentials(); // 从配置文件加载用户名和密码
 }
 
 LoginDialog::~LoginDialog()
@@ -57,7 +61,7 @@ void LoginDialog::on_closeButton_clicked()
     close();
 }
 
-void LoginDialog::on_miniButton_clicked()
+void LoginDialog::on_minimizeButton_clicked()
 {
     showMinimized();
 }
@@ -82,6 +86,7 @@ void LoginDialog::onLoginButton()
     // 验证用户
     if (m_dbManager->validateUser(username, password, userRole)) {
         notifySuccess(this,"登录成功!");
+        saveCredentials(); // 保存用户名和密码到配置文件
         accept(); // 关闭对话框，返回 QDialog::Accepted
     } else {
         ui->passwordEdit->clear();
@@ -165,4 +170,29 @@ void LoginDialog::paintEvent(QPaintEvent *event)
 
     // 绘制右侧白色背景 //fillRect - 用纯色填充指定矩形
     painter.fillRect(ui->formPanelWidget->geometry(), QColor(0xffffff));
+}
+
+void LoginDialog::saveCredentials()
+{
+    if(ui->rememberMeCheckBox->isChecked()){
+        QSettings settings("Sentinel", "ParkingSystem");
+        settings.setValue("login/username", ui->usernameEdit->text());
+        settings.setValue("login/password", ui->passwordEdit->text());
+        settings.setValue("login/remember", true);
+    } else {
+        QSettings settings("Sentinel", "ParkingSystem");
+        settings.remove("login/username");
+        settings.remove("login/password");
+        settings.setValue("login/remember", false);
+    }
+}
+
+void LoginDialog::loadCredentials()
+{
+    QSettings settings("Sentinel", "ParkingSystem");
+    if(settings.value("login/remember", false).toBool()){
+        ui->usernameEdit->setText(settings.value("login/username").toString());
+        ui->passwordEdit->setText(settings.value("login/password").toString());
+        ui->rememberMeCheckBox->setChecked(true);
+    }
 }

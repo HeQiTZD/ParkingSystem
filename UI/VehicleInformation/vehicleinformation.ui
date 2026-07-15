@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>VehicleInformation</class>
+ <widget class="QWidget" name="VehicleInformation">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>810</width>
+    <height>663</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>810</width>
+    <height>663</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="outerGridLayout" rowstretch="1,4">
+   <item row="0" column="0">
+    <widget class="QWidget" name="searchWidget" native="true">
+     <layout class="QGridLayout" name="searchGridLayout">
+      <property name="leftMargin">
+       <number>20</number>
+      </property>
+      <property name="rightMargin">
+       <number>25</number>
+      </property>
+      <property name="horizontalSpacing">
+       <number>25</number>
+      </property>
+      <item row="0" column="4">
+       <widget class="QPushButton" name="queryPushButton">
+        <property name="minimumSize">
+         <size>
+          <width>55</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>查询</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="5">
+       <widget class="QPushButton" name="deletePushButton">
+        <property name="minimumSize">
+         <size>
+          <width>55</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>删除</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QWidget" name="startTimeWidget" native="true">
+        <layout class="QGridLayout" name="startTimeGridLayout">
+         <item row="0" column="0">
+          <widget class="QLabel" name="startTimeLabel">
+           <property name="text">
+            <string>开始时间</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <spacer name="startTimeHorizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>96</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="1" column="0" colspan="2">
+          <widget class="QLineEdit" name="startTimeLineEdit"/>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QWidget" name="plateWidget" native="true">
+        <layout class="QGridLayout" name="plateGridLayout">
+         <item row="0" column="0">
+          <widget class="QLabel" name="plateLabel">
+           <property name="text">
+            <string>车牌号</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <spacer name="plateHorizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>106</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="1" column="0" colspan="2">
+          <widget class="QLineEdit" name="plateLineEdit"/>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QWidget" name="endTimeWidget" native="true">
+        <layout class="QGridLayout" name="endTimeGridLayout">
+         <item row="0" column="0">
+          <widget class="QLabel" name="endTimeLabel">
+           <property name="text">
+            <string>结束时间</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <spacer name="endTimeHorizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>97</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="1" column="0" colspan="2">
+          <widget class="QLineEdit" name="endTimeLineEdit"/>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <spacer name="rightHorizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Orientation::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QWidget" name="contentWidget" native="true"/>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
