@@ -3,14 +3,7 @@
 
 #include <QObject>
 #include <QString>
-#include <QJsonObject>//表示一个 JSON 对象（键值对集合）
-#include <QJsonDocument>//读写 JSON 文档，在 QJsonObject / QJsonArray 与 二进制/文本 格式之间转换。
-#include <QJsonArray>//表示 JSON 数组
-#include <QFile>//读写本地文件（文本或二进制）
-#include <QDir>//操作目录（文件夹），如遍历文件、创建/删除目录、获取路径等。
-#include <QStandardPaths>//获取不同操作系统上的标准路径
-#include <QDebug>
-#include <QCoreApplication>//提供非 GUI 事件循环的核心类。简单来说，它管理控制台程序、后台服务或没有界面的 Qt 应用的主事件循环。
+#include <QJsonObject>
 
 class InitFile : public QObject
 {

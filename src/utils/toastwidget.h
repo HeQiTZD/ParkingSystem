@@ -6,7 +6,6 @@
 #include <QPushButton>
 #include <QPropertyAnimation>
 #include <QQueue>
-#include <QTimer>
 #include <QGraphicsOpacityEffect>
 
 /**

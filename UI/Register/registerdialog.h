@@ -2,7 +2,7 @@
 #define REGISTERDIALOG_H
 
 #include <QDialog>
-#include "src/database/databasemanager.h"
+class DatabaseManager;
 
 namespace Ui {
 class RegisterDialog;

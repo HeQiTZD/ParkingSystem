@@ -1,5 +1,10 @@
 #include "mysqlinit.h"
-#include "src/utils/utils.h"<longcat_arg_value>
+#include "src/utils/utils.h"
+#include "databasemanager.h"
+#include "src/utils/initfile.h"
+#include <QSqlQuery>
+#include <QSqlError>
+#include <QDebug>
 
 //构造函数
 MySQLInit::MySQLInit(DatabaseManager *dbManager, InitFile *initFile, QObject *parent)

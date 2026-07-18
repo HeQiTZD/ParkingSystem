@@ -4,9 +4,7 @@
 #include <QObject>
 #include <QThreadPool>//管理并复用一组 QThread 的线程池，可以避免频繁创建销毁线程的开销。通常与 QRunnable 配合使用，将任务交给线程池自动调度执行
 #include <QRunnable>//表示一个可在线程中执行的任务（即 run() 函数）。它本身不是线程，需要提交给 QThreadPool 来运行。开发者继承 QRunnable 并实现 run() 方法。
-#include <QMutex>//互斥锁，用于保护共享资源，确保同一时刻只有一个线程访问被锁定的代码段，防止数据竞争
-#include <QQueue>//一个泛型队列容器（FIFO），继承自 QList，提供 enqueue() 入队、dequeue() 出队等操作，适合在线程间传递任务或数据
-#include <QSemaphore>//信号量，用于控制对一定数量资源的访问（比互斥锁更灵活）。典型场景是限制同时访问某资源的线程数，或实现生产者-消费者队列
+#include <QMutex>
 #include <opencv2/opencv.hpp>
 
 /**

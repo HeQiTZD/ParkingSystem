@@ -4,9 +4,6 @@
 #include <QObject>
 #include <QSqlDatabase>
 #include <QSqlQuery>
-#include <QSqlError>
-#include <QDebug>
-#include <QMessageBox>
 #include <QDateTime>
 #include "src/utils/messageType.h"
 
@@ -60,12 +57,16 @@ public:
     //车辆信息搜索
     QList<QVariantList> searchCars(const QString &plate, const QDateTime &startTime,
                                     const QDateTime &endTime, int status);
+
+    // 获取最近 N 条车辆记录（按入库时间降序）
+    QList<QVariantList> getRecentRecords(int count);
     
     // 获取入库时间
     QDateTime getVehicleCheckInTime(const QString &licensePlate);
 
     //车辆信息删除
     bool deleteCarRecord(int id);
+
 
     //---------- 用户管理 -----------
     // 添加新用户

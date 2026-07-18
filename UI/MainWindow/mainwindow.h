@@ -1,21 +1,19 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-#include "circleprogress.h"
-#include "vehicleentryexitwidget.h"
-#include "src/camera/camerathread.h"
-#include "src/database/databasemanager.h"
-#include "src/app/recognizethread.h"
-#include "src/app/plateconfirmtracker.h"
-#include "src/camera/framequeue.h"
-#include "UI/VehicleInformation/vehicleinformation.h"
 #include <QMainWindow>
-#include <QTimer>
-#include <QLabel>
-#include <QCursor>
+#include <opencv2/core/mat.hpp>
 
-namespace Ui {
-class MainWindow;
-}
+namespace Ui { class MainWindow; }
+
+class CircleProgress;
+class CameraThread;
+class DatabaseManager;
+class RecognizeThread;
+class PlateConfirmTracker;
+class FrameQueue;
+class VehicleInformation;
+class QTimer;
+class QLabel;
 
 class MainWindow : public QMainWindow
 {

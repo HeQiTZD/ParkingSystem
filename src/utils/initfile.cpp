@@ -1,4 +1,9 @@
 ﻿#include "initfile.h"
+#include <QJsonDocument>
+#include <QFile>
+#include <QDir>
+#include <QDebug>
+#include <QCoreApplication>
 
 InitFile &InitFile::instance()
 {

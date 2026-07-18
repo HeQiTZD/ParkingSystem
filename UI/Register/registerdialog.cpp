@@ -1,5 +1,6 @@
 #include "registerdialog.h"
 #include "ui_registerdialog.h"
+#include "src/database/databasemanager.h"
 #include "src/utils/utils.h"
 #include "src/utils/notification_global.h"
 #include <QFile>

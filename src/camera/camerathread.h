@@ -5,7 +5,6 @@
 #include <QMutex>
 #include <QWaitCondition>
 #include <QImage>
-#include <QQueue>
 #include <opencv2/opencv.hpp>
 //#include "framequeue.h"
 

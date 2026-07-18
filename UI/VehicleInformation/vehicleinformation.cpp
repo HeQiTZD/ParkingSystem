@@ -1,12 +1,191 @@
 #include "vehicleinformation.h"
 #include "ui_vehicleinformation.h"
-#include "src/utils/iconlineedit.h" 
+#include "src/utils/iconlineedit.h"
+#include "src/database/databasemanager.h"
+#include "src/utils/paginationwidget.h"
 #include <QFile>
-#include <QGridLayout>                 
+#include <QGridLayout>
+#include <QVBoxLayout>
+#include <QHeaderView>
+#include <QTableWidget>
+#include <QComboBox>
+#include <QPushButton>
+#include <QLabel>
+#include <QHBoxLayout>
 
-VehicleInformation::VehicleInformation(QWidget *parent)
-    : QWidget(parent)
-    , ui(new Ui::VehicleInformation)
+void VehicleInformation::setupTable()
+{
+    m_tableWidget = new QTableWidget(this);
+
+    QStringList headers;
+    headers << "序号" << "车牌号" << "进场时间"
+            << "出场时间" << "停留时长" << "收费金额";
+
+    m_tableWidget->setColumnCount(headers.size());
+    m_tableWidget->setHorizontalHeaderLabels(headers);
+
+    m_tableWidget->setColumnWidth(0, 60);
+    m_tableWidget->setColumnWidth(1, 120);
+    m_tableWidget->setColumnWidth(2, 160);
+    m_tableWidget->setColumnWidth(3, 160);
+    m_tableWidget->setColumnWidth(4, 100);
+
+    m_tableWidget->horizontalHeader()->setStretchLastSection(true);
+    m_tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
+    m_tableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
+    m_tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    m_tableWidget->setAlternatingRowColors(true);
+    m_tableWidget->verticalHeader()->setVisible(false);
+    m_tableWidget->setShowGrid(false);
+    m_tableWidget->setFocusPolicy(Qt::NoFocus);
+    m_tableWidget->verticalHeader()->setDefaultSectionSize(44);
+
+    // ── 分页栏 + 每页条数选择 ──
+    m_pagination = new PaginationWidget(this);
+    m_pagination->setPageSize(10);
+
+    m_pageSizeCombo = new QComboBox(this);
+    m_pageSizeCombo->addItems({"10", "20", "50", "100"});
+    m_pageSizeCombo->setCurrentIndex(0);
+    m_pageSizeCombo->setFixedWidth(70);
+
+    QLabel *pageSizeLabel = new QLabel("每页显示", this);
+    pageSizeLabel->setStyleSheet("color: #737686; font-size: 13px;");
+
+    QHBoxLayout *bottomLayout = new QHBoxLayout;
+    bottomLayout->setContentsMargins(16, 0, 0, 0);
+    bottomLayout->addWidget(pageSizeLabel);
+    bottomLayout->addWidget(m_pageSizeCombo);
+    bottomLayout->addStretch(1);
+    bottomLayout->addWidget(m_pagination);
+
+    // ── 替换 contentWidget 布局：表格在上，底部栏在下 ──
+    QLayout *oldLayout = ui->contentWidget->layout();
+    if (oldLayout) {
+        QLayoutItem *item;
+        while ((item = oldLayout->takeAt(0)) != nullptr) {
+            if (item->widget())
+                item->widget()->setParent(nullptr);
+            delete item;
+        }
+        delete oldLayout;
+    }
+
+    QVBoxLayout *newLayout = new QVBoxLayout(ui->contentWidget);
+    newLayout->setContentsMargins(0, 0, 0, 0);
+    newLayout->setSpacing(0);
+    newLayout->addWidget(m_tableWidget, 1);
+    newLayout->addLayout(bottomLayout, 0);
+}
+
+// ─── 从 m_allData 按当前页切片填入表格 ────────────────────────
+void VehicleInformation::populateTable()
+{
+    m_tableWidget->setRowCount(0);
+
+    if (m_allData.isEmpty()) return;
+
+    // 计算当前页的数据范围
+    int page     = m_pagination->currentPage();
+    int pageSize = m_pagination->pageSize();
+    int start    = (page - 1) * pageSize;
+    int end      = qMin(start + pageSize, m_allData.size());
+
+    m_tableWidget->setRowCount(end - start);
+
+    for (int row = start; row < end; ++row) {
+        const QVariantList &rec = m_allData[row];
+        int displayRow = row - start;  // 表格内行号从 0 开始
+
+        // rec 的字段顺序由 searchCars() 决定（databasemanager.cpp:441-449）：
+        //   [0] id              → int
+        //   [1] license_plate   → QString
+        //   [2] check_in_time   → QDateTime
+        //   [3] check_out_time  → QDateTime (NULL 时无效)
+        //   [4] fee             → double (NULL 时无效)
+        //   [5] parking_minutes → int
+        //   [6] status_text     → QString ("在场" / "已离场")
+
+        // 列 0：序号（从 1 开始）
+        QTableWidgetItem *indexItem = new QTableWidgetItem(QString::number(row + 1));
+        indexItem->setTextAlignment(Qt::AlignCenter);
+        indexItem->setForeground(QColor("#737686"));
+        m_tableWidget->setItem(displayRow, 0, indexItem);
+
+        QTableWidgetItem *plateItem = new QTableWidgetItem(rec[1].toString());
+        plateItem->setForeground(QColor("#003FB1"));
+        QFont boldFont = plateItem->font();
+        boldFont.setBold(true);
+        plateItem->setFont(boldFont);
+        m_tableWidget->setItem(displayRow, 1, plateItem);
+
+        QDateTime checkIn = rec[2].toDateTime();
+        QTableWidgetItem *entryItem = new QTableWidgetItem(
+            checkIn.toString("yyyy-MM-dd HH:mm:ss"));
+        entryItem->setForeground(QColor("#191b23"));
+        m_tableWidget->setItem(displayRow, 2, entryItem);
+
+        QDateTime checkOut = rec[3].toDateTime();
+        QString exitText = checkOut.isValid()
+            ? checkOut.toString("yyyy-MM-dd HH:mm:ss")
+            : QString("--");
+        QTableWidgetItem *exitItem = new QTableWidgetItem(exitText);
+        exitItem->setForeground(QColor("#191b23"));
+        m_tableWidget->setItem(displayRow, 3, exitItem);
+
+        int minutes = rec[5].toInt();
+        QString durationText = (rec[6].toString() == "在场")
+            ? QString("在场")
+            : QString("%1h %2m").arg(minutes / 60).arg(minutes % 60);
+        QTableWidgetItem *durationItem = new QTableWidgetItem(durationText);
+        durationItem->setForeground(
+            rec[6].toString() == "在场" ? QColor("#059669") : QColor("#191b23"));
+        m_tableWidget->setItem(displayRow, 4, durationItem);
+
+        QString feeText;
+        if (!checkOut.isValid()) {
+            feeText = "--";
+        } else {
+            feeText = QString("¥ %1").arg(rec[4].toDouble(), 0, 'f', 2);
+        }
+        QTableWidgetItem *feeItem = new QTableWidgetItem(feeText);
+        feeItem->setForeground(QColor("#191b23"));
+        feeItem->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
+        m_tableWidget->setItem(displayRow, 5, feeItem);
+    }
+}
+
+// ─── 查询按钮的槽函数 ────────────────────────────────────────
+void VehicleInformation::onQueryClicked()
+{
+    QString plate = ui->plateLineEdit->text().trimmed();
+    plate.remove(QChar(0xB7));
+    plate.remove(' ');
+    plate.remove('-');
+
+    QDateTime startTime, endTime;
+    QString startStr = ui->startTimeLineEdit->text().trimmed();
+    QString endStr   = ui->endTimeLineEdit->text().trimmed();
+    if (!startStr.isEmpty())
+        startTime = QDateTime::fromString(startStr, "yyyy-MM-dd HH:mm:ss");
+    if (!endStr.isEmpty())
+        endTime = QDateTime::fromString(endStr, "yyyy-MM-dd HH:mm:ss");
+
+    // 执行查询，缓存全量结果
+    m_allData = m_db->searchCars(plate, startTime, endTime, 0);
+
+    // 更新分页控件 → 自动回到第1页 → 触发 pageChanged 信号
+    m_pagination->setTotalRecords(m_allData.size());
+}
+
+void VehicleInformation::onPageChanged(int page)
+{
+    Q_UNUSED(page);
+    populateTable();
+}
+
+VehicleInformation::VehicleInformation(QWidget *parent, DatabaseManager *db)
+    : QWidget(parent), ui(new Ui::VehicleInformation), m_db(db)
 {
     ui->setupUi(this);
 
@@ -39,6 +218,23 @@ VehicleInformation::VehicleInformation(QWidget *parent)
         setStyleSheet(QLatin1String(styleFile.readAll()));
         styleFile.close();
     }
+
+    setupTable();
+
+    connect(ui->queryPushButton, &QPushButton::clicked,
+            this, &VehicleInformation::onQueryClicked);
+
+    connect(m_pagination, &PaginationWidget::pageChanged,
+            this, &VehicleInformation::onPageChanged);
+
+    connect(m_pageSizeCombo, &QComboBox::currentTextChanged,
+            this, [this](const QString &text) {
+        m_pagination->setPageSize(text.toInt());
+    });
+
+    // 首次加载最近 50 条记录
+    m_allData = m_db->getRecentRecords(50);
+    m_pagination->setTotalRecords(m_allData.size());
 }
 
 VehicleInformation::~VehicleInformation()

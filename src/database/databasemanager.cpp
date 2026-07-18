@@ -1,7 +1,9 @@
 #include "databasemanager.h"
 #include "src/utils/utils.h"
-#include "src/utils/notification_global.h"
 #include "src/utils/initfile.h"
+#include <QSqlError>
+#include <QDebug>
+#include <QTimeZone>
 
 DatabaseManager::DatabaseManager(QObject *parent): QObject(parent), connected(false){}
 
@@ -451,6 +453,42 @@ QList<QVariantList> DatabaseManager::searchCars(const QString &plate, const QDat
     return resultList;
 }
 
+QList<QVariantList> DatabaseManager::getRecentRecords(int count)
+{
+    QList<QVariantList> resultList;
+    if (!connected || count <= 0) return resultList;
+
+    QString sql = R"(
+        SELECT id, license_plate, check_in_time, check_out_time, fee,
+               TIMESTAMPDIFF(MINUTE, check_in_time,
+                             IFNULL(check_out_time, NOW())) AS parking_minutes,
+               CASE WHEN check_out_time IS NULL THEN '在场'
+                    ELSE '已离场' END AS status_text
+        FROM CAR
+        ORDER BY check_in_time DESC
+        LIMIT :count
+    )";
+
+    QSqlQuery query(db);
+    query.prepare(sql);
+    query.bindValue(":count", count);
+
+    if (!query.exec()) return resultList;
+
+    while (query.next()) {
+        QVariantList row;
+        row << query.value("id")
+            << query.value("license_plate")
+            << query.value("check_in_time")
+            << query.value("check_out_time")
+            << query.value("fee")
+            << query.value("parking_minutes")
+            << query.value("status_text");
+        resultList << row;
+    }
+    return resultList;
+}
+
 QDateTime DatabaseManager::getVehicleCheckInTime(const QString &licensePlate)
 {
     if(!connected) {
@@ -469,8 +507,8 @@ QDateTime DatabaseManager::getVehicleCheckInTime(const QString &licensePlate)
 
     if(query.next()){
         QDateTime dt = query.value(0).toDateTime();
-        // 数据库存的是本地时间（无时区字符串），修正 offset 为当前本地时区，避免被 Qt 误解析为 UTC
-        dt.setTimeSpec(Qt::LocalTime);
+        // 数据库存的是本地时间（无时区字符串），标记为系统时区，避免 Qt 6 误解析为 UTC
+        dt.setTimeZone(QTimeZone::systemTimeZone());
         return dt;
     }else{
         return QDateTime();

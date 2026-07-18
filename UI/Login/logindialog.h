@@ -2,9 +2,8 @@
 #define LOGINDIALOG_H
 
 #include <QDialog>
-
-#include "src/database/databasemanager.h"
 #include "src/utils/messageType.h"
+class DatabaseManager;
 namespace Ui {
 class LoginDialog;
 }

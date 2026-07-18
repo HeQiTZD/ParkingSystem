@@ -1,7 +1,6 @@
 ﻿#ifndef CAR_H
 #define CAR_H
 
-#include <QObject>
 #include <QString>
 #include <QDateTime>
 #include <QVariant>

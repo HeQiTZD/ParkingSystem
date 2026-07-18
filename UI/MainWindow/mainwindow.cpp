@@ -2,17 +2,22 @@
 #include "ui_mainwindow.h"
 #include "circleprogress.h"
 #include "vehicleentryexitwidget.h"
+#include "src/database/databasemanager.h"
+#include "src/camera/camerathread.h"
 #include "src/app/car.h"
 #include "src/utils/notification_global.h"
 #include "src/utils/initfile.h"
 #include "src/camera/framequeue.h"
 #include "src/app/recognizethread.h"
 #include "src/app/plateconfirmtracker.h"
+#include "UI/VehicleInformation/vehicleinformation.h"
 #include "src/app/platerecognize.h"
 #include <QFile>
 #include <QButtonGroup>
 #include <QDateTime>
 #include <QTimer>
+#include <QLabel>
+#include <QCursor>
 #include <QMouseEvent>
 
 MainWindow::MainWindow(QWidget *parent, DatabaseManager *db)
@@ -197,7 +202,7 @@ MainWindow::MainWindow(QWidget *parent, DatabaseManager *db)
 
     // ========== 导航页面注册 ==========
     // 添加车辆信息页面到 stackedWidget（索引从 0 开始，contentWidget 是索引 0）
-    m_vehicleInfoPage = new VehicleInformation(this);
+    m_vehicleInfoPage = new VehicleInformation(this, m_db);
     int vehicleInfoIndex = ui->stackedWidget->addWidget(m_vehicleInfoPage);
 
     // 导航按钮 → 切换 stackedWidget 页面

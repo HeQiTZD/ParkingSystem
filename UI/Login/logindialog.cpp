@@ -3,6 +3,7 @@
 #include "usernameedit.h"
 #include "passwordedit.h"
 #include "UI/Register/registerdialog.h"
+#include "src/database/databasemanager.h"
 #include "src/utils/utils.h"
 #include "src/utils/notification_global.h"
 

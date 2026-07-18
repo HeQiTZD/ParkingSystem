@@ -2,11 +2,8 @@
 #define MYSQLINIT_H
 
 #include <QObject>
-#include <QSqlQuery>
-#include <QSqlError>
-#include <QDebug>
-#include "databasemanager.h"
-#include "src/utils/initfile.h"
+class DatabaseManager;
+class InitFile;
 
 /**
  * @brief 数据库初始化类
