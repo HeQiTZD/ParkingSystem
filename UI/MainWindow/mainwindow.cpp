@@ -217,14 +217,15 @@ MainWindow::MainWindow(QWidget *parent, DatabaseManager *db)
         if (!btn) return;
 
         // 根据按钮名映射到对应的页面索引
-        // contentWidget   → 索引 0（仪表盘，通过 objectName 查找）
-        // vehicleInfoPage → 索引 1（车辆信息）
+        // contentWidget       → 索引 0（仪表盘，通过 objectName 查找）
+        // vehicleInfoButton   → 索引 1（车辆信息）
+        // userManagementButton → 索引 2（用户管理）
         if (btn == ui->dashboardButton) {
             ui->stackedWidget->setCurrentIndex(0);
         } else if (btn == ui->vehicleInfoButton) {
             ui->stackedWidget->setCurrentIndex(1);
         }
-        // 后续页面按此规律追加：userManagementButton → 索引 2, etc.
+        // 后续页面按此规律追加：cameraManagementButton → 索引 3, etc.
     });
 }
 
