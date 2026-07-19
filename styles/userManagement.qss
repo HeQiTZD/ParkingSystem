@@ -12,6 +12,7 @@
 }
 
 #dataTable::item {
+    padding: 0px 12px;
     border-bottom: 1px solid #E2E8F0;
 }
 
@@ -22,7 +23,7 @@
 
 QHeaderView::section {
     background: #F1F5F9;
-    padding: 10px 24px;
+    padding: 10px 12px;
     border: none;
     border-bottom: 1px solid #E2E8F0;
     font-weight: 600;
