@@ -81,6 +81,7 @@ SOURCES += \
     src/utils/notificationdialog.cpp \
     src/utils/toastwidget.cpp \
     src/utils/iconlineedit.cpp \
+    src/utils/datelineedit.cpp \
     src/utils/paginationwidget.cpp \
     # ==================== HyperLPR-2 车牌识别库（替换 EasyPR） ====================
     thirdparty/hyperlpr/src/Pipeline.cpp \
@@ -121,6 +122,7 @@ HEADERS += \
     src/utils/notification_global.h \
     src/utils/messageType.h \
     src/utils/iconlineedit.h \
+    src/utils/datelineedit.h \
     src/utils/paginationwidget.h \
     # ==================== HyperLPR-2 头文件（替换 EasyPR） ====================
     thirdparty/hyperlpr/include/Pipeline.h \

@@ -1,6 +1,7 @@
 #include "vehicleinformation.h"
 #include "ui_vehicleinformation.h"
 #include "src/utils/iconlineedit.h"
+#include "src/utils/datelineedit.h"
 #include "src/database/databasemanager.h"
 #include "src/utils/paginationwidget.h"
 #include "src/utils/notification_global.h"
@@ -220,7 +221,16 @@ VehicleInformation::VehicleInformation(QWidget *parent, DatabaseManager *db)
 {
     ui->setupUi(this);
 
-    auto replaceWithIconEdit = [this](QGridLayout *layout, QLineEdit *oldEdit, const QString &iconPath)->IconLineEdit * 
+    // 日期输入框：左右双图标（左 calendar_today + 右 date_range）
+    ui->startTimeLineEdit->setLeftIcon(QIcon(":/icons/calendar_today.svg"));
+    ui->startTimeLineEdit->setRightIcon(QIcon(":/icons/date_range.svg"));
+    ui->startTimeLineEdit->setRightIconSize(QSize(14, 14));
+    ui->endTimeLineEdit->setLeftIcon(QIcon(":/icons/calendar_today.svg"));
+    ui->endTimeLineEdit->setRightIcon(QIcon(":/icons/date_range.svg"));
+    ui->endTimeLineEdit->setRightIconSize(QSize(14, 14));
+
+    // 车牌输入框：运行时替换为 IconLineEdit（左侧图标）
+    auto replaceWithIconEdit = [this](QGridLayout *layout, QLineEdit *oldEdit, const QString &iconPath)->IconLineEdit *
     {
         int idx = layout->indexOf(oldEdit);
         int row, col, rowSpan, colSpan;
@@ -236,12 +246,7 @@ VehicleInformation::VehicleInformation(QWidget *parent, DatabaseManager *db)
 
         return newEdit;
     };
-
-    replaceWithIconEdit(ui->startTimeGridLayout, ui->startTimeLineEdit, ":/icons/calendar_today.svg");
-
     replaceWithIconEdit(ui->plateGridLayout, ui->plateLineEdit, ":/icons/directions.svg");
-
-    replaceWithIconEdit(ui->endTimeGridLayout, ui->endTimeLineEdit, ":/icons/calendar_today.svg");
 
 
     QFile styleFile(":/styles/vehicleInformation.qss");

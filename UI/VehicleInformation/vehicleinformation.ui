@@ -82,7 +82,7 @@
           </spacer>
          </item>
          <item row="1" column="0" colspan="2">
-          <widget class="QLineEdit" name="startTimeLineEdit"/>
+          <widget class="DateLineEdit" name="startTimeLineEdit"/>
          </item>
         </layout>
        </widget>
@@ -140,7 +140,7 @@
           </spacer>
          </item>
          <item row="1" column="0" colspan="2">
-          <widget class="QLineEdit" name="endTimeLineEdit"/>
+          <widget class="DateLineEdit" name="endTimeLineEdit"/>
          </item>
         </layout>
        </widget>
@@ -166,6 +166,13 @@
    </item>
   </layout>
  </widget>
- <resources/>
- <connections/>
+  <resources/>
+  <connections/>
+  <customwidgets>
+    <customwidget>
+      <class>DateLineEdit</class>
+      <extends>QLineEdit</extends>
+      <header>src/utils/datelineedit.h</header>
+    </customwidget>
+  </customwidgets>
 </ui>
