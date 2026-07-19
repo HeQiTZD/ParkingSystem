@@ -1,0 +1,52 @@
+#tableCard {
+    background: white;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+}
+
+#dataTable {
+    background: white;
+    border: none;
+    font-size: 13px;
+    color: #1E293B;
+}
+
+#dataTable::item {
+    border-bottom: 1px solid #E2E8F0;
+}
+
+#dataTable::item:selected {
+    background: #EFF6FF;
+    color: #1E40AF;
+}
+
+QHeaderView::section {
+    background: #F1F5F9;
+    padding: 10px 24px;
+    border: none;
+    border-bottom: 1px solid #E2E8F0;
+    font-weight: 600;
+    color: #475569;
+    font-size: 12px;
+}
+
+#bottomBar {
+    border-top: 1px solid #E2E8F0;
+    background: #F8FAFC;
+}
+
+#recordCountLabel {
+    color: #64748B;
+    font-size: 13px;
+}
+
+#emptyText {
+    color: #1E293B;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+#emptyHint {
+    color: #94A3B8;
+    font-size: 13px;
+}

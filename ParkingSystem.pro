@@ -59,6 +59,7 @@ SOURCES += \
     UI/MainWindow/circleprogress.cpp \
     UI/MainWindow/mainwindow.cpp \
     UI/MainWindow/vehicleentryexitwidget.cpp \
+    UI/UserManager/usermanagement.cpp \
     UI/VehicleInformation/vehicleinformation.cpp \
     UI/Register/registerdialog.cpp \
     UI/ConfigInit/configinitdialog.cpp \
@@ -82,6 +83,10 @@ SOURCES += \
     src/utils/toastwidget.cpp \
     src/utils/iconlineedit.cpp \
     src/utils/datelineedit.cpp \
+    src/utils/customdatechooser.cpp \
+    src/utils/calendardaybtn.cpp \
+    src/utils/yearmonthpopup.cpp \
+    src/utils/timeselector.cpp \
     src/utils/paginationwidget.cpp \
     # ==================== HyperLPR-2 车牌识别库（替换 EasyPR） ====================
     thirdparty/hyperlpr/src/Pipeline.cpp \
@@ -98,6 +103,7 @@ HEADERS += \
     UI/MainWindow/mainwindow.h \
     UI/MainWindow/vehicleentry.h \
     UI/MainWindow/vehicleentryexitwidget.h \
+    UI/UserManager/usermanagement.h \
     UI/VehicleInformation/vehicleinformation.h \
     UI/Register/registerdialog.h \
     UI/ConfigInit/configinitdialog.h \
@@ -123,6 +129,10 @@ HEADERS += \
     src/utils/messageType.h \
     src/utils/iconlineedit.h \
     src/utils/datelineedit.h \
+    src/utils/customdatechooser.h \
+    src/utils/calendardaybtn.h \
+    src/utils/yearmonthpopup.h \
+    src/utils/timeselector.h \
     src/utils/paginationwidget.h \
     # ==================== HyperLPR-2 头文件（替换 EasyPR） ====================
     thirdparty/hyperlpr/include/Pipeline.h \
@@ -141,7 +151,7 @@ INCLUDEPATH += thirdparty/opencv4/include \
                .
 
 # OpenCV 4.11：链接 world 导入库（Hyperlpr 改为源码直接编译，无需 -lhyperlpr）
-LIBS += -Lthirdparty/opencv4/lib -lopencv_world4110
+LIBS += -L$$PWD/thirdparty/opencv4/lib -lopencv_world4110
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -155,6 +165,7 @@ UI_DIR = generated
 FORMS += \
     UI/Login/logindialog.ui \
     UI/MainWindow/mainwindow.ui \
+    UI/UserManager/usermanagement.ui \
     UI/VehicleInformation/vehicleinformation.ui \
     UI/Register/registerdialog.ui \
     UI/ConfigInit/configinitdialog.ui
@@ -169,7 +180,7 @@ CONFIG(debug, debug|release) {
 }
 
 # 复制 OpenCV 4.11 world DLL（从导入库目录获取）
-QMAKE_POST_LINK += $$quote(cmd /c copy /Y \"$$PWD/thirdparty/opencv4/lib/libopencv_world4110.dll\" \"$$DLL_TARGET_DIR\" $$escape_expand(\n\t))
+QMAKE_POST_LINK += $$quote(cmd /c copy /Y \"$$shell_path($$PWD/thirdparty/opencv4/lib/libopencv_world4110.dll)\" \"$$shell_path($$DLL_TARGET_DIR)\" $$escape_expand(\n\t))
 
 RESOURCES += \
     UI/imageQrc/image.qrc \

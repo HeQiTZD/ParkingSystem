@@ -75,6 +75,8 @@ public:
     bool updateUser(int id, const QString &username, const QString &telephone, const QString &truename, const QString &role);
     // 删除用户
     bool deleteUser(int id);
+    // 搜索用户（支持用户名/姓名/手机号模糊匹配）
+    QList<QVariantList> searchUsers(const QString &keyword = "");
 
 signals:
     void connectionStatusChanged(bool connected);

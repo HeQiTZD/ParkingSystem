@@ -11,6 +11,7 @@
 #include "src/app/recognizethread.h"
 #include "src/app/plateconfirmtracker.h"
 #include "UI/VehicleInformation/vehicleinformation.h"
+#include "UI/UserManager/usermanagement.h"
 #include "src/app/platerecognize.h"
 #include <QFile>
 #include <QButtonGroup>
@@ -209,6 +210,9 @@ MainWindow::MainWindow(QWidget *parent, DatabaseManager *db)
     m_vehicleInfoPage = new VehicleInformation(this, m_db);
     int vehicleInfoIndex = ui->stackedWidget->addWidget(m_vehicleInfoPage);
 
+    m_userManagementPage = new UserManagement(this, m_db);
+    int userMgmtIndex = ui->stackedWidget->addWidget(m_userManagementPage);
+
     // 导航按钮 → 切换 stackedWidget 页面
     // QButtonGroup 用信号携带按钮 ID 来区分哪个按钮被点击
      connect(navButtonGroup, &QButtonGroup::idClicked, this, [this, navButtonGroup](int id) {
@@ -224,6 +228,8 @@ MainWindow::MainWindow(QWidget *parent, DatabaseManager *db)
             ui->stackedWidget->setCurrentIndex(0);
         } else if (btn == ui->vehicleInfoButton) {
             ui->stackedWidget->setCurrentIndex(1);
+        } else if (btn == ui->userManagementButton) {
+            ui->stackedWidget->setCurrentIndex(2);
         }
         // 后续页面按此规律追加：cameraManagementButton → 索引 3, etc.
     });

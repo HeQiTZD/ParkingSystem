@@ -60,6 +60,18 @@
       </item>
       <item row="0" column="1">
        <widget class="QWidget" name="startTimeWidget" native="true">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>16777215</height>
+         </size>
+        </property>
         <layout class="QGridLayout" name="startTimeGridLayout">
          <item row="0" column="0">
           <widget class="QLabel" name="startTimeLabel">
@@ -82,7 +94,14 @@
           </spacer>
          </item>
          <item row="1" column="0" colspan="2">
-          <widget class="DateLineEdit" name="startTimeLineEdit"/>
+          <widget class="DateLineEdit" name="startTimeLineEdit">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
+          </widget>
          </item>
         </layout>
        </widget>
@@ -118,6 +137,12 @@
       </item>
       <item row="0" column="2">
        <widget class="QWidget" name="endTimeWidget" native="true">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
         <layout class="QGridLayout" name="endTimeGridLayout">
          <item row="0" column="0">
           <widget class="QLabel" name="endTimeLabel">
@@ -140,7 +165,14 @@
           </spacer>
          </item>
          <item row="1" column="0" colspan="2">
-          <widget class="DateLineEdit" name="endTimeLineEdit"/>
+          <widget class="DateLineEdit" name="endTimeLineEdit">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
+          </widget>
          </item>
         </layout>
        </widget>
@@ -166,13 +198,13 @@
    </item>
   </layout>
  </widget>
-  <resources/>
-  <connections/>
-  <customwidgets>
-    <customwidget>
-      <class>DateLineEdit</class>
-      <extends>QLineEdit</extends>
-      <header>src/utils/datelineedit.h</header>
-    </customwidget>
-  </customwidgets>
+ <customwidgets>
+  <customwidget>
+   <class>DateLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>src/utils/datelineedit.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
 </ui>

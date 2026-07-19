@@ -2,10 +2,12 @@
 #include "ui_vehicleinformation.h"
 #include "src/utils/iconlineedit.h"
 #include "src/utils/datelineedit.h"
+#include "src/utils/customdatechooser.h"
 #include "src/database/databasemanager.h"
 #include "src/utils/paginationwidget.h"
 #include "src/utils/notification_global.h"
 #include <QFile>
+#include <QDialog>
 #include <QGridLayout>
 #include <QVBoxLayout>
 #include <QHeaderView>
@@ -228,6 +230,35 @@ VehicleInformation::VehicleInformation(QWidget *parent, DatabaseManager *db)
     ui->endTimeLineEdit->setLeftIcon(QIcon(":/icons/calendar_today.svg"));
     ui->endTimeLineEdit->setRightIcon(QIcon(":/icons/date_range.svg"));
     ui->endTimeLineEdit->setRightIconSize(QSize(14, 14));
+
+    // 日期输入框：右图标点击弹出 CustomDateChooser 日期时间选择器
+    auto setupDatePicker = [this](DateLineEdit *edit) {
+        connect(edit, &DateLineEdit::rightIconClicked, this, [this, edit]() {
+            QDialog popup(this, Qt::FramelessWindowHint | Qt::Popup);
+
+            auto *chooser = new CustomDateChooser(&popup);
+            auto *layout = new QVBoxLayout(&popup);
+            layout->setContentsMargins(0, 0, 0, 0);
+            layout->addWidget(chooser);
+
+            QString text = edit->text().trimmed();
+            if (!text.isEmpty()) {
+                QDateTime dt = QDateTime::fromString(text, "yyyy-MM-dd HH:mm:ss");
+                if (dt.isValid())
+                    chooser->setSelectedDateTime(dt);
+            }
+
+            connect(chooser, &CustomDateChooser::dateTimeConfirmed, this, [edit, &popup](const QDateTime &dt) {
+                edit->setText(dt.toString("yyyy-MM-dd HH:mm:ss"));
+                popup.accept();
+            });
+
+            popup.move(edit->mapToGlobal(QPoint(0, edit->height() + 2)));
+            popup.exec();
+        });
+    };
+    setupDatePicker(ui->startTimeLineEdit);
+    setupDatePicker(ui->endTimeLineEdit);
 
     // 车牌输入框：运行时替换为 IconLineEdit（左侧图标）
     auto replaceWithIconEdit = [this](QGridLayout *layout, QLineEdit *oldEdit, const QString &iconPath)->IconLineEdit *

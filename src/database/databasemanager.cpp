@@ -626,6 +626,45 @@ bool DatabaseManager::deleteCarRecords(const QList<int> &ids)
     return true;
 }
 
+QList<QVariantList> DatabaseManager::searchUsers(const QString &keyword)
+{
+    QList<QVariantList> resultList;
+    if (!connected) return resultList;
+
+    QString sql = R"(
+        SELECT id, username, truename, telephone, role, create_at
+        FROM User
+        WHERE 1=1
+    )";
+
+    if (!keyword.isEmpty()) {
+        sql += " AND (username LIKE :keyword OR truename LIKE :keyword OR telephone LIKE :keyword)";
+    }
+
+    sql += " ORDER BY create_at DESC";
+
+    QSqlQuery query(db);
+    query.prepare(sql);
+
+    if (!keyword.isEmpty()) {
+        query.bindValue(":keyword", "%" + keyword + "%");
+    }
+
+    if (!query.exec()) return resultList;
+
+    while (query.next()) {
+        QVariantList row;
+        row << query.value("id")
+            << query.value("username")
+            << query.value("truename")
+            << query.value("telephone")
+            << query.value("role")
+            << query.value("create_at");
+        resultList << row;
+    }
+    return resultList;
+}
+
 bool DatabaseManager::addUser(const QString &username, const QString &password, const QString &telephone, const QString &truename, const QString &role)
 {
     if(!isConnected()){

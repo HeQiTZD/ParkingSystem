@@ -12,6 +12,7 @@ class RecognizeThread;
 class PlateConfirmTracker;
 class FrameQueue;
 class VehicleInformation;
+class UserManagement;
 class QTimer;
 class QLabel;
 
@@ -105,6 +106,7 @@ private:
     bool m_autoRecognizeEnabled = false;
 
     VehicleInformation *m_vehicleInfoPage  = nullptr;  // 车辆信息页面
+    UserManagement *m_userManagementPage  = nullptr;    // 用户管理页面
 };
 
 #endif // MAINWINDOW_H
