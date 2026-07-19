@@ -138,6 +138,10 @@ MainWindow::MainWindow(QWidget *parent, DatabaseManager *db)
     // 初始化更新车位情况
     onUpdateParkingCount();
 
+    // 监听停车数据变化（入库/出库/删除），自动刷新车位图表
+    connect(m_db, &DatabaseManager::parkingDataChanged,
+            this, &MainWindow::onUpdateParkingCount);
+
     // 摄像头初始化
     m_videoLabel = new QLabel(ui->cameraViewWidget);
     m_videoLabel->setGeometry(ui->cameraViewWidget->rect());
@@ -329,7 +333,6 @@ void MainWindow::onEntrySearchButton()
     QString parkingName = getParkingNameFromConfig();
     if(m_db->checkIn(plate, parkingName)){
         notifySuccess(this, QStringLiteral("%1 入库成功").arg(plate));
-        onUpdateParkingCount();
         // 入库成功 → 推一条实时记录进「最新记录」卡片(事件驱动,不再查库)
         if (ui->vehicleEntryExitWidget) {
             ui->vehicleEntryExitWidget->prependEntry(
@@ -390,7 +393,6 @@ void MainWindow::onExitSearchButton()
 
     if(m_db->checkOut(plate, parkingName, cost)){
         notifySuccess(this, QStringLiteral("%1 出库成功").arg(plate));
-        onUpdateParkingCount();
         // 出库成功 → 推一条实时记录进「最新记录」卡片(事件驱动,不再查库)
         if (ui->vehicleEntryExitWidget) {
             ui->vehicleEntryExitWidget->prependEntry(
@@ -520,7 +522,6 @@ void MainWindow::onPlateRecognized(const QString &plate, const cv::Mat &plateImg
         if(m_db->checkIn(normalizedPlate, parkingName)){
             m_confirmTracker->markActioned(normalizedPlate);
             notifySuccess(this, QStringLiteral("[自动] %1 入库成功").arg(normalizedPlate));
-            onUpdateParkingCount();
             if(ui->vehicleEntryExitWidget){
                 ui->vehicleEntryExitWidget->prependEntry({Car::displayPlate(normalizedPlate), QDateTime::currentDateTime(), VehicleEntryStatus::In});
             }
@@ -543,7 +544,6 @@ void MainWindow::onPlateRecognized(const QString &plate, const cv::Mat &plateImg
         int minutes = totalMinutes % 60;
 
         notifySuccess(this, QStringLiteral("[自动] %1 出库成功 | %2时%3分 | %4元").arg(normalizedPlate).arg(hours).arg(minutes).arg(cost, 0, 'f', 2));
-        onUpdateParkingCount();
         if(ui->vehicleEntryExitWidget){
             ui->vehicleEntryExitWidget->prependEntry({Car::displayPlate(normalizedPlate), QDateTime::currentDateTime(), VehicleEntryStatus::Out});
         }

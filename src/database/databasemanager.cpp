@@ -252,6 +252,7 @@ bool DatabaseManager::checkIn(const QString &licensePlate, const QString &parkin
     }
 
     qDebug() << "车辆入库成功:" << licensePlate;
+    emit parkingDataChanged();
     return true;
 }
 
@@ -317,6 +318,7 @@ bool DatabaseManager::checkOut(const QString &licensePlate, const QString &parki
     }
 
     qDebug() << "车辆出库成功:" << licensePlate;
+    emit parkingDataChanged();
     return true;
 }
 
@@ -572,6 +574,55 @@ bool DatabaseManager::deleteCarRecord(int id)
         return false;
     }
 
+    emit parkingDataChanged();
+    return true;
+}
+
+bool DatabaseManager::deleteCarRecords(const QList<int> &ids)
+{
+    if (!isConnected() || ids.isEmpty()) return false;
+
+    // 统计待删记录中仍在场的数量（check_out_time IS NULL）
+    QStringList cntPl;
+    for (int i = 0; i < ids.size(); ++i)
+        cntPl << QString(":c%1").arg(i);
+
+    QSqlQuery countQ(db);
+    countQ.prepare(QString("SELECT COUNT(*) FROM CAR WHERE id IN (%1) AND check_out_time IS NULL")
+                   .arg(cntPl.join(", ")));
+    for (int i = 0; i < ids.size(); ++i)
+        countQ.bindValue(QString(":c%1").arg(i), ids[i]);
+
+    if (!countQ.exec() || !countQ.next()) return false;
+    int inParkCount = countQ.value(0).toInt();
+
+    // 构建 DELETE 占位符
+    QStringList delPl;
+    for (int i = 0; i < ids.size(); ++i)
+        delPl << QString(":d%1").arg(i);
+
+    if (!db.transaction()) return false;
+
+    // 在场车辆 → 同步车位计数
+    if (inParkCount > 0) {
+        QSqlQuery upQ(db);
+        upQ.prepare("UPDATE PARKING SET P_now_count = GREATEST(P_now_count - :cnt, 0) "
+                    "WHERE P_name = :name");
+        upQ.bindValue(":cnt", inParkCount);
+        upQ.bindValue(":name", InitFile::instance().getParkingName());
+        if (!upQ.exec()) { db.rollback(); return false; }
+    }
+
+    // 批量删除
+    QSqlQuery delQ(db);
+    delQ.prepare(QString("DELETE FROM CAR WHERE id IN (%1)").arg(delPl.join(", ")));
+    for (int i = 0; i < ids.size(); ++i)
+        delQ.bindValue(QString(":d%1").arg(i), ids[i]);
+
+    if (!delQ.exec()) { db.rollback(); return false; }
+    if (!db.commit()) { db.rollback(); return false; }
+
+    emit parkingDataChanged();
     return true;
 }
 

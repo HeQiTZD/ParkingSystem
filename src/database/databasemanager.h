@@ -66,7 +66,7 @@ public:
 
     //车辆信息删除
     bool deleteCarRecord(int id);
-
+    bool deleteCarRecords(const QList<int> &ids);
 
     //---------- 用户管理 -----------
     // 添加新用户
@@ -79,6 +79,9 @@ public:
 signals:
     void connectionStatusChanged(bool connected);
     void messageBox(MessageType::Type, const QString &msg, const QString &title = QString());
+
+    // 停车数据变化（入库/出库/删除），供 UI 订阅者刷新显示
+    void parkingDataChanged();
 
 private:
     QSqlDatabase db;

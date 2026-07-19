@@ -16,6 +16,11 @@ TARGET = ParkingSystem
 # 作用：启用 C++11 标准，支持 auto、lambda 等特性
 CONFIG += c++11
 
+# 生成文件归类到子目录，避免 Makefile 依赖追踪失准导致 moc 过时
+MOC_DIR     = generated/moc
+OBJECTS_DIR = generated/obj
+RCC_DIR     = generated/rcc
+
 # ── 强制指定 MinGW 13.1.0 编译器（避免 PATH 中的 mingw810_64 / GCC 8.1 误链接） ──
 QMAKE_CXX = C:/Qt/Tools/mingw1310_64/bin/g++.exe
 QMAKE_LINK = C:/Qt/Tools/mingw1310_64/bin/g++.exe

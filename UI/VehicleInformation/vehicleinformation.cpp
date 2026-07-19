@@ -3,6 +3,7 @@
 #include "src/utils/iconlineedit.h"
 #include "src/database/databasemanager.h"
 #include "src/utils/paginationwidget.h"
+#include "src/utils/notification_global.h"
 #include <QFile>
 #include <QGridLayout>
 #include <QVBoxLayout>
@@ -32,7 +33,7 @@ void VehicleInformation::setupTable()
 
     m_tableWidget->horizontalHeader()->setStretchLastSection(true);
     m_tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
-    m_tableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
+    m_tableWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
     m_tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
     m_tableWidget->setAlternatingRowColors(true);
     m_tableWidget->verticalHeader()->setVisible(false);
@@ -45,6 +46,7 @@ void VehicleInformation::setupTable()
     m_pagination->setPageSize(10);
 
     m_pageSizeCombo = new QComboBox(this);
+    m_pageSizeCombo->setObjectName("pageSizeCombo");
     m_pageSizeCombo->addItems({"10", "20", "50", "100"});
     m_pageSizeCombo->setCurrentIndex(0);
     m_pageSizeCombo->setFixedWidth(70);
@@ -110,6 +112,7 @@ void VehicleInformation::populateTable()
         QTableWidgetItem *indexItem = new QTableWidgetItem(QString::number(row + 1));
         indexItem->setTextAlignment(Qt::AlignCenter);
         indexItem->setForeground(QColor("#737686"));
+        indexItem->setData(Qt::UserRole, rec[0].toInt());
         m_tableWidget->setItem(displayRow, 0, indexItem);
 
         QTableWidgetItem *plateItem = new QTableWidgetItem(rec[1].toString());
@@ -178,6 +181,34 @@ void VehicleInformation::onQueryClicked()
     m_pagination->setTotalRecords(m_allData.size());
 }
 
+void VehicleInformation::onDeleteClicked()
+{
+    QList<QTableWidgetItem *> selected = m_tableWidget->selectedItems();
+    if (selected.isEmpty()) {
+        notifyInfo(this, "请先选择要删除的记录");
+        return;
+    }
+
+    // 从选中行中提取不重复的 id
+    QSet<int> idSet;
+    for (QTableWidgetItem *item : selected) {
+        int row = item->row();
+        idSet.insert(m_tableWidget->item(row, 0)->data(Qt::UserRole).toInt());
+    }
+    QList<int> ids = QList<int>(idSet.constBegin(), idSet.constEnd());
+
+    if (!notifyConfirm(this, "确认删除",
+                       QString("确定要删除选中的 %1 条记录吗？此操作不可撤销。").arg(ids.size())))
+        return;
+
+    if (m_db->deleteCarRecords(ids)) {
+        notifySuccess(this, QString("成功删除 %1 条记录").arg(ids.size()));
+        onQueryClicked();
+    } else {
+        notifyError(this, "删除失败", "数据库删除操作失败，请重试");
+    }
+}
+
 void VehicleInformation::onPageChanged(int page)
 {
     Q_UNUSED(page);
@@ -226,6 +257,9 @@ VehicleInformation::VehicleInformation(QWidget *parent, DatabaseManager *db)
 
     connect(m_pagination, &PaginationWidget::pageChanged,
             this, &VehicleInformation::onPageChanged);
+
+    connect(ui->deletePushButton, &QPushButton::clicked,
+            this, &VehicleInformation::onDeleteClicked);
 
     connect(m_pageSizeCombo, &QComboBox::currentTextChanged,
             this, [this](const QString &text) {

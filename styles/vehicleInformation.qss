@@ -50,6 +50,12 @@
     background-color: #003FB1;
     border: 1px solid #003FB1
 }
+#VehicleInformation #queryPushButton:hover {
+    background-color: #003399;
+}
+#VehicleInformation #queryPushButton:pressed {
+    background-color: #002a80;
+}
 
 /* ── 删除按钮 ── */
 #VehicleInformation #deletePushButton {
@@ -58,6 +64,12 @@
     color: #EA3323;
     background-color: #ffffff;
     border: 1px solid #EA3323;
+}
+#VehicleInformation #deletePushButton:hover {
+    background-color: #fff5f5;
+}
+#VehicleInformation #deletePushButton:pressed {
+    background-color: #ffe0e0;
 }
 
 #VehicleInformation #plateWidget,
@@ -109,4 +121,23 @@
 #VehicleInformation QTableWidget::item:selected {
     background-color: #dae2fd;
     color: #191b23;
+}
+
+/* ── 每页条数下拉框 ── */
+#VehicleInformation #pageSizeCombo {
+    background: #ffffff;
+    border: 1px solid #E2E8F0;
+    border-radius: 4px;
+    padding: 4px 8px;
+    color: #191b23;
+}
+#VehicleInformation #pageSizeCombo::drop-down {
+    border: none;
+    width: 20px;
+}
+#VehicleInformation #pageSizeCombo QAbstractItemView {
+    background: #ffffff;
+    color: #191b23;
+    selection-background-color: #f3f3fe;
+    selection-color: #003FB1;
 }

@@ -25,6 +25,7 @@ public:
 
 private slots:
     void onQueryClicked();
+    void onDeleteClicked();
     void onPageChanged(int page);
 
 private:
