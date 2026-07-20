@@ -297,7 +297,7 @@ void CameraSettingsDialog::onSave()
     if (entryCount == 0) {
         auto reply = QMessageBox::question(this, QStringLiteral("警告"),
             QStringLiteral("当前无入口摄像头，车牌识别功能将暂停。确定继续？"));
-        if (reply != QMessageBox::No)
+        if (reply == QMessageBox::No)
             return;
     }
 
