@@ -63,6 +63,7 @@ SOURCES += \
     UI/VehicleInformation/vehicleinformation.cpp \
     UI/Register/registerdialog.cpp \
     UI/ConfigInit/configinitdialog.cpp \
+    UI/Settings/settingsdialog.cpp \
     UI/CameraManagement/cameramanagement.cpp \
     UI/CameraManagement/camerawindow.cpp \
     # ==================== 业务服务层 ====================
@@ -115,6 +116,7 @@ HEADERS += \
     UI/VehicleInformation/vehicleinformation.h \
     UI/Register/registerdialog.h \
     UI/ConfigInit/configinitdialog.h \
+    UI/Settings/settingsdialog.h \
     UI/CameraManagement/cameramanagement.h \
     UI/CameraManagement/camerawindow.h \
     # ==================== 业务服务层 ====================
@@ -187,7 +189,8 @@ FORMS += \
     UI/UserManager/usermanagement.ui \
     UI/VehicleInformation/vehicleinformation.ui \
     UI/Register/registerdialog.ui \
-    UI/ConfigInit/configinitdialog.ui
+    UI/ConfigInit/configinitdialog.ui \
+    UI/Settings/settingsdialog.ui
 
 # ==================== DLL 复制配置 ====================
 # 构建完成后将 DLL 复制到可执行文件目录
