@@ -28,7 +28,7 @@ CameraWindow::CameraWindow(QWidget *parent) : QFrame(parent)
     m_statusDot->setFixedSize(12, 12);
     m_statusDot->raise();
 
-    showEmptyState(QStringLiteral("Signal Lost / Awaiting Connection"));
+    // 不在这里调 showEmptyState — 等 bind() 后由 onFrame/onStatus 决定
 }
 
 CameraWindow::~CameraWindow()
@@ -58,8 +58,8 @@ void CameraWindow::bind(CameraThread *thread, const CameraInfo &info)
                                  .arg(m_info.name)
                                  .arg(m_info.width).arg(m_info.height)
                                  .arg(m_info.fps));
-        m_connected = false;
-        m_statusDot->setProperty("status", "offline");
+        m_connected = m_thread->isRunning();
+        m_statusDot->setProperty("status", m_thread->isRunning() ? "online" : "offline");
         m_statusDot->style()->unpolish(m_statusDot);
         m_statusDot->style()->polish(m_statusDot);
     }
@@ -68,6 +68,13 @@ void CameraWindow::bind(CameraThread *thread, const CameraInfo &info)
 void CameraWindow::onFrame(cv::Mat frame)
 {
     if(frame.empty()) return;
+    // 收到帧证明摄像头已在线,清空文本残留
+    m_videoLabel->setText(QString());
+    m_connected = true;
+    m_statusDot->setProperty("status", "online");
+    m_statusDot->style()->unpolish(m_statusDot);
+    m_statusDot->style()->polish(m_statusDot);
+
     cv::Mat rgb;
     cv::cvtColor(frame, rgb, cv::COLOR_BGR2RGB);
     QImage img(rgb.data, rgb.cols, rgb.rows,
