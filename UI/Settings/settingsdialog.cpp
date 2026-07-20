@@ -1,7 +1,6 @@
 #include "settingsdialog.h"
 #include "ui_settingsdialog.h"
 #include "src/utils/initfile.h"
-#include "src/database/databasemanager.h"
 
 #include <QFile>
 #include <QMessageBox>
@@ -9,10 +8,9 @@
 #include <QMouseEvent>
 #include <QSqlDatabase>
 
-SettingsDialog::SettingsDialog(DatabaseManager *db, QWidget *parent)
+SettingsDialog::SettingsDialog(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::SettingsDialog)
-    , m_db(db)
 {
     ui->setupUi(this);
     setupWindow();
@@ -60,27 +58,32 @@ void SettingsDialog::setupWindow()
 bool SettingsDialog::eventFilter(QObject *obj, QEvent *event)
 {
     if (obj == ui->titleBar) {
-        QMouseEvent *me = static_cast<QMouseEvent *>(event);
         switch (event->type()) {
-        case QEvent::MouseButtonPress:
+        case QEvent::MouseButtonPress: {
+            QMouseEvent *me = static_cast<QMouseEvent *>(event);
             if (me->button() == Qt::LeftButton) {
                 m_dragging = true;
                 m_dragPosition = me->globalPos() - frameGeometry().topLeft();
                 return true;
             }
             break;
-        case QEvent::MouseMove:
+        }
+        case QEvent::MouseMove: {
+            QMouseEvent *me = static_cast<QMouseEvent *>(event);
             if (m_dragging && (me->buttons() & Qt::LeftButton)) {
                 move(me->globalPos() - m_dragPosition);
                 return true;
             }
             break;
-        case QEvent::MouseButtonRelease:
+        }
+        case QEvent::MouseButtonRelease: {
+            QMouseEvent *me = static_cast<QMouseEvent *>(event);
             if (me->button() == Qt::LeftButton) {
                 m_dragging = false;
                 return true;
             }
             break;
+        }
         default:
             break;
         }

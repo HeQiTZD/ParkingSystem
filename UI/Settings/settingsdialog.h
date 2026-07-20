@@ -8,14 +8,12 @@ namespace Ui {
 class SettingsDialog;
 }
 
-class DatabaseManager;
-
 class SettingsDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit SettingsDialog(DatabaseManager *db, QWidget *parent = nullptr);
+    explicit SettingsDialog(QWidget *parent = nullptr);
     ~SettingsDialog();
 
 signals:
@@ -31,7 +29,6 @@ private:
     void loadSettings();
 
     Ui::SettingsDialog *ui;
-    DatabaseManager *m_db;
     bool m_dragging = false;
     QPoint m_dragPosition;
 
