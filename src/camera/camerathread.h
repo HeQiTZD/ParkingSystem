@@ -6,6 +6,7 @@
 #include <QWaitCondition>
 #include <QImage>
 #include <opencv2/opencv.hpp>
+#include <atomic>
 //#include "framequeue.h"
 
 class FrameQueue;   // 前向声明，避免引入头文件
@@ -174,8 +175,8 @@ private:
     int m_cameraHeight = 480;  // 采集高度
     int m_targetFps; //目标帧率
     int m_currentFps; //当前帧率
-    bool m_running; //运行标志
-    bool m_paused; //暂停标志
+    std::atomic<bool> m_running{false}; //运行标志
+    std::atomic<bool> m_paused{false}; //暂停标志
 
     cv::VideoCapture m_capture; //OpenCV摄像头捕获对象
     cv::Mat m_latestFrame; //最新帧（线程安全）

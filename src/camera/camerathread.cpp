@@ -10,8 +10,6 @@ CameraThread::CameraThread(int cameraIndex, QObject *parent)
     , m_cameraIndex(cameraIndex)
     , m_targetFps(30)
     , m_currentFps(0)
-    , m_running(false)
-    , m_paused(false)
     , m_frameCount(0)
     , m_lastFpsTime(0)
 {}
@@ -32,7 +30,9 @@ void CameraThread::stop()
     // 等待线程结束
     if(QThread::isRunning()){//检查线程是否仍在运行
         quit();//让线程的事件循环退出（如果线程内有 exec() 或 QEventLoop）。对于自定义的非事件循环线程，通常不需要 quit()，但保留它也不会造成问题
-        wait(3000);// 最多等待3秒
+        if(!wait(3000)){// 最多等待3秒
+            qWarning() << "CameraThread::stop() timeout";// 超时警告
+        }
     }
 }
 
