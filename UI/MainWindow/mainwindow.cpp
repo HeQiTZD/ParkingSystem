@@ -152,10 +152,18 @@ MainWindow::MainWindow(QWidget *parent, DatabaseManager *db)
     m_videoLabel->setAlignment(Qt::AlignCenter);
     m_videoLabel->setScaledContents(false);
 
+    // 创建帧队列（先于摄像头线程，以便注入）
+    m_frameQueue = new FrameQueue();
+
     m_cameraThread = CameraManager::instance().getThread(0);
     if(m_cameraThread){
         connect(m_cameraThread, &CameraThread::newFrameCaptured, this, &MainWindow::updateFrame);
         CameraManager::instance().start(0);
+        m_cameraThread->setFrameQueue(m_frameQueue);
+    } else {
+        // 无摄像头可用 — FrameQueue 不会被生产数据，自动识别也无需启动
+        delete m_frameQueue;
+        m_frameQueue = nullptr;
     }
 
     ui->cameraViewWidget->installEventFilter(this);
@@ -175,22 +183,24 @@ MainWindow::MainWindow(QWidget *parent, DatabaseManager *db)
     // → 3. RecognizeThread（消费者）→ 4. PlateConfirmTracker（校验器）
     // → 5. 信号连接 → 6. 加载模型 → 7. 启动识别线程
     
-    // 1. 创建帧队列
-    m_frameQueue = new FrameQueue();
+    // 2. 注入 CameraThread 已在前面完成（置于 guard 内）
 
-    // 2. 注入 CameraThread（使其成为生产者）
-    m_cameraThread->setFrameQueue(m_frameQueue);
-
-    // 3. 创建识别消费者线程
-    m_recognizeThread = new RecognizeThread(this);
-    m_recognizeThread->setFrameQueue(m_frameQueue);
-    m_recognizeThread->setSamplingInterval(1500);// 1.5秒采样间隔
+    // 3. 创建识别消费者线程（仅在存在 FrameQueue 时有意义）
+    if(m_frameQueue){
+        m_recognizeThread = new RecognizeThread(this);
+        m_recognizeThread->setFrameQueue(m_frameQueue);
+        m_recognizeThread->setSamplingInterval(1500);// 1.5秒采样间隔
+    } else {
+        m_recognizeThread = nullptr;
+    }
 
     // 4. 创建防重复校验器
     m_confirmTracker = new PlateConfirmTracker();
 
     // 5. 连接识别结果信号（跨线程，Qt 自动使用 QueuedConnection）
-    connect(m_recognizeThread, &RecognizeThread::plateRecognized, this, &MainWindow::onPlateRecognized);
+    if(m_recognizeThread){
+        connect(m_recognizeThread, &RecognizeThread::plateRecognized, this, &MainWindow::onPlateRecognized);
+    }
 
     // 6. 加载 EasyPR 模型（如果尚未加载）
     PlateRecognize *recognizer = PlateRecognize::instance();
@@ -249,13 +259,14 @@ MainWindow::~MainWindow()
         m_recognizeThread->wait(3000);
     }
 
-    // CameraThread 0 is now owned by CameraManager singleton — don't stop/wait here.
-    // CameraManager is destroyed after MainWindow (static singleton), so the pointer
-    // remains valid during ~MainWindow.
+    // 停止摄像头 0 生产数据，以防其还在向 FrameQueue 推送帧
+    CameraManager::instance().stop(0);
 
-    // 释放帧队列（两个线程都已停止，安全释放）
-    delete m_frameQueue;
-    m_frameQueue = nullptr;
+    // 释放帧队列（线程已停止，安全释放）
+    if(m_frameQueue){
+        delete m_frameQueue;
+        m_frameQueue = nullptr;
+    }
 
     // 释放校验器
     delete m_confirmTracker;
