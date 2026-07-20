@@ -72,37 +72,16 @@ public:
     /**
      * @brief 获取单例实例
      */
-    static ThreadPoolManager* instance();
+    static ThreadPoolManager& instance();
 
-    /**
-     * @brief 初始化线程池
-     * @param maxThreadCount 最大线程数（默认为CPU核心数）
-     */
     void init(int maxThreadCount = QThread::idealThreadCount());
-
-    /**
-     * @brief 提交识别任务
-     * @param frame 待识别的图像
-     * @return 任务ID，-1表示提交失败（参数无效或线程池未初始化）
-     */
     int submitTask(const cv::Mat &frame);
-
-    /**
-     * @brief 获取线程池状态
-     * @return 活动线程数
-     */
     int activeThreadCount() const;
-
-    /**
-     * @brief 等待所有任务完成
-     * @param timeout 超时时间（毫秒），-1表示无限等待
-     */
     void waitForDone(int timeout = -1);
-
-    /**
-     * @brief 获取线程池是否已初始化
-     */
     bool isInitialized() const {return m_initialized;}
+
+    // 幂等关闭: 等待任务完成并释放线程池
+    void shutdown();
 
 signals:
     /**
@@ -139,9 +118,6 @@ private:
     QMutex m_mutex;// 互斥锁，保护任务计数器
     int m_taskCounter;// 任务计数器
     bool m_initialized; //初始化标志
-
-    // 单例实例
-    static ThreadPoolManager* s_instance;
 };
 #endif // PTHREADPOOL_H
 

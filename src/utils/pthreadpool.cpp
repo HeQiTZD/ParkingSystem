@@ -50,27 +50,19 @@ void RecognitionTask::run()
     }
 
     // 发射任务完成信号
-    emit ThreadPoolManager::instance()->taskFinished(m_taskId, success, errorMsg);
-
-    // 发射状态变化信号
-    emit ThreadPoolManager::instance()->statusChanged(
-        ThreadPoolManager::instance()->activeThreadCount());
+    emit ThreadPoolManager::instance().taskFinished(m_taskId, success, errorMsg);
+    emit ThreadPoolManager::instance().statusChanged(
+        ThreadPoolManager::instance().activeThreadCount());
 
     qDebug() << "任务" << m_taskId << "执行完成";
 }
 
 // ========== ThreadPoolManager 实现 ==========
 
-// 初始化静态成员变量
-ThreadPoolManager* ThreadPoolManager::s_instance = nullptr;
-
-
-ThreadPoolManager *ThreadPoolManager::instance()
+ThreadPoolManager& ThreadPoolManager::instance()
 {
-    if(s_instance == nullptr){
-        s_instance = new ThreadPoolManager();
-    }
-    return s_instance;
+    static ThreadPoolManager inst;  // Meyer's, C++11 thread-safe
+    return inst;
 }
 
 void ThreadPoolManager::init(int maxThreadCount)
@@ -151,9 +143,17 @@ ThreadPoolManager::ThreadPoolManager(QObject *parent)
 
 ThreadPoolManager::~ThreadPoolManager()
 {
+    shutdown();
+}
+
+void ThreadPoolManager::shutdown()
+{
+    if(!m_initialized) return;  // 幂等
     if(m_threadPool){
         m_threadPool->waitForDone();
         delete m_threadPool;
         m_threadPool = nullptr;
     }
+    m_initialized = false;
+    qDebug() << "ThreadPoolManager: shutdown 完成";
 }
