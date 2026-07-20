@@ -265,13 +265,23 @@ void CameraSettingsDialog::onSave()
     CameraManager &mgr = CameraManager::instance();
     int n = mgr.count();
 
-    int globalWidth = ui->cmbGlobalWidth->currentText().toInt();
-    int globalHeight = ui->cmbGlobalHeight->currentText().toInt();
-    int globalFps = ui->cmbGlobalFps->currentText().toInt();
-
-    if (globalWidth <= 0 || globalHeight <= 0 || globalFps <= 0) {
+    bool ok = false;
+    int globalWidth = ui->cmbGlobalWidth->currentText().toInt(&ok);
+    if (!ok || globalWidth <= 0) {
         QMessageBox::warning(this, QStringLiteral("错误"),
-            QStringLiteral("全局分辨率或帧率无效，请输入正整数"));
+            QStringLiteral("全局分辨率宽度无效，请输入正整数"));
+        return;
+    }
+    int globalHeight = ui->cmbGlobalHeight->currentText().toInt(&ok);
+    if (!ok || globalHeight <= 0) {
+        QMessageBox::warning(this, QStringLiteral("错误"),
+            QStringLiteral("全局分辨率高度无效，请输入正整数"));
+        return;
+    }
+    int globalFps = ui->cmbGlobalFps->currentText().toInt(&ok);
+    if (!ok || globalFps <= 0) {
+        QMessageBox::warning(this, QStringLiteral("错误"),
+            QStringLiteral("全局帧率无效，请输入正整数"));
         return;
     }
 
@@ -318,8 +328,9 @@ void CameraSettingsDialog::onSave()
         obj["role"] = (rbEntry && rbEntry->isChecked()) ? "entry" : "monitor";
 
         QComboBox *cmbWidth = row->findChild<QComboBox*>(QStringLiteral("cam_width_%1").arg(i));
-        int perWidth = cmbWidth ? cmbWidth->currentText().toInt() : 0;
-        if (perWidth <= 0) {
+        bool ok = false;
+        int perWidth = cmbWidth ? cmbWidth->currentText().toInt(&ok) : 0;
+        if (!ok || perWidth <= 0) {
             QMessageBox::warning(this, QStringLiteral("错误"),
                 QStringLiteral("摄像头 %1 的分辨率宽度无效，请输入正整数").arg(i + 1));
             return;
@@ -327,8 +338,8 @@ void CameraSettingsDialog::onSave()
         obj["width"] = perWidth;
 
         QComboBox *cmbHeight = row->findChild<QComboBox*>(QStringLiteral("cam_height_%1").arg(i));
-        int perHeight = cmbHeight ? cmbHeight->currentText().toInt() : 0;
-        if (perHeight <= 0) {
+        int perHeight = cmbHeight ? cmbHeight->currentText().toInt(&ok) : 0;
+        if (!ok || perHeight <= 0) {
             QMessageBox::warning(this, QStringLiteral("错误"),
                 QStringLiteral("摄像头 %1 的分辨率高度无效，请输入正整数").arg(i + 1));
             return;
@@ -336,8 +347,8 @@ void CameraSettingsDialog::onSave()
         obj["height"] = perHeight;
 
         QComboBox *cmbFps = row->findChild<QComboBox*>(QStringLiteral("cam_fps_%1").arg(i));
-        int perFps = cmbFps ? cmbFps->currentText().toInt() : 0;
-        if (perFps <= 0) {
+        int perFps = cmbFps ? cmbFps->currentText().toInt(&ok) : 0;
+        if (!ok || perFps <= 0) {
             QMessageBox::warning(this, QStringLiteral("错误"),
                 QStringLiteral("摄像头 %1 的帧率无效，请输入正整数").arg(i + 1));
             return;
