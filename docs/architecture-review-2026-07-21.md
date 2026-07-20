@@ -254,17 +254,27 @@ CameraThread 捕获 BGR → QImage → cv::Mat → QImage，每帧经历 2-3 次
 
 ## 实施状态(2026-07-21 更新)
 
-经架构改进实现计划 `docs/superpowers/plans/2026-07-21-architecture-improvement.md` 落地:
+经架构改进实现计划 `docs/superpowers/plans/2026-07-21-architecture-improvement.md` 落地, 编译通过 + 功能验证完成:
 
 | # | 等级 | 问题 | 状态 |
 |---|------|------|------|
-| #1 | P1 | God Object | ✅ 已修复(Service 层提取,DatabasManager 瘦身) |
-| #2 | P1 | Singleton 生命周期 | ✅ 已修复(Meyer's + shutdown 序列) |
-| #3 | P1 | 线程安全 | ✅ 已修复(per-thread DbConnectionPool) |
-| #4 | P2 | 裸指针传播 | ✅ 已修复(UI 持 Service 引用) |
-| #7 | P2 | UI 耦合 | ✅ 已修复(业务逻辑下沉 Service) |
+| #1 | P1 | God Object | ✅ 已修复 — Service 层提取, DatabaseManager 瘦身为纯 CRUD |
+| #2 | P1 | Singleton 生命周期 | ✅ 已修复 — 4 单例统一 Meyer's + shutdown 逆序序列 |
+| #3 | P1 | 线程安全 | ✅ 已修复 — per-thread DbConnectionPool + 线程退出 close |
+| #4 | P2 | 裸指针传播 | ✅ 已修复 — UI 持 Service 引用, 消除空指针检查分散 |
+| #7 | P2 | UI 耦合 | ✅ 已修复 — 业务流程下沉 ParkingService/UserService/VehicleService |
+| #8 | P3 | 空指针不一致 | ✅ 顺手修复 — UI 引用天然非空 + Service 内部统一检查 |
+| #9 | P3 | 死代码 | ✅ 顺手修复 — `executeQuery()` 已删除 |
 | #5 | P2 | FrameQueue 单帧 | ⏭️ 已忽略(业务设计) |
 | #6 | P2 | 零测试覆盖 | ⏭️ 已忽略(QtTest 后续手动) |
+| #10 | P3 | 定时轮询 | ⬜ 未处理(后续优化) |
+| #11 | P3 | 视频帧格式转换 | ⬜ 未处理(后续优化) |
+
+### 实施过程中额外修复
+
+| 问题 | 描述 |
+|------|------|
+| MySQLInit QSqlQuery 无默认连接 | `DbConnectionPool` 使用命名连接后, `MySQLInit` 中 `QSqlQuery()` 无参构造找不到默认连接, 改为 `QSqlDatabase dbc = m_dbManager->threadConnection(); QSqlQuery query(dbc);` |
 
 ---
 
@@ -272,28 +282,28 @@ CameraThread 捕获 BGR → QImage → cv::Mat → QImage，每帧经历 2-3 次
 
 ### 严重度统计
 
-| 等级 | 数量 | 说明 |
-|------|------|------|
-| P0 (Critical) | 0 | 无即时崩溃/安全漏洞 |
-| P1 (High) | 3 | 上帝对象、单例生命周期、线程安全 |
-| P2 (Medium) | 2 | UI 耦合、裸指针 |
-| P3 (Low) | 4 | 空指针不一致、死代码、轮询、格式转换 |
+| 等级 | 原数量 | 已修复 | 剩余 | 说明 |
+|------|--------|--------|------|------|
+| P0 (Critical) | 0 | - | 0 | 无即时崩溃/安全漏洞 |
+| P1 (High) | 3 | 3 | 0 | ~~上帝对象~~、~~单例生命周期~~、~~线程安全~~ |
+| P2 (Medium) | 4 | 2 | 2 | ~~UI 耦合~~、~~裸指针~~、FrameQueue(已忽略)、零测试(已忽略) |
+| P3 (Low) | 4 | 2 | 2 | ~~死代码~~、~~空指针不一致~~、轮询、格式转换 |
 
 ### 建议修复顺序
 
 ```ascii
-Phase A (短期, 1-2天)
-  ├── A1: 删除 executeQuery 死代码
-  ├── A2: 统一 ThreadPoolManager 为 Meyer's Singleton
-  ├── A3: 添加 DatabaseManager 线程安全保护（per-thread 连接或 mutex）
-  └── A4: 补齐关键路径的空指针检查
+✅ Phase A (短期, 已完成 2026-07-21)
+  ├── ✅ A1: 删除 executeQuery 死代码
+  ├── ✅ A2: 统一 4 个 Singleton 为 Meyer's + shutdown 序列
+  ├── ✅ A3: per-thread DbConnectionPool 线程安全保护
+  └── ✅ A4: Service 层提取 + UI 依赖切换(顺手解决空指针)
 
-Phase B (中期, 3-5天)
+⬜ Phase B (中期, 3-5天, 后续)
   ├── B1: 集成 QtTest，编写计费逻辑 + FrameQueue 单元测试
   ├── B2: 提取 ParkingService（入库/出库/计费逻辑从 MainWindow 分离）
-  └── B3: FrameQueue 从单帧改为环形缓冲区
+  └── B3: FrameQueue 从单帧改为环形缓冲区(业务需求决定)
 
-Phase C (长期, 1-2周)
+⬜ Phase C (长期, 1-2周, 后续)
   ├── C1: 拆解 DatabaseManager 为 UserRepository / VehicleRepository / ParkingRepository
   ├── C2: 引入 Service 层（UserService, VehicleService, ParkingService）
   └── C3: 建立 CI/CD 流水线（GitHub Actions / 本地脚本）
@@ -336,11 +346,11 @@ Phase C (长期, 1-2周)
 
 | Runs | Status | Findings |
 |------|--------|----------|
-| plan-eng-review (architecture) | ✅ | 4 findings (P1×3, P2×1) |
-| plan-eng-review (code quality) | ✅ | 3 findings (P2×2, P3×1) |
+| plan-eng-review (architecture) | ✅ | 4 findings (P1×3 → 全部修复, P2×1 → 已忽略) |
+| plan-eng-review (code quality) | ✅ | 3 findings (P2×2 → 全部修复, P3×1 → 死代码已删) |
 | plan-eng-review (tests) | ⏭️ 跳过 | QtTest 后续手动引入 |
-| plan-eng-review (performance) | ✅ | 2 findings (P3×2) |
+| plan-eng-review (performance) | ✅ | 2 findings (P3×2, 未处理) |
 
-**VERDICT:** 架构基本合格，适合实习项目规模。3 个 P1 问题需在后续迭代中解决（上帝对象、单例生命周期、线程安全）。代码注释质量高、文档覆盖完整，加分项。
+**VERDICT (更新 2026-07-21):** 架构审查原始 11 项发现: 5 项已修复(P1×3 + P2×2), 2 项顺手修复(P3 死代码+空指针), 2 项已忽略(业务设计+后续), 2 项未处理(P3 轮询+格式转换)。**编译通过, 功能验证完成。**
 
-**FINAL:** 建议先修复 Phase A（1-2 天安全加固），然后进行 Phase B（中期改善），Phase C 可择机进行。
+**FINAL (更新):** Phase A 已完成。剩余 Phase B/C 中的测试框架集成 → Repository 拆解 → CI/CD 可在后续迭代中择机进行。
