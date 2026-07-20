@@ -33,6 +33,9 @@ public:
     //检查连接状态
     bool isConnected() const;
 
+    // 取当前线程的数据库连接(供 MySQLInit 等内部使用)
+    QSqlDatabase threadConnection();
+
     //验证用户登录
     bool validateUser(const QString &username, const QString &password, QString &userRole);
     //查询用户是否已存在
@@ -75,7 +78,6 @@ signals:
     void parkingDataChanged();
 
 private:
-    QSqlDatabase threadConnection();   // 取当前线程的连接
     DbConfig m_config;
     bool m_connected = false;
 };

@@ -124,7 +124,8 @@ bool MySQLInit::createParkingTable()
 bool MySQLInit::initParkingData(const QString &parkingName, int totalSpace, double fee)
 {
     //检查是否已存在
-    QSqlQuery checkQuery;
+    QSqlDatabase dbc = m_dbManager->threadConnection();
+    QSqlQuery checkQuery(dbc);
     checkQuery.prepare("SELECT COUNT(*) FROM PARKING WHERE P_name = :name");
     checkQuery.bindValue(":name", parkingName);
 
@@ -139,7 +140,7 @@ bool MySQLInit::initParkingData(const QString &parkingName, int totalSpace, doub
     }
 
     //插入初始数据
-    QSqlQuery inserQuery;
+    QSqlQuery inserQuery(dbc);
     inserQuery.prepare(R"(
         INSERT INTO PARKING (P_name, P_now_count, P_all_count, P_fee)
         VALUES (:name, 0, :all_count, :fee)
@@ -161,7 +162,8 @@ bool MySQLInit::initParkingData(const QString &parkingName, int totalSpace, doub
 bool MySQLInit::initAdminUser()
 {
     // 1. 判断 admin 是否已存在，存在则跳过（幂等，可重复调用）
-    QSqlQuery checkQuery;
+    QSqlDatabase dbc = m_dbManager->threadConnection();
+    QSqlQuery checkQuery(dbc);
     checkQuery.prepare("SELECT COUNT(*) FROM User WHERE username = :username");
     checkQuery.bindValue(":username", "admin");
 
@@ -176,7 +178,7 @@ bool MySQLInit::initAdminUser()
     }
 
     // 2. 不存在则插入默认管理员（密码 SHA256 加密后存入）
-    QSqlQuery insertQuery;
+    QSqlQuery insertQuery(dbc);
     insertQuery.prepare(R"(
         INSERT INTO User (username, password, telephone, truename, role)
         VALUES (:username, :password, :telephone, :truename, 'admin')
@@ -198,7 +200,8 @@ bool MySQLInit::initAdminUser()
 
 bool MySQLInit::isTableExists(const QString &tableName)
 {
-    QSqlQuery query;
+    QSqlDatabase dbc = m_dbManager->threadConnection();
+    QSqlQuery query(dbc);
     query.prepare("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = :name");
     query.bindValue(":name", tableName);
 
@@ -210,7 +213,8 @@ bool MySQLInit::isTableExists(const QString &tableName)
 
 bool MySQLInit::executeSql(const QString &sql, const QString &description)
 {
-    QSqlQuery query;
+    QSqlDatabase dbc = m_dbManager->threadConnection();
+    QSqlQuery query(dbc);
     if(!query.exec(sql)){
         qDebug() << description << QStringLiteral("失败") << query.lastError().text();
         return false;
