@@ -6,5 +6,6 @@
         <file alias="register.qss">register.qss</file>
         <file alias="vehicleInformation.qss">vehicleInformation.qss</file>
         <file alias="userManagement.qss">userManagement.qss</file>
+        <file alias="cameramanagement.qss">cameramanagement.qss</file>
     </qresource>
 </RCC>

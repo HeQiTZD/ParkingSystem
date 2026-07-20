@@ -1,0 +1,74 @@
+/* ── 视频容器(深色科技感) ── */
+#videoContainer {
+    background: #1E293B;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+}
+
+/* ── 底部控制栏 ── */
+#controlBar {
+    background: #ffffff;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+}
+
+#countLabel {
+    color: #5C647A;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+#startAllBtn {
+    background-color: #003FB1;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 24px;
+    font-size: 14px;
+    font-weight: 500;
+}
+#startAllBtn:hover { background-color: #003DAB; }
+
+#stopAllBtn {
+    background-color: #ffffff;
+    color: #DC2626;
+    border: 1px solid #FECACA;
+    border-radius: 6px;
+    padding: 8px 20px;
+    font-size: 14px;
+    font-weight: 500;
+}
+#stopAllBtn:hover { background-color: #FEF2F2; border-color: #DC2626; }
+
+#settingsBtn {
+    background-color: #F1F5F9;
+    color: #5C647A;
+    border: 1px solid #E2E8F0;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+}
+#settingsBtn:hover { background-color: #E2E8F0; }
+
+/* ── 单个摄像头窗口 ── */
+#cameraWindow {
+    background: #0F172A;
+    border: 1px solid #334155;
+    border-radius: 8px;
+}
+
+#cameraInfoPanel {
+    background: rgba(0, 0, 0, 140);
+    color: #ffffff;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 12px;
+}
+
+#cameraStatusDot {
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 80);
+}
+#cameraStatusDot[status="online"]  { background: #059669; }
+#cameraStatusDot[status="offline"] { background: #DC2626; }
