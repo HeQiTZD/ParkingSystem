@@ -252,6 +252,22 @@ CameraThread 捕获 BGR → QImage → cv::Mat → QImage，每帧经历 2-3 次
 
 ---
 
+## 实施状态(2026-07-21 更新)
+
+经架构改进实现计划 `docs/superpowers/plans/2026-07-21-architecture-improvement.md` 落地:
+
+| # | 等级 | 问题 | 状态 |
+|---|------|------|------|
+| #1 | P1 | God Object | ✅ 已修复(Service 层提取,DatabasManager 瘦身) |
+| #2 | P1 | Singleton 生命周期 | ✅ 已修复(Meyer's + shutdown 序列) |
+| #3 | P1 | 线程安全 | ✅ 已修复(per-thread DbConnectionPool) |
+| #4 | P2 | 裸指针传播 | ✅ 已修复(UI 持 Service 引用) |
+| #7 | P2 | UI 耦合 | ✅ 已修复(业务逻辑下沉 Service) |
+| #5 | P2 | FrameQueue 单帧 | ⏭️ 已忽略(业务设计) |
+| #6 | P2 | 零测试覆盖 | ⏭️ 已忽略(QtTest 后续手动) |
+
+---
+
 ## 审查总结
 
 ### 严重度统计

@@ -43,37 +43,31 @@ public:
     //数据库操作
     bool updateParkingConfig(const QString &name, double price, int capacity);
 
+    // ═══════════════════════════════════════════════════════════════════
+    // 以下方法被 Service 层使用(ParkingService/UserService/VehicleService)
+    // 新代码应通过 Service 调用, 而不是直接使用 DatabaseManager。
+    // ═══════════════════════════════════════════════════════════════════
+
     //车辆管理
     bool isVehicleInPark(const QString &licensePlate);
     bool checkIn(const QString &licensePlate, const QString &parkingName);
     bool checkOut(const QString &licensePlate, const QString &parkingName, double fee);
     QSqlQuery queryVehicle(const QString &licensePlate, bool onlyInPark = true);
-
-    //车位统计
     ParkingStats getParkingStats(const QString &parkingName);
-
-    //车辆信息搜索
     QList<QVariantList> searchCars(const QString &plate, const QDateTime &startTime,
                                     const QDateTime &endTime, int status);
-
-    // 获取最近 N 条车辆记录（按入库时间降序）
     QList<QVariantList> getRecentRecords(int count);
-
-    // 获取入库时间
     QDateTime getVehicleCheckInTime(const QString &licensePlate);
-
-    //车辆信息删除
     bool deleteCarRecord(int id);
     bool deleteCarRecords(const QList<int> &ids);
 
-    //---------- 用户管理 -----------
-    // 添加新用户
+    //用户管理
+    bool validateUser(const QString &username, const QString &password, QString &userRole);
+    bool isUsernameExists(const QString &username);
+    bool registerUser(const QString &username, const QString &password, const QString &name, const QString &phone);
     bool addUser(const QString &username, const QString &password, const QString &telephone, const QString &truename, const QString &role);
-    // 修改用户信息
     bool updateUser(int id, const QString &username, const QString &telephone, const QString &truename, const QString &role);
-    // 删除用户
     bool deleteUser(int id);
-    // 搜索用户（支持用户名/姓名/手机号模糊匹配）
     QList<QVariantList> searchUsers(const QString &keyword = "");
 
 signals:
