@@ -7,6 +7,7 @@
 #include <QGraphicsDropShadowEffect>
 #include <QMouseEvent>
 #include <QSqlDatabase>
+#include <QSqlError>
 
 SettingsDialog::SettingsDialog(QWidget *parent)
     : QDialog(parent)
@@ -63,7 +64,7 @@ bool SettingsDialog::eventFilter(QObject *obj, QEvent *event)
             QMouseEvent *me = static_cast<QMouseEvent *>(event);
             if (me->button() == Qt::LeftButton) {
                 m_dragging = true;
-                m_dragPosition = me->globalPos() - frameGeometry().topLeft();
+                m_dragPosition = me->globalPosition().toPoint() - frameGeometry().topLeft();
                 return true;
             }
             break;
@@ -71,7 +72,7 @@ bool SettingsDialog::eventFilter(QObject *obj, QEvent *event)
         case QEvent::MouseMove: {
             QMouseEvent *me = static_cast<QMouseEvent *>(event);
             if (m_dragging && (me->buttons() & Qt::LeftButton)) {
-                move(me->globalPos() - m_dragPosition);
+                move(me->globalPosition().toPoint() - m_dragPosition);
                 return true;
             }
             break;
