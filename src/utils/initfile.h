@@ -18,6 +18,7 @@ public:
     //配置文件操作
     bool loadConfig();// 加载配置文件
     bool saveConfig();// 保存配置文件
+    void shutdown();  // 幂等写盘(shutdown 序列调用)
     bool createDefaultConfig();// 创建默认配置文件
     bool isConfigExists();//检查配置文件是否存在
 

@@ -18,9 +18,15 @@ CameraManager::CameraManager(QObject *parent) : QObject(parent) {}
 
 CameraManager::~CameraManager()
 {
-    stopAll();
+    shutdown();
     qDeleteAll(m_threads);
     m_threads.clear();
+}
+
+void CameraManager::shutdown()
+{
+    stopAll();
+    qDebug() << "CameraManager: shutdown 完成";
 }
 
 void CameraManager::scanCameras()

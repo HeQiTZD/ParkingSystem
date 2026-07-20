@@ -1,6 +1,7 @@
-#include "recognizethread.h" 
+#include "recognizethread.h"
 #include "src/camera/framequeue.h"
 #include "src/app/platerecognize.h"
+#include "src/database/dbconnectionpool.h"
 #include <QDebug>
 
 RecognizeThread::RecognizeThread(QObject *parent)
@@ -81,5 +82,6 @@ void RecognizeThread::run()
         }
     }
 
+    DbConnectionPool::instance().closeThreadConnection();
     qDebug() << QStringLiteral("识别线程已结束");
 }

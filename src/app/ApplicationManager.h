@@ -12,6 +12,7 @@ class ApplicationManager : public QObject {
 
 public:
     explicit ApplicationManager(DatabaseManager &dbMgr, QObject *parent = nullptr);
+    ~ApplicationManager();
 
     // 应用入口：创建窗口、建立信号连接、显示登录框。
     // 返回后由 main() 调 app.exec() 驱动全局事件循环。

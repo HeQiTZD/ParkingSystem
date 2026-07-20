@@ -23,6 +23,9 @@ public:
     void startAll();
     void stopAll();
 
+    // 幂等: 停止所有摄像头线程。析构时自动调用。
+    void shutdown();
+
 private:
     CameraManager(QObject *parent = nullptr);
     ~CameraManager();

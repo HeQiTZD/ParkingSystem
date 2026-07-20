@@ -1,6 +1,10 @@
 #include "ApplicationManager.h"
 #include "UI/Login/logindialog.h"
 #include "UI/MainWindow/mainwindow.h"
+#include "src/utils/pthreadpool.h"
+#include "src/camera/cameramanager.h"
+#include "src/app/platerecognize.h"
+#include "src/utils/initfile.h"
 #include <QApplication>
 #include <QDebug>
 
@@ -8,6 +12,18 @@ ApplicationManager::ApplicationManager(DatabaseManager &dbMgr, QObject *parent)
     : QObject(parent)
     , m_dbMgr(dbMgr)
 {
+}
+
+ApplicationManager::~ApplicationManager()
+{
+    // 先停识别
+    if(m_mainWindow) m_mainWindow->stopRecognition();
+
+    // 逆序依赖: ThreadPool→Camera→Recognize→InitFile
+    ThreadPoolManager::instance().shutdown();
+    CameraManager::instance().shutdown();
+    PlateRecognize::instance().shutdown();
+    InitFile::instance().shutdown();
 }
 
 void ApplicationManager::start()

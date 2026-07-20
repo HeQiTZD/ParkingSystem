@@ -4,6 +4,7 @@
 #include <QElapsedTimer>
 #include <QDateTime>
 #include "framequeue.h"
+#include "src/database/dbconnectionpool.h"
 
 CameraThread::CameraThread(int cameraIndex, QObject *parent)
     : QThread(parent)
@@ -142,6 +143,7 @@ void CameraThread::run()
 
     //清理资源
     releaseCamera();
+    DbConnectionPool::instance().closeThreadConnection();
     qDebug() << QStringLiteral("摄像头线程已结束");
 }
 

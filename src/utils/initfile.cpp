@@ -24,6 +24,12 @@ InitFile::~InitFile()
     // 避免只读场景下局部/临时实例析构时把内存副本无意义地回写磁盘。
 }
 
+void InitFile::shutdown()
+{
+    saveConfig();
+    qDebug() << "InitFile: shutdown 写盘完成";
+}
+
 //加载配置文件
 bool InitFile::loadConfig()
 {
