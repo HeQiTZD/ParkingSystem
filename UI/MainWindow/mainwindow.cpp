@@ -16,6 +16,7 @@
 #include "UI/VehicleInformation/vehicleinformation.h"
 #include "UI/UserManager/usermanagement.h"
 #include "UI/CameraManagement/cameramanagement.h"
+#include "UI/Settings/settingsdialog.h"
 #include "src/camera/cameramanager.h"
 #include "src/app/platerecognize.h"
 #include <QFile>
@@ -327,7 +328,10 @@ void MainWindow::onMaxButton()
 
 void MainWindow::onSetButton()
 {
-    return;
+    auto *dialog = new SettingsDialog(this);
+    dialog->setModal(true);
+    dialog->exec();
+    dialog->deleteLater();
 }
 
 void MainWindow::onlogoutButton()
