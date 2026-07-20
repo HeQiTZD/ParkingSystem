@@ -3,6 +3,9 @@
 #include "circleprogress.h"
 #include "vehicleentryexitwidget.h"
 #include "src/database/databasemanager.h"
+#include "src/service/parkingservice.h"
+#include "src/service/userservice.h"
+#include "src/service/vehicleservice.h"
 #include "src/camera/camerathread.h"
 #include "src/app/car.h"
 #include "src/utils/notification_global.h"
@@ -23,10 +26,17 @@
 #include <QCursor>
 #include <QMouseEvent>
 
-MainWindow::MainWindow(QWidget *parent, DatabaseManager *db)
+MainWindow::MainWindow(QWidget *parent,
+                     DatabaseManager *db,
+                     ParkingService *parkingSvc,
+                     UserService *userSvc,
+                     VehicleService *vehicleSvc)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , m_db(db)
+    , m_parkingSvc(parkingSvc)
+    , m_userSvc(userSvc)
+    , m_vehicleSvc(vehicleSvc)
 {
     ui->setupUi(this);
     CameraManager::instance().scanCameras();
@@ -143,7 +153,7 @@ MainWindow::MainWindow(QWidget *parent, DatabaseManager *db)
     onUpdateParkingCount();
 
     // 监听停车数据变化（入库/出库/删除），自动刷新车位图表
-    connect(m_db, &DatabaseManager::parkingDataChanged,
+    connect(m_parkingSvc, &ParkingService::parkingDataChanged,
             this, &MainWindow::onUpdateParkingCount);
 
     // 摄像头初始化
@@ -217,13 +227,13 @@ MainWindow::MainWindow(QWidget *parent, DatabaseManager *db)
 
     // ========== 导航页面注册 ==========
     // 添加车辆信息页面到 stackedWidget（索引从 0 开始，contentWidget 是索引 0）
-    m_vehicleInfoPage = new VehicleInformation(this, m_db);
+    m_vehicleInfoPage = new VehicleInformation(this, m_vehicleSvc);
     int vehicleInfoIndex = ui->stackedWidget->addWidget(m_vehicleInfoPage);
 
-    m_userManagementPage = new UserManagement(this, m_db);
+    m_userManagementPage = new UserManagement(this, m_userSvc);
     int userMgmtIndex = ui->stackedWidget->addWidget(m_userManagementPage);
 
-    m_cameraManagementPage = new CameraManagement(this, m_db);
+    m_cameraManagementPage = new CameraManagement(this);
     int cameraMgmtIndex = ui->stackedWidget->addWidget(m_cameraManagementPage);
     Q_UNUSED(cameraMgmtIndex);
 

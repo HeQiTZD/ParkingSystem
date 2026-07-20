@@ -11,16 +11,23 @@
 }
 
 #searchEdit {
+    background: #ffffff;
     border: 1px solid #E2E8F0;
     border-radius: 6px;
     padding: 6px 12px;
     font-size: 14px;
-    color: #434654;
+    color: #191B23;
     min-width: 240px;
+    min-height: 20px;
+}
+
+#searchEdit:hover {
+    border-color: #94A3B8;
 }
 
 #searchEdit:focus {
     border-color: #003FB1;
+    background: #ffffff;
 }
 
 #searchButton {
@@ -123,6 +130,25 @@ QHeaderView::section {
 #bottomBar {
     border-top: 1px solid #E2E8F0;
     background: #F8FAFC;
+}
+
+/* ── 每页条数下拉框 ── */
+#pageSizeCombo {
+    background: #ffffff;
+    border: 1px solid #E2E8F0;
+    border-radius: 4px;
+    padding: 4px 8px;
+    color: #191b23;
+}
+#pageSizeCombo::drop-down {
+    border: none;
+    width: 20px;
+}
+#pageSizeCombo QAbstractItemView {
+    background: #ffffff;
+    color: #191b23;
+    selection-background-color: #f3f3fe;
+    selection-color: #003FB1;
 }
 
 #recordCountLabel {

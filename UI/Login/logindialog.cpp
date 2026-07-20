@@ -3,7 +3,7 @@
 #include "usernameedit.h"
 #include "passwordedit.h"
 #include "UI/Register/registerdialog.h"
-#include "src/database/databasemanager.h"
+#include "src/service/userservice.h"
 #include "src/utils/utils.h"
 #include "src/utils/notification_global.h"
 
@@ -14,10 +14,10 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QSettings>
-LoginDialog::LoginDialog(QWidget *parent, DatabaseManager *m_db)
+LoginDialog::LoginDialog(QWidget *parent, UserService *userSvc)
     : QDialog(parent)
     , ui(new Ui::LoginDialog)
-    , m_dbManager(m_db)
+    , m_userSvc(userSvc)
 {
     ui->setupUi(this);
     setWindowFlag(Qt::FramelessWindowHint);
@@ -39,7 +39,9 @@ LoginDialog::LoginDialog(QWidget *parent, DatabaseManager *m_db)
 
     connect(ui->loginButton,&QPushButton::clicked,this,&LoginDialog::onLoginButton);
     connect(ui->registerButton,&QPushButton::clicked,this,&LoginDialog::onRegisterButton);
-    connect(m_dbManager, &DatabaseManager::messageBox, this, &LoginDialog::onMessageBox);
+    connect(m_userSvc, &UserService::error, this, [this](MessageType::Type type, const QString& msg) {
+        onMessageBox(type, msg);
+    });
 
     loadCredentials(); // 从配置文件加载用户名和密码
 }
@@ -70,7 +72,7 @@ void LoginDialog::on_minimizeButton_clicked()
 void LoginDialog::onLoginButton()
 {
     // 检查数据库管理器是否有效
-    if (!m_dbManager) {
+    if (!m_userSvc) {
         qDebug() << "数据库未连接";
         return;
     }
@@ -85,7 +87,8 @@ void LoginDialog::onLoginButton()
     QString password = encryptPassword(ui->passwordEdit->text());
 
     // 验证用户
-    if (m_dbManager->validateUser(username, password, userRole)) {
+    QString errMsg;
+if (m_userSvc->authenticate(username, password, userRole, errMsg)) {
         notifySuccess(this,"登录成功!");
         saveCredentials(); // 保存用户名和密码到配置文件
         accept(); // 关闭对话框，返回 QDialog::Accepted
@@ -97,7 +100,7 @@ void LoginDialog::onLoginButton()
 
 void LoginDialog::onRegisterButton()
 {
-    RegisterDialog registerDialog(nullptr,m_dbManager);
+    RegisterDialog registerDialog(nullptr,m_userSvc);
     if(registerDialog.exec() == QDialog::Accepted){
         ui->usernameEdit->setText(registerDialog.getUserName());
         ui->passwordEdit->setText(registerDialog.getPassword());

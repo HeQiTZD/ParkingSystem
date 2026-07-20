@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__codegraph__codegraph_explore",
+      "Bash(/c/Qt/6.10.2/mingw_64/bin/qmake6.exe ParkingSystem.pro)",
+      "Bash(make -f Makefile.Debug debug/ParkingSystem.exe)",
+      "Bash(git ls-files *)",
+      "Bash(rcc --version)",
+      "Bash(/c/Qt/6.10.2/mingw_64/bin/rcc --name icons UI/imageQrc/image.qrc -o release/qrc_icons.cpp)",
+      "Bash(mingw32-make -j4)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(rm -f d:/QTproject/ParkingSystem/release/qrc_icons.cpp)",
+      "Bash(C:/Qt/6.10.2/mingw1310_64/bin/qmake.exe ParkingSystem.pro -spec win32-g++ CONFIG+=qtquickcompiler)",
+      "Bash(/c/Qt/6.10.2/mingw_64/bin/qmake.exe ParkingSystem.pro -spec win32-g++ CONFIG+=debug CONFIG+=qml_debug)",
+      "Read(//c/Users/LENOVO/.claude/skills/gstack/office-hours/**)",
+      "Read(//c/Users/LENOVO/.claude/skills/subagent-driven-development/**)"
+    ],
+    "additionalDirectories": [
+      "d:\\QTproject\\ParkingSystem\\release"
+    ]
+  }
+}

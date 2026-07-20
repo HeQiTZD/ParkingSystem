@@ -12,10 +12,9 @@
 #include <QPushButton>
 #include <QResizeEvent>
 
-CameraManagement::CameraManagement(QWidget *parent, DatabaseManager *db)
+CameraManagement::CameraManagement(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::CameraManagement)
-    , m_db(db)
 {
     ui->setupUi(this);
 

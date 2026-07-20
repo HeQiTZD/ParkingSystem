@@ -98,7 +98,11 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    ApplicationManager applicationManager(dbManager);
+    ParkingService  parkingSvc(dbManager);
+    UserService     userSvc(dbManager);
+    VehicleService  vehicleSvc(dbManager);
+
+    ApplicationManager applicationManager(dbManager, parkingSvc, userSvc, vehicleSvc);
     applicationManager.start();   // 创建窗口、连信号、显示登录框
 
     return app.exec();            // 标准全局事件循环

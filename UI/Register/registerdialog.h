@@ -2,7 +2,7 @@
 #define REGISTERDIALOG_H
 
 #include <QDialog>
-class DatabaseManager;
+class UserService;
 
 namespace Ui {
 class RegisterDialog;
@@ -13,7 +13,7 @@ class RegisterDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit RegisterDialog(QWidget *parent = nullptr, DatabaseManager *db = nullptr);
+    explicit RegisterDialog(QWidget *parent = nullptr, UserService *userSvc = nullptr);
     ~RegisterDialog();
 
     QString getUserName() const;
@@ -36,7 +36,7 @@ private:
     bool validateInputs();
 
 private:
-    DatabaseManager *m_db;
+    UserService *m_userSvc = nullptr;
 
     bool m_dragging = false;   // 是否正在拖动
     QPoint m_dragPos;          // 拖动起始偏移

@@ -1,6 +1,7 @@
 #include "usermanagement.h"
 #include "ui_usermanagement.h"
-#include "src/database/databasemanager.h"
+#include "UI/Register/registerdialog.h"
+#include "src/service/userservice.h"
 #include "src/utils/paginationwidget.h"
 #include "src/utils/notification_global.h"
 #include <QFile>
@@ -8,15 +9,16 @@
 #include <QHBoxLayout>
 #include <QHeaderView>
 #include <QPushButton>
+#include <QLabel>
 
 // ════════════════════════════════════════════════════════════════
 // 构造 & 析构
 // ════════════════════════════════════════════════════════════════
 
-UserManagement::UserManagement(QWidget *parent, DatabaseManager *db)
+UserManagement::UserManagement(QWidget *parent, UserService *userSvc)
     : QWidget(parent)
     , ui(new Ui::UserManagement)
-    , m_db(db)
+    , m_userSvc(userSvc)
 {
     ui->setupUi(this);
 
@@ -40,14 +42,18 @@ UserManagement::UserManagement(QWidget *parent, DatabaseManager *db)
             this, &UserManagement::onRegisterClicked);
     connect(m_pagination, &PaginationWidget::pageChanged,
             this, &UserManagement::onPageChanged);
+    connect(m_pageSizeCombo, &QComboBox::currentTextChanged,
+            this, [this](const QString &text) {
+        m_pagination->setPageSize(text.toInt());
+    });
 
     // 回车触发搜索
     connect(ui->searchEdit, &QLineEdit::returnPressed,
             this, &UserManagement::onSearchClicked);
 
     // ── 首次加载全部用户 ──
-    if (m_db) {
-        m_allUsers = m_db->searchUsers("");
+    if (m_userSvc) {
+        m_allUsers = m_userSvc->listUsers("");
         m_pagination->setTotalRecords(m_allUsers.size());
     }
 }
@@ -74,7 +80,7 @@ void UserManagement::setupTable()
     m_tableWidget->setHorizontalHeaderLabels(headers);
 
     // 列宽：序号窄，操作列固定宽，其余自动拉伸
-    m_tableWidget->setColumnWidth(0, 60);
+    m_tableWidget->setColumnWidth(0, 80);
     m_tableWidget->setColumnWidth(4, 140);
     m_tableWidget->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
     m_tableWidget->horizontalHeader()->setSectionResizeMode(2, QHeaderView::Stretch);
@@ -93,17 +99,24 @@ void UserManagement::setupTable()
     m_pagination = new PaginationWidget(this);
     m_pagination->setPageSize(10);
 
-    // ── 3. 记录数标签 ──
-    m_recordLabel = new QLabel("共 0 条记录", this);
-    m_recordLabel->setObjectName("recordCountLabel");
+    // ── 3. 每页条数选择 ──
+    m_pageSizeCombo = new QComboBox(this);
+    m_pageSizeCombo->setObjectName("pageSizeCombo");
+    m_pageSizeCombo->addItems({"10", "20", "50", "100"});
+    m_pageSizeCombo->setCurrentIndex(0);
+    m_pageSizeCombo->setFixedWidth(70);
+
+    QLabel *pageSizeLabel = new QLabel("每页显示", this);
+    pageSizeLabel->setStyleSheet("color: #737686; font-size: 13px;");
 
     // ── 4. 底部栏 ──
     QWidget *bottomBar = new QWidget(this);
     bottomBar->setObjectName("bottomBar");
 
     QHBoxLayout *bottomLayout = new QHBoxLayout(bottomBar);
-    bottomLayout->setContentsMargins(16, 0, 16, 0);
-    bottomLayout->addWidget(m_recordLabel);
+    bottomLayout->setContentsMargins(16, 0, 0, 0);
+    bottomLayout->addWidget(pageSizeLabel);
+    bottomLayout->addWidget(m_pageSizeCombo);
     bottomLayout->addStretch(1);
     bottomLayout->addWidget(m_pagination);
 
@@ -210,8 +223,6 @@ void UserManagement::populateTable()
         m_tableWidget->setCellWidget(row, 4, btnWidget);
     }
 
-    // ── 更新记录数标签 ──
-    m_recordLabel->setText(QString("共 %1 条记录").arg(m_allUsers.size()));
 }
 
 // ════════════════════════════════════════════════════════════════
@@ -220,10 +231,10 @@ void UserManagement::populateTable()
 
 void UserManagement::onSearchClicked()
 {
-    if (!m_db) return;
+    if (!m_userSvc) return;
 
     QString keyword = ui->searchEdit->text().trimmed();
-    m_allUsers = m_db->searchUsers(keyword);
+    m_allUsers = m_userSvc->listUsers(keyword);
     m_pagination->setTotalRecords(m_allUsers.size());
 }
 
@@ -235,13 +246,16 @@ void UserManagement::onPageChanged(int page)
 
 void UserManagement::onRegisterClicked()
 {
-    // TODO: 打开注册对话框（复用 RegisterDialog 或新建 UserEditDialog）
-    notifyInfo(this, "注册功能开发中，请使用登录界面的注册入口");
+    RegisterDialog dlg(this, m_userSvc);
+    if (dlg.exec() == QDialog::Accepted) {
+        // 注册成功，刷新列表
+        onSearchClicked();
+    }
 }
 
 void UserManagement::onEditUser(const QVariantList &userData)
 {
-    if (!m_db) return;
+    if (!m_userSvc) return;
 
     int    userId   = userData[0].toInt();
     QString username = userData[1].toString();
@@ -256,7 +270,7 @@ void UserManagement::onEditUser(const QVariantList &userData)
 
 void UserManagement::onDeleteUser(const QVariantList &userData)
 {
-    if (!m_db) return;
+    if (!m_userSvc) return;
 
     int    userId   = userData[0].toInt();
     QString username = userData[1].toString();
@@ -267,7 +281,7 @@ void UserManagement::onDeleteUser(const QVariantList &userData)
                            .arg(username, truename)))
         return;
 
-    if (m_db->deleteUser(userId)) {
+    if (m_userSvc->deleteUser(userId)) {
         notifySuccess(this, QString("用户 \"%1\" 已删除").arg(username));
         // 刷新当前搜索
         onSearchClicked();

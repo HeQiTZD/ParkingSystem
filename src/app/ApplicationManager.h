@@ -3,6 +3,9 @@
 
 #include <QObject>
 #include "src/database/databasemanager.h"
+#include "src/service/parkingservice.h"
+#include "src/service/userservice.h"
+#include "src/service/vehicleservice.h"
 
 class LoginDialog;
 class MainWindow;
@@ -11,23 +14,25 @@ class ApplicationManager : public QObject {
     Q_OBJECT
 
 public:
-    explicit ApplicationManager(DatabaseManager &dbMgr, QObject *parent = nullptr);
+    explicit ApplicationManager(DatabaseManager &dbMgr,
+                                ParkingService &parkingSvc,
+                                UserService &userSvc,
+                                VehicleService &vehicleSvc,
+                                QObject *parent = nullptr);
     ~ApplicationManager();
 
-    // 应用入口：创建窗口、建立信号连接、显示登录框。
-    // 返回后由 main() 调 app.exec() 驱动全局事件循环。
     void start();
 
 private slots:
-    // 登录成功：隐藏登录框，显示主窗口
     void onLoginAccepted();
-    // 退出登录：隐藏主窗口，回到登录框
     void onLogoutRequested();
-    // 关闭按钮：退出整个应用
     void onAppExitRequested();
 
 private:
     DatabaseManager &m_dbMgr;
+    ParkingService  &m_parkingSvc;
+    UserService     &m_userSvc;
+    VehicleService  &m_vehicleSvc;
     LoginDialog *m_loginDialog = nullptr;
     MainWindow  *m_mainWindow  = nullptr;
 };

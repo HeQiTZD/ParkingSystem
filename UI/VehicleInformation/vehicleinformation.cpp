@@ -3,7 +3,7 @@
 #include "src/utils/iconlineedit.h"
 #include "src/utils/datelineedit.h"
 #include "src/utils/customdatechooser.h"
-#include "src/database/databasemanager.h"
+#include "src/service/vehicleservice.h"
 #include "src/utils/paginationwidget.h"
 #include "src/utils/notification_global.h"
 #include <QFile>
@@ -178,7 +178,7 @@ void VehicleInformation::onQueryClicked()
         endTime = QDateTime::fromString(endStr, "yyyy-MM-dd HH:mm:ss");
 
     // 执行查询，缓存全量结果
-    m_allData = m_db->searchCars(plate, startTime, endTime, 0);
+    m_allData = m_vehicleSvc->search(plate, startTime, endTime, 0);
 
     // 更新分页控件 → 自动回到第1页 → 触发 pageChanged 信号
     m_pagination->setTotalRecords(m_allData.size());
@@ -204,7 +204,7 @@ void VehicleInformation::onDeleteClicked()
                        QString("确定要删除选中的 %1 条记录吗？此操作不可撤销。").arg(ids.size())))
         return;
 
-    if (m_db->deleteCarRecords(ids)) {
+    if (m_vehicleSvc->deleteRecords(ids)) {
         notifySuccess(this, QString("成功删除 %1 条记录").arg(ids.size()));
         onQueryClicked();
     } else {
@@ -218,8 +218,8 @@ void VehicleInformation::onPageChanged(int page)
     populateTable();
 }
 
-VehicleInformation::VehicleInformation(QWidget *parent, DatabaseManager *db)
-    : QWidget(parent), ui(new Ui::VehicleInformation), m_db(db)
+VehicleInformation::VehicleInformation(QWidget *parent, VehicleService *vehicleSvc)
+    : QWidget(parent), ui(new Ui::VehicleInformation), m_vehicleSvc(vehicleSvc)
 {
     ui->setupUi(this);
 
@@ -303,7 +303,7 @@ VehicleInformation::VehicleInformation(QWidget *parent, DatabaseManager *db)
     });
 
     // 首次加载最近 50 条记录
-    m_allData = m_db->getRecentRecords(50);
+    m_allData = m_vehicleSvc->recentRecords(50);
     m_pagination->setTotalRecords(m_allData.size());
 }
 

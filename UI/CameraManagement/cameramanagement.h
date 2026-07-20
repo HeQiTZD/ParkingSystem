@@ -11,14 +11,13 @@ class QFrame;
 class QGridLayout;
 class QLabel;
 class QPushButton;
-class DatabaseManager;
 
 class CameraManagement : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit CameraManagement(QWidget *parent = nullptr, DatabaseManager *db = nullptr);
+    explicit CameraManagement(QWidget *parent = nullptr);
     ~CameraManagement();
 
 protected:
@@ -32,8 +31,7 @@ private:
     void updateCountLabel();
 
     Ui::CameraManagement *ui;
-    DatabaseManager *m_db = nullptr;
-
+    
     QFrame       *m_videoContainer  = nullptr;
     QGridLayout *m_gridLayout      = nullptr;
     QLabel       *m_emptyLabel     = nullptr;

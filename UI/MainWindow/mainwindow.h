@@ -8,6 +8,9 @@ namespace Ui { class MainWindow; }
 class CircleProgress;
 class CameraThread;
 class DatabaseManager;
+class ParkingService;
+class UserService;
+class VehicleService;
 class RecognizeThread;
 class PlateConfirmTracker;
 class FrameQueue;
@@ -22,7 +25,11 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = nullptr, DatabaseManager *db = nullptr);
+    explicit MainWindow(QWidget *parent = nullptr,
+                     DatabaseManager *db = nullptr,
+                     ParkingService *parkingSvc = nullptr,
+                     UserService *userSvc = nullptr,
+                     VehicleService *vehicleSvc = nullptr);
     ~MainWindow();
 
     enum MouseArea {
@@ -98,7 +105,10 @@ private:
     int m_dragBarHeight = 50;
     static const int kResizeBorder = 5;
 
-    DatabaseManager *m_db;
+    DatabaseManager *m_db = nullptr;          // 过渡: 业务方法暂用
+    ParkingService *m_parkingSvc = nullptr;
+    UserService    *m_userSvc    = nullptr;
+    VehicleService *m_vehicleSvc = nullptr;
 
     // ===== 自动识别相关 =====
     FrameQueue *m_frameQueue = nullptr;

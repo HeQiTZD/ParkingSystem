@@ -1,6 +1,6 @@
 #include "registerdialog.h"
 #include "ui_registerdialog.h"
-#include "src/database/databasemanager.h"
+#include "src/service/userservice.h"
 #include "src/utils/utils.h"
 #include "src/utils/notification_global.h"
 #include <QFile>
@@ -10,10 +10,10 @@
 #include <QPainterPath>
 #include <QRegularExpression>
 
-RegisterDialog::RegisterDialog(QWidget *parent, DatabaseManager *db) :
+RegisterDialog::RegisterDialog(QWidget *parent, UserService *userSvc) :
     QDialog(parent),
     ui(new Ui::RegisterDialog),
-    m_db(db)
+    m_userSvc(userSvc)
 {
     ui->setupUi(this);
     setWindowFlag(Qt::FramelessWindowHint);        // 无边框
@@ -109,13 +109,13 @@ void RegisterDialog::on_btnRegister_clicked()
 {
     if(!validateInputs()) return;
 
-    if(m_db->isUsernameExists(ui->txtUsername->text())){
+    if(m_userSvc->isUsernameExists(ui->txtUsername->text())){
         notifyInfo(this, QStringLiteral("用户名已被占用"));
         return;
     }
 
     QString password = encryptPassword(ui->txtPassword->text());
-    if(m_db->registerUser(ui->txtUsername->text(), password, ui->txtName->text(), ui->txtPhone->text())){
+    if(m_userSvc->registerUser(ui->txtUsername->text(), password, ui->txtName->text(), ui->txtPhone->text())){
         notifySuccess(this, QStringLiteral("注册成功"));
         accept();
     }else{

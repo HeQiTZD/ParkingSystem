@@ -7,6 +7,7 @@
 #include <QStyle>
 #include <QImage>
 #include <opencv2/imgproc.hpp>
+#include <opencv2/imgcodecs.hpp>
 #include <opencv2/core/mat.hpp>
 
 CameraWindow::CameraWindow(QWidget *parent) : QFrame(parent)
@@ -75,11 +76,12 @@ void CameraWindow::onFrame(cv::Mat frame)
     m_statusDot->style()->unpolish(m_statusDot);
     m_statusDot->style()->polish(m_statusDot);
 
-    cv::Mat rgb;
-    cv::cvtColor(frame, rgb, cv::COLOR_BGR2RGB);
-    QImage img(rgb.data, rgb.cols, rgb.rows,
-               static_cast<int>(rgb.step), QImage::Format_RGB888);
-    QPixmap pm = QPixmap::fromImage(img.copy());
+    cv::Mat rgbFrame;
+    cv::cvtColor(frame, rgbFrame, cv::COLOR_BGR2RGB);
+
+    QImage img(rgbFrame.data, rgbFrame.cols, rgbFrame.rows,
+               static_cast<int>(rgbFrame.step), QImage::Format_RGB888);
+    QPixmap pm = QPixmap::fromImage(img);
     m_videoLabel->setPixmap(pm.scaled(m_videoLabel->size(),
                                       Qt::KeepAspectRatio,
                                       Qt::SmoothTransformation));

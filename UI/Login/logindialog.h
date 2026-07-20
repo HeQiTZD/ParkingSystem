@@ -3,7 +3,7 @@
 
 #include <QDialog>
 #include "src/utils/messageType.h"
-class DatabaseManager;
+class UserService;
 namespace Ui {
 class LoginDialog;
 }
@@ -13,7 +13,7 @@ class LoginDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit LoginDialog(QWidget *parent = nullptr, DatabaseManager* m_db = nullptr);
+    explicit LoginDialog(QWidget *parent = nullptr, UserService* userSvc = nullptr);
     ~LoginDialog();
 
     // 获取登录成功后的用户角色
@@ -48,7 +48,7 @@ private:
     bool m_dragging = false;
     QRect m_dragArea;
 
-    DatabaseManager *m_dbManager;
+    UserService *m_userSvc = nullptr;
     QString userRole;
 };
 

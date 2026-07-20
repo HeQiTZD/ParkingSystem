@@ -4,7 +4,7 @@
 #include <QWidget>
 class QTableWidget;
 class QComboBox;
-class DatabaseManager;
+class VehicleService;
 class PaginationWidget;
 
 namespace Ui {
@@ -20,7 +20,7 @@ private:
     void populateTable();
 
 public:
-    explicit VehicleInformation(QWidget *parent = nullptr, DatabaseManager *db = nullptr);
+    explicit VehicleInformation(QWidget *parent = nullptr, VehicleService *vehicleSvc = nullptr);
     ~VehicleInformation();
 
 private slots:
@@ -33,7 +33,7 @@ private:
     QTableWidget *m_tableWidget;
     PaginationWidget *m_pagination;
     QComboBox *m_pageSizeCombo;
-    DatabaseManager *m_db;
+    VehicleService *m_vehicleSvc = nullptr;
     QList<QVariantList> m_allData;   // 缓存最近一次查询的全量结果
 };
 

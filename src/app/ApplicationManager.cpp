@@ -8,9 +8,16 @@
 #include <QApplication>
 #include <QDebug>
 
-ApplicationManager::ApplicationManager(DatabaseManager &dbMgr, QObject *parent)
+ApplicationManager::ApplicationManager(DatabaseManager &dbMgr,
+                                     ParkingService &parkingSvc,
+                                     UserService &userSvc,
+                                     VehicleService &vehicleSvc,
+                                     QObject *parent)
     : QObject(parent)
     , m_dbMgr(dbMgr)
+    , m_parkingSvc(parkingSvc)
+    , m_userSvc(userSvc)
+    , m_vehicleSvc(vehicleSvc)
 {
 }
 
@@ -30,8 +37,8 @@ void ApplicationManager::start()
 {
     // 两个窗口都作为本对象的子对象，长生命周期常驻。
     // 析构时由 Qt 父子关系自动 delete，无泄漏。
-    m_loginDialog = new LoginDialog(nullptr, &m_dbMgr);
-    m_mainWindow  = new MainWindow(nullptr, &m_dbMgr);
+    m_loginDialog = new LoginDialog(nullptr, &m_userSvc);
+    m_mainWindow  = new MainWindow(nullptr, &m_dbMgr, &m_parkingSvc, &m_userSvc, &m_vehicleSvc);
 
     // —— 登录框 → 主窗口 ——
     // QDialog::accepted 在 accept() 时发射（登录成功）。
