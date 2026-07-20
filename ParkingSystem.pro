@@ -65,6 +65,10 @@ SOURCES += \
     UI/ConfigInit/configinitdialog.cpp \
     UI/CameraManagement/cameramanagement.cpp \
     UI/CameraManagement/camerawindow.cpp \
+    # ==================== 业务服务层 ====================
+    src/service/parkingservice.cpp \
+    src/service/userservice.cpp \
+    src/service/vehicleservice.cpp \
     # ==================== 应用程序核心代码 ====================
     src/app/main.cpp \
     src/app/car.cpp \
@@ -113,6 +117,10 @@ HEADERS += \
     UI/ConfigInit/configinitdialog.h \
     UI/CameraManagement/cameramanagement.h \
     UI/CameraManagement/camerawindow.h \
+    # ==================== 业务服务层 ====================
+    src/service/parkingservice.h \
+    src/service/userservice.h \
+    src/service/vehicleservice.h \
     # ==================== 应用程序核心代码 ====================
     src/app/car.h \
     src/app/platerecognize.h \
