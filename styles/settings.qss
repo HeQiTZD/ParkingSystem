@@ -1,0 +1,178 @@
+/* ==================== SettingsDialog 样式 ==================== */
+/* 作用域限制：仅影响 SettingsDialog (#SettingsDialog) */
+
+/* 对话框容器 */
+#SettingsDialog {
+    background-color: #ffffff;
+}
+
+/* -------------------- 分组标题 -------------------- */
+#SettingsDialog QLabel#dbSectionLabel,
+#SettingsDialog QLabel#parkingSectionLabel,
+#SettingsDialog QLabel#recognitionSectionLabel {
+    color: #1a1a2e;
+    padding: 8px 0;
+    border-bottom: 2px solid #3b82f6;
+    margin-top: 10px;
+}
+
+/* -------------------- 标签样式 -------------------- */
+#SettingsDialog QLabel#lblDbHost,
+#SettingsDialog QLabel#lblDbPort,
+#SettingsDialog QLabel#lblDbName,
+#SettingsDialog QLabel#lblDbUsername,
+#SettingsDialog QLabel#lblDbPassword,
+#SettingsDialog QLabel#lblParkingName,
+#SettingsDialog QLabel#lblPrice,
+#SettingsDialog QLabel#lblCapacity,
+#SettingsDialog QLabel#lblFreeMinutes,
+#SettingsDialog QLabel#lblConfidence {
+    color: #475569;
+    font-size: 14px;
+    min-width: 80px;
+    max-width: 80px;
+}
+
+/* -------------------- 输入框样式 -------------------- */
+#SettingsDialog QLineEdit,
+#SettingsDialog QSpinBox,
+#SettingsDialog QDoubleSpinBox {
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 14px;
+    color: #1e293b;
+    background-color: #f8fafc;
+    min-height: 20px;
+}
+
+#SettingsDialog QLineEdit:hover,
+#SettingsDialog QSpinBox:hover,
+#SettingsDialog QDoubleSpinBox:hover {
+    border-color: #94a3b8;
+}
+
+#SettingsDialog QLineEdit:focus,
+#SettingsDialog QSpinBox:focus,
+#SettingsDialog QDoubleSpinBox:focus {
+    border-color: #3b82f6;
+    background-color: #ffffff;
+    border-width: 2px;
+    padding: 9px 13px;
+}
+
+/* -------------------- 滑块样式 -------------------- */
+#SettingsDialog QSlider::groove:horizontal {
+    border: 1px solid #e2e8f0;
+    border-radius: 3px;
+    height: 6px;
+    background-color: #f1f5f9;
+}
+
+#SettingsDialog QSlider::handle:horizontal {
+    background-color: #3b82f6;
+    border: none;
+    width: 16px;
+    height: 16px;
+    margin: -5px 0;
+    border-radius: 8px;
+}
+
+#SettingsDialog QSlider::handle:horizontal:hover {
+    background-color: #2563eb;
+}
+
+#SettingsDialog QSlider::sub-page:horizontal {
+    background-color: #3b82f6;
+    border-radius: 3px;
+}
+
+/* -------------------- 测试连接按钮 -------------------- */
+#SettingsDialog QPushButton#btnTestConnection {
+    background-color: #ffffff;
+    color: #3b82f6;
+    border: 1px solid #3b82f6;
+    border-radius: 6px;
+    padding: 6px 16px;
+    font-size: 13px;
+}
+
+#SettingsDialog QPushButton#btnTestConnection:hover {
+    background-color: #eff6ff;
+}
+
+/* -------------------- 提交按钮 -------------------- */
+#SettingsDialog QPushButton#btnSubmit {
+    background-color: #3b82f6;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 24px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+#SettingsDialog QPushButton#btnSubmit:hover {
+    background-color: #2563eb;
+}
+
+#SettingsDialog QPushButton#btnSubmit:pressed {
+    background-color: #1d4ed8;
+}
+
+/* -------------------- 取消按钮 -------------------- */
+#SettingsDialog QPushButton#btnCancel {
+    background-color: #ffffff;
+    color: #475569;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 10px 24px;
+    font-size: 14px;
+}
+
+#SettingsDialog QPushButton#btnCancel:hover {
+    background-color: #f8fafc;
+    border-color: #94a3b8;
+}
+
+#SettingsDialog QPushButton#btnCancel:pressed {
+    background-color: #f1f5f9;
+}
+
+/* ==================== 标题栏样式 ==================== */
+
+#SettingsDialog #titleBar {
+    background-color: #ffffff;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+#SettingsDialog QPushButton#btnClose {
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    color: #94a3b8;
+    font-size: 14px;
+    font-weight: bold;
+    min-width: 36px;
+    max-width: 36px;
+    min-height: 28px;
+    max-height: 28px;
+    padding: 0px;
+}
+
+#SettingsDialog QPushButton#btnClose:hover {
+    background-color: #ef4444;
+    color: #ffffff;
+}
+
+#SettingsDialog QPushButton#btnClose:pressed {
+    background-color: #dc2626;
+}
+
+/* ==================== 主容器样式 ==================== */
+#SettingsDialog #mainContainer {
+    background-color: #ffffff;
+    border-radius: 8px;
+}

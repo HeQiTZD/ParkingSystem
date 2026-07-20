@@ -7,5 +7,6 @@
         <file alias="vehicleInformation.qss">vehicleInformation.qss</file>
         <file alias="userManagement.qss">userManagement.qss</file>
         <file alias="cameramanagement.qss">cameramanagement.qss</file>
+        <file alias="settings.qss">settings.qss</file>
     </qresource>
 </RCC>
