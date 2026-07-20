@@ -5,6 +5,9 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
+// ODR-use 定义: qMin 用 const 引用参数取 kMaxCameras 地址,需要类外定义
+const int CameraManager::kMaxCameras;
+
 CameraManager& CameraManager::instance()
 {
     static CameraManager instance;
