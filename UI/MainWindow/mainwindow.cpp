@@ -203,11 +203,11 @@ MainWindow::MainWindow(QWidget *parent, DatabaseManager *db)
     }
 
     // 6. 加载 EasyPR 模型（如果尚未加载）
-    PlateRecognize *recognizer = PlateRecognize::instance();
-    if(!recognizer->isModelsLoaded()){
+    PlateRecognize& recognizer = PlateRecognize::instance();
+    if(!recognizer.isModelsLoaded()){
         // 模型路径：项目根目录下的 resources/model
         QString modelPath = QCoreApplication::applicationDirPath() + "/model";
-        recognizer->loadModels(modelPath);
+        recognizer.loadModels(modelPath);
     }
 
     // 7. 连接自动识别开关
@@ -279,9 +279,9 @@ void MainWindow::updateFrame(cv::Mat frame)
 {
     if(frame.empty()) return;
 
-    // BGR->RGB
-    cv::cvtColor(frame, frame, cv::COLOR_BGR2RGB);
-    QImage img(frame.data, frame.cols, frame.rows, frame.step, QImage::Format_RGB888);
+    cv::Mat rgbFrame;
+    cv::cvtColor(frame, rgbFrame, cv::COLOR_BGR2RGB);
+    QImage img(rgbFrame.data, rgbFrame.cols, rgbFrame.rows, rgbFrame.step, QImage::Format_RGB888);
 
     QPixmap pixmap = QPixmap::fromImage(img);
     m_videoLabel->setPixmap(pixmap.scaled(

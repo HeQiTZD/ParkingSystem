@@ -26,10 +26,8 @@ void RecognitionTask::run()
 
     try{
         // 获取车牌识别器实例
-        PlateRecognize *recognizer = PlateRecognize::instance();
-
-        // 执行识别
-        int result = recognizer->recognizePlate(m_frame);
+        PlateRecognize& recognizer = PlateRecognize::instance();
+        int result = recognizer.recognizePlate(m_frame);
 
         if(result > 0){
             qDebug() << "任务" << m_taskId << "识别成功，发现" << result << "个车牌";

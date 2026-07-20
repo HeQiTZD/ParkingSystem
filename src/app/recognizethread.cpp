@@ -39,8 +39,8 @@ void RecognizeThread::run()
         return;
     }
 
-    PlateRecognize *recognizer = PlateRecognize::instance();
-    if(!recognizer->isModelsLoaded()){
+    PlateRecognize& recognizer = PlateRecognize::instance();
+    if(!recognizer.isModelsLoaded()){
         emit recognizeError(QStringLiteral("HyperLPR 模型未加载"));
         return;
     }
@@ -61,7 +61,7 @@ void RecognizeThread::run()
         // 步骤 2：调用 HyperLPR 识别
         try{
             std::vector<PlateResult> results;
-            int ret = recognizer->plateRecognizeAccessor(frame, results);
+            int ret = recognizer.plateRecognizeAccessor(frame, results);
 
             if(ret > 0){
                 for(size_t i = 0; i < results.size(); ++i){

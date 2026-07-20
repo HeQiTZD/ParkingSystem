@@ -23,7 +23,7 @@ class PlateRecognize : public QObject
 {
     Q_OBJECT
 public:
-    static PlateRecognize* instance();
+    static PlateRecognize& instance();
 
     // 加载 HyperLPR 模型（modelPath = 包含 prototxt/caffemodel 的目录）
     bool loadModels(const QString &modelPath);
@@ -32,6 +32,9 @@ public:
     int recognizePlate(const cv::Mat &image);
 
     bool isModelsLoaded() const { return m_modelsLoaded; }
+
+    // 幂等释放模型资源(shutdown 序列调用)
+    void shutdown();
     void setDebugMode(bool show);
 
     // 直接获取识别结果（供 RecognizeThread 使用）
@@ -54,8 +57,6 @@ private:
     pr::PipelinePR *m_prc = nullptr;   // HyperLPR 流水线（替换 EasyPR CPlateRecognize）
     bool m_modelsLoaded = false;
     bool m_debugMode = false;
-
-    static PlateRecognize* s_instance;
 };
 
 #endif // PLATERECOGNIZE_H

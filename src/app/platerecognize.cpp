@@ -6,9 +6,6 @@
 #include <QDebug>
 #include <QCoreApplication>
 
-// ── 静态成员 ──
-PlateRecognize* PlateRecognize::s_instance = nullptr;
-
 PlateRecognize::PlateRecognize(QObject *parent) : QObject(parent)
 {
     qRegisterMetaType<cv::Mat>("cv::Mat");
@@ -16,12 +13,21 @@ PlateRecognize::PlateRecognize(QObject *parent) : QObject(parent)
     m_debugMode = false;
 }
 
-PlateRecognize* PlateRecognize::instance()
+PlateRecognize& PlateRecognize::instance()
 {
-    if (s_instance == nullptr) {
-        s_instance = new PlateRecognize();
+    static PlateRecognize inst;  // Meyer's
+    return inst;
+}
+
+void PlateRecognize::shutdown()
+{
+    // HyperLPR Pipeline 由裸指针持有, delete 并置 nullptr
+    if(m_prc){
+        delete m_prc;
+        m_prc = nullptr;
     }
-    return s_instance;
+    m_modelsLoaded = false;
+    qDebug() << "PlateRecognize: shutdown 完成";
 }
 
 // ════════════════════════════════════════════════════════════════
