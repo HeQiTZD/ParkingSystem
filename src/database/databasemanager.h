@@ -61,10 +61,7 @@ public:
     bool deleteCarRecord(int id);
     bool deleteCarRecords(const QList<int> &ids);
 
-    //用户管理
-    bool validateUser(const QString &username, const QString &password, QString &userRole);
-    bool isUsernameExists(const QString &username);
-    bool registerUser(const QString &username, const QString &password, const QString &name, const QString &phone);
+    //用户管理 (被 UserService 内部使用)
     bool addUser(const QString &username, const QString &password, const QString &telephone, const QString &truename, const QString &role);
     bool updateUser(int id, const QString &username, const QString &telephone, const QString &truename, const QString &role);
     bool deleteUser(int id);

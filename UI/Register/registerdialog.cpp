@@ -109,17 +109,14 @@ void RegisterDialog::on_btnRegister_clicked()
 {
     if(!validateInputs()) return;
 
-    if(m_userSvc->isUsernameExists(ui->txtUsername->text())){
-        notifyInfo(this, QStringLiteral("用户名已被占用"));
-        return;
-    }
-
     QString password = encryptPassword(ui->txtPassword->text());
-    if(m_userSvc->registerUser(ui->txtUsername->text(), password, ui->txtName->text(), ui->txtPhone->text())){
+    QString errMsg;
+    if(m_userSvc->registerUser(ui->txtUsername->text(), password,
+                               ui->txtName->text(), ui->txtPhone->text(), errMsg)){
         notifySuccess(this, QStringLiteral("注册成功"));
         accept();
     }else{
-        notifyFailure(this, QStringLiteral("注册失败"));
+        notifyFailure(this, errMsg.isEmpty() ? QStringLiteral("注册失败") : errMsg);
     }
 }
 

@@ -204,7 +204,8 @@ void VehicleInformation::onDeleteClicked()
                        QString("确定要删除选中的 %1 条记录吗？此操作不可撤销。").arg(ids.size())))
         return;
 
-    if (m_vehicleSvc->deleteRecords(ids)) {
+    QString errMsg;
+    if (m_vehicleSvc->deleteRecords(ids, errMsg)) {
         notifySuccess(this, QString("成功删除 %1 条记录").arg(ids.size()));
         onQueryClicked();
     } else {

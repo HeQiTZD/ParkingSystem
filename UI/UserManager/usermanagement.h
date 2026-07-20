@@ -34,7 +34,7 @@ private:
     void populateTable();
 
     Ui::UserManagement *ui;
-    DatabaseManager *m_userSvc = nullptr;
+    UserService *m_userSvc = nullptr;
 
     // ── 表格 ──
     QTableWidget *m_tableWidget = nullptr;

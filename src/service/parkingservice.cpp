@@ -10,22 +10,22 @@ ParkingService::ParkingService(DatabaseManager& db, QObject* parent)
 bool ParkingService::checkIn(const QString& rawPlate)
 {
     if(!m_db.isConnected()){
-        emit error(MessageType::Error, "数据库未连接");
+        emit error(MessageType::Type::Error, "数据库未连接");
         return false;
     }
     QString plate = Car::normalizePlate(rawPlate);
     if(plate.isEmpty() || !Car::isValidLicensePlate(plate)){
-        emit error(MessageType::Warning, "车牌格式错误");
+        emit error(MessageType::Type::Warning, "车牌格式错误");
         return false;
     }
     if(m_db.isVehicleInPark(plate)){
-        emit error(MessageType::Warning,
+        emit error(MessageType::Type::Warning,
                    QStringLiteral("%1 已入库").arg(Car::displayPlate(plate)));
         return false;
     }
     QString parkingName = InitFile::instance().getParkingName();
     if(!m_db.checkIn(plate, parkingName)){
-        emit error(MessageType::Error, "入库写入失败");
+        emit error(MessageType::Type::Error, "入库写入失败");
         return false;
     }
     emit parkingDataChanged();
@@ -58,7 +58,7 @@ bool ParkingService::confirmCheckOut(const QString& plate, double cost)
 {
     QString parkingName = InitFile::instance().getParkingName();
     if(!m_db.checkOut(plate, parkingName, cost)){
-        emit error(MessageType::Error, "出库写入失败");
+        emit error(MessageType::Type::Error, "出库写入失败");
         return false;
     }
     emit parkingDataChanged();

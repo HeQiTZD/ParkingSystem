@@ -326,6 +326,7 @@ bool DatabaseManager::checkOut(const QString &licensePlate, const QString &parki
 
 QSqlQuery DatabaseManager::queryVehicle(const QString &licensePlate, bool onlyInPark)
 {
+    QSqlDatabase dbc = threadConnection();
     QSqlQuery query(dbc);
 
     if (onlyInPark) {
@@ -530,6 +531,8 @@ bool DatabaseManager::deleteCarRecord(int id)
         return false;
     }
 
+    QSqlDatabase dbc = threadConnection();
+
     QSqlQuery searchCarId(dbc);
     QString searchCar = R"(SELECT check_out_time FROM Car WHERE id = :id)";
     searchCarId.prepare(searchCar);
@@ -588,6 +591,8 @@ bool DatabaseManager::deleteCarRecords(const QList<int> &ids)
 {
     if (!isConnected() || ids.isEmpty()) return false;
 
+    QSqlDatabase dbc = threadConnection();
+
     // 统计待删记录中仍在场的数量（check_out_time IS NULL）
     QStringList cntPl;
     for (int i = 0; i < ids.size(); ++i)
@@ -606,8 +611,6 @@ bool DatabaseManager::deleteCarRecords(const QList<int> &ids)
     QStringList delPl;
     for (int i = 0; i < ids.size(); ++i)
         delPl << QString(":d%1").arg(i);
-
-    QSqlDatabase dbc = threadConnection();
 
     if (!dbc.transaction()) return false;
 
@@ -747,7 +750,8 @@ bool DatabaseManager::updateUser(int id, const QString &username, const QString 
     QString sql = "UPDATE User SET " + setClauses.join(", ") + " WHERE id = :id";
     bindValues[":id"] = id;
 
-    QSqlQuery query(dbc);
+    QSqlDatabase dbc2 = threadConnection();
+    QSqlQuery query(dbc2);
     query.prepare(sql);
 
     for(auto it = bindValues.begin(); it != bindValues.end(); ++it){

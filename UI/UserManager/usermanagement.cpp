@@ -281,7 +281,8 @@ void UserManagement::onDeleteUser(const QVariantList &userData)
                            .arg(username, truename)))
         return;
 
-    if (m_userSvc->deleteUser(userId)) {
+    QString errMsg;
+    if (m_userSvc->deleteUser(userId, errMsg)) {
         notifySuccess(this, QString("用户 \"%1\" 已删除").arg(username));
         // 刷新当前搜索
         onSearchClicked();
