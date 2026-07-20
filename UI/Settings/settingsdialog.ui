@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SettingsDialog</class>
+ <widget class="QDialog" name="SettingsDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>600</width>
+    <height>550</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>600</width>
+    <height>550</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>600</width>
+    <height>550</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>设置</string>
+  </property>
+  <layout class="QVBoxLayout" name="outerLayout">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="leftMargin">
+    <number>10</number>
+   </property>
+   <property name="topMargin">
+    <number>10</number>
+   </property>
+   <property name="rightMargin">
+    <number>10</number>
+   </property>
+   <property name="bottomMargin">
+    <number>10</number>
+   </property>
+   <item>
+    <widget class="QWidget" name="mainContainer">
+     <layout class="QVBoxLayout" name="containerLayout">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <!-- ===== 标题栏 ===== -->
+       <widget class="QWidget" name="titleBar">
+        <property name="minimumSize">
+         <size><width>0</width><height>40</height></size>
+        </property>
+        <property name="maximumSize">
+         <size><width>16777215</width><height>40</height></size>
+        </property>
+        <layout class="QHBoxLayout" name="titleBarLayout">
+         <property name="spacing"><number>8</number></property>
+         <property name="leftMargin"><number>0</number></property>
+         <property name="topMargin"><number>0</number></property>
+         <property name="rightMargin"><number>16</number></property>
+         <property name="bottomMargin"><number>0</number></property>
+         <item>
+          <spacer name="titleSpacer">
+           <property name="orientation"><enum>Qt::Horizontal</enum></property>
+           <property name="sizeHint" stdset="0">
+            <size><width>40</width><height>20</height></size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnClose">
+           <property name="minimumSize"><size><width>36</width><height>28</height></size></property>
+           <property name="maximumSize"><size><width>36</width><height>28</height></size></property>
+           <property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property>
+           <property name="text"><string>×</string></property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <!-- ===== 内容滚动区 ===== -->
+       <widget class="QScrollArea" name="scrollArea">
+        <property name="widgetResizable"><bool>true</bool></property>
+        <property name="frameShape"><enum>QFrame::NoFrame</enum></property>
+        <widget class="QWidget" name="scrollContent">
+         <layout class="QVBoxLayout" name="scrollLayout">
+          <property name="spacing"><number>15</number></property>
+          <property name="leftMargin"><number>30</number></property>
+          <property name="topMargin"><number>20</number></property>
+          <property name="rightMargin"><number>30</number></property>
+          <property name="bottomMargin"><number>20</number></property>
+          <!-- ===== 数据库配置区 ===== -->
+          <item>
+           <widget class="QLabel" name="dbSectionLabel">
+            <property name="text">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=" font-size:12pt; font-weight:600;"&gt;数据库连接&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="dbHostLayout">
+            <property name="spacing"><number>10</number></property>
+            <item>
+             <widget class="QLabel" name="lblDbHost">
+              <property name="minimumSize"><size><width>80</width><height>0</height></size></property>
+              <property name="maximumSize"><size><width>80</width><height>16777215</height></size></property>
+              <property name="text">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align="right"&gt;&lt;span style=" font-size:10pt;"&gt;主机地址&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="alignment"><set>Qt::AlignRight|Qt::AlignVCenter</set></property>
+             </widget>
+            </item>
+            <item><widget class="QLineEdit" name="txtDbHost"><property name="placeholderText"><string>localhost</string></property></widget></item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="dbPortLayout">
+            <property name="spacing"><number>10</number></property>
+            <item>
+             <widget class="QLabel" name="lblDbPort">
+              <property name="minimumSize"><size><width>80</width><height>0</height></size></property>
+              <property name="maximumSize"><size><width>80</width><height>16777215</height></size></property>
+              <property name="text">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align="right"&gt;&lt;span style=" font-size:10pt;"&gt;端口号&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="alignment"><set>Qt::AlignRight|Qt::AlignVCenter</set></property>
+             </widget>
+            </item>
+            <item><widget class="QSpinBox" name="txtDbPort"><property name="minimum"><number>1</number></property><property name="maximum"><number>65535</number></property></widget></item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="dbNameLayout">
+            <property name="spacing"><number>10</number></property>
+            <item>
+             <widget class="QLabel" name="lblDbName">
+              <property name="minimumSize"><size><width>80</width><height>0</height></size></property>
+              <property name="maximumSize"><size><width>80</width><height>16777215</height></size></property>
+              <property name="text">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align="right"&gt;&lt;span style=" font-size:10pt;"&gt;数据库名&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="alignment"><set>Qt::AlignRight|Qt::AlignVCenter</set></property>
+             </widget>
+            </item>
+            <item><widget class="QLineEdit" name="txtDbName"><property name="placeholderText"><string>请输入数据库名</string></property></widget></item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="dbUsernameLayout">
+            <property name="spacing"><number>10</number></property>
+            <item>
+             <widget class="QLabel" name="lblDbUsername">
+              <property name="minimumSize"><size><width>80</width><height>0</height></size></property>
+              <property name="maximumSize"><size><width>80</width><height>16777215</height></size></property>
+              <property name="text">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align="right"&gt;&lt;span style=" font-size:10pt;"&gt;用户名&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="alignment"><set>Qt::AlignRight|Qt::AlignVCenter</set></property>
+             </widget>
+            </item>
+            <item><widget class="QLineEdit" name="txtDbUsername"><property name="placeholderText"><string>请输入用户名</string></property></widget></item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="dbPasswordLayout">
+            <property name="spacing"><number>10</number></property>
+            <item>
+             <widget class="QLabel" name="lblDbPassword">
+              <property name="minimumSize"><size><width>80</width><height>0</height></size></property>
+              <property name="maximumSize"><size><width>80</width><height>16777215</height></size></property>
+              <property name="text">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align="right"&gt;&lt;span style=" font-size:10pt;"&gt;密码&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="alignment"><set>Qt::AlignRight|Qt::AlignVCenter</set></property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="txtDbPassword">
+              <property name="echoMode"><enum>QLineEdit::Password</enum></property>
+              <property name="placeholderText"><string>请输入数据库密码</string></property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="testBtnLayout">
+            <item><spacer name="testBtnSpacer"><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property></spacer></item>
+            <item><widget class="QPushButton" name="btnTestConnection"><property name="text"><string>测试连接</string></property></widget></item>
+           </layout>
+          </item>
+          <!-- ===== 停车场参数区 ===== -->
+          <item>
+           <widget class="QLabel" name="parkingSectionLabel">
+            <property name="text">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=" font-size:12pt; font-weight:600;"&gt;停车场参数&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="parkingNameLayout">
+            <property name="spacing"><number>10</number></property>
+            <item>
+             <widget class="QLabel" name="lblParkingName">
+              <property name="minimumSize"><size><width>80</width><height>0</height></size></property>
+              <property name="maximumSize"><size><width>80</width><height>16777215</height></size></property>
+              <property name="text">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align="right"&gt;&lt;span style=" font-size:10pt;"&gt;停车场名称&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="alignment"><set>Qt::AlignRight|Qt::AlignVCenter</set></property>
+             </widget>
+            </item>
+            <item><widget class="QLineEdit" name="txtParkingName"><property name="placeholderText"><string>请输入停车场名称</string></property></widget></item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="priceLayout">
+            <property name="spacing"><number>10</number></property>
+            <item>
+             <widget class="QLabel" name="lblPrice">
+              <property name="minimumSize"><size><width>80</width><height>0</height></size></property>
+              <property name="maximumSize"><size><width>80</width><height>16777215</height></size></property>
+              <property name="text">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align="right"&gt;&lt;span style=" font-size:10pt;"&gt;每小时价格&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="alignment"><set>Qt::AlignRight|Qt::AlignVCenter</set></property>
+             </widget>
+            </item>
+            <item><widget class="QDoubleSpinBox" name="txtPrice"><property name="minimum"><double>0.00</double></property><property name="maximum"><double>9999.00</double></property><property name="suffix"><string> 元/小时</string></property></widget></item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="capacityLayout">
+            <property name="spacing"><number>10</number></property>
+            <item>
+             <widget class="QLabel" name="lblCapacity">
+              <property name="minimumSize"><size><width>80</width><height>0</height></size></property>
+              <property name="maximumSize"><size><width>80</width><height>16777215</height></size></property>
+              <property name="text">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align="right"&gt;&lt;span style=" font-size:10pt;"&gt;总车位数&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="alignment"><set>Qt::AlignRight|Qt::AlignVCenter</set></property>
+             </widget>
+            </item>
+            <item><widget class="QSpinBox" name="txtCapacity"><property name="minimum"><number>1</number></property><property name="maximum"><number>99999</number></property></widget></item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="freeMinLayout">
+            <property name="spacing"><number>10</number></property>
+            <item>
+             <widget class="QLabel" name="lblFreeMinutes">
+              <property name="minimumSize"><size><width>80</width><height>0</height></size></property>
+              <property name="maximumSize"><size><width>80</width><height>16777215</height></size></property>
+              <property name="text">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align="right"&gt;&lt;span style=" font-size:10pt;"&gt;免费分钟&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="alignment"><set>Qt::AlignRight|Qt::AlignVCenter</set></property>
+             </widget>
+            </item>
+            <item><widget class="QSpinBox" name="txtFreeMinutes"><property name="minimum"><number>0</number></property><property name="maximum"><number>120</number></property><property name="suffix"><string> 分钟</string></property></widget></item>
+           </layout>
+          </item>
+          <!-- ===== 识别参数区 ===== -->
+          <item>
+           <widget class="QLabel" name="recognitionSectionLabel">
+            <property name="text">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=" font-size:12pt; font-weight:600;"&gt;识别参数&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="confidenceLayout">
+            <property name="spacing"><number>10</number></property>
+            <item>
+             <widget class="QLabel" name="lblConfidence">
+              <property name="minimumSize"><size><width>80</width><height>0</height></size></property>
+              <property name="maximumSize"><size><width>80</width><height>16777215</height></size></property>
+              <property name="text">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align="right"&gt;&lt;span style=" font-size:10pt;"&gt;置信度阈值&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="alignment"><set>Qt::AlignRight|Qt::AlignVCenter</set></property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSlider" name="sliderConfidence">
+              <property name="orientation"><enum>Qt::Horizontal</enum></property>
+              <property name="minimum"><number>0</number></property>
+              <property name="maximum"><number>100</number></property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="lblConfidenceValue">
+              <property name="minimumSize"><size><width>40</width><height>0</height></size></property>
+              <property name="text"><string>0.70</string></property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <!-- ===== 弹簧 + 按钮 ===== -->
+          <item>
+           <spacer name="buttonTopSpacer">
+            <property name="orientation"><enum>Qt::Vertical</enum></property>
+            <property name="sizeType"><enum>QSizePolicy::Expanding</enum></property>
+           </spacer>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="buttonLayout">
+            <property name="spacing"><number>20</number></property>
+            <item>
+             <widget class="QPushButton" name="btnCancel">
+              <property name="minimumSize"><size><width>0</width><height>40</height></size></property>
+              <property name="text"><string>取消</string></property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="btnSubmit">
+              <property name="minimumSize"><size><width>0</width><height>40</height></size></property>
+              <property name="text"><string>保存</string></property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
