@@ -48,19 +48,15 @@ void CameraManager::scanCameras()
     QJsonArray camerasCfg = InitFile::instance().getCameras();
 
     for(int i = 0; i < n; ++i){
-        CameraThread* t = new CameraThread(i, this);
-        t->setResolution(w, h);
-        t->setTargetFps(fps);
-
         CameraInfo info;
         info.index = i;
-        info.width = w;
+        info.width  = w;
         info.height = h;
-        info.fps = fps;
+        info.fps    = fps;
 
-        info.name = QStringLiteral("摄像头 %1").arg(i + 1);
+        info.name     = QStringLiteral("摄像头 %1").arg(i + 1);
         info.location = QStringLiteral("位置 %1").arg(i + 1);
-        info.role = (i == 0) ? "entry" : "monitor";
+        info.role     = (i == 0) ? "entry" : "monitor";
 
         for(const QJsonValue& v : camerasCfg){
             QJsonObject o = v.toObject();
@@ -71,9 +67,20 @@ void CameraManager::scanCameras()
                     info.location = o["location"].toString();
                 if(!o["role"].toString().isEmpty())
                     info.role = o["role"].toString();
+                // per-camera resolution/FPS override global values
+                if(o.contains("width") && o["width"].toInt() > 0)
+                    info.width = o["width"].toInt();
+                if(o.contains("height") && o["height"].toInt() > 0)
+                    info.height = o["height"].toInt();
+                if(o.contains("fps") && o["fps"].toInt() > 0)
+                    info.fps = o["fps"].toInt();
                 break;
             }
         }
+
+        CameraThread* t = new CameraThread(i, this);
+        t->setResolution(info.width, info.height);
+        t->setTargetFps(info.fps);
 
         m_threads.append(t);
         m_infos.append(info);
