@@ -32,6 +32,9 @@ void CameraManager::scanCameras()
     int w = InitFile::instance().getCameraWidth();
     int h = InitFile::instance().getCameraHeight();
     int fps = InitFile::instance().getCameraFps();
+    if(w <= 0) w = 640;
+    if(h <= 0) h = 480;
+    if(fps <= 0) fps = 30;
 
     QJsonArray camerasCfg = InitFile::instance().getCameras();
 
