@@ -64,6 +64,7 @@ SOURCES += \
     UI/Register/registerdialog.cpp \
     UI/ConfigInit/configinitdialog.cpp \
     UI/CameraManagement/cameramanagement.cpp \
+    UI/CameraManagement/camerawindow.cpp \
     # ==================== 应用程序核心代码 ====================
     src/app/main.cpp \
     src/app/car.cpp \
@@ -77,6 +78,7 @@ SOURCES += \
     # ==================== 摄像头相关 ====================
     src/camera/camerathread.cpp \
     src/camera/framequeue.cpp \
+    src/camera/cameramanager.cpp \
     # ==================== 工具和基础设施 ====================
     src/utils/initfile.cpp \
     src/utils/pthreadpool.cpp \
@@ -109,6 +111,7 @@ HEADERS += \
     UI/Register/registerdialog.h \
     UI/ConfigInit/configinitdialog.h \
     UI/CameraManagement/cameramanagement.h \
+    UI/CameraManagement/camerawindow.h \
     # ==================== 应用程序核心代码 ====================
     src/app/car.h \
     src/app/platerecognize.h \
@@ -122,6 +125,7 @@ HEADERS += \
     src/camera/camerathread.h \
     src/camera/camerainfo.h \
     src/camera/framequeue.h \
+    src/camera/cameramanager.h \
     # ==================== 工具和基础设施 ====================
     src/utils/initfile.h \
     src/utils/pthreadpool.h \
