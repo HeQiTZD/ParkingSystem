@@ -225,6 +225,17 @@ void InitFile::setCameraConfig(int index, int width, int height, int fps)
      qDebug() << QStringLiteral("摄像头配置已更新");
 }
 
+QJsonArray InitFile::getCameras() const
+{
+    return configData["cameras"].toArray();
+}
+
+void InitFile::setCameras(const QJsonArray &cameras)
+{
+    configData["cameras"] = cameras;
+    qDebug() << QStringLiteral("摄像头列表配置已更新");
+}
+
 //获取识别配置
 QString InitFile::getModelPath() const
 {
@@ -311,6 +322,15 @@ QJsonObject InitFile::getDefaultConfig() const
     cameraConfig["height"] = 1080;
     cameraConfig["fps"] = 30;
     defaultConfig["camera"] = cameraConfig;
+
+    QJsonArray camerasArray;
+    QJsonObject cam0;
+    cam0["index"] = 0;
+    cam0["name"] = QStringLiteral("主入口");
+    cam0["location"] = QStringLiteral("大门");
+    cam0["role"] = "entry";
+    camerasArray.append(cam0);
+    defaultConfig["cameras"] = camerasArray;
 
     //识别默认配置
     QJsonObject recognitionConfig;

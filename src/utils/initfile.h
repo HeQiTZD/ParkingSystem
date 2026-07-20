@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QString>
 #include <QJsonObject>
+#include <QJsonArray>
 
 class InitFile : public QObject
 {
@@ -35,6 +36,10 @@ public:
     int getCameraHeight() const;//获取摄像头采集的画面高度（像素）
     int getCameraFps() const;//获取摄像头的帧率（Frames Per Second，每秒帧数）
     void setCameraConfig(int index, int width, int height, int fps);
+
+    //摄像头列表(多摄像头管理)
+    QJsonArray getCameras() const;
+    void setCameras(const QJsonArray &cameras);
 
     //停车场配置
     QString getParkingName() const;//获取停车场名称

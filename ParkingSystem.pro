@@ -63,6 +63,7 @@ SOURCES += \
     UI/VehicleInformation/vehicleinformation.cpp \
     UI/Register/registerdialog.cpp \
     UI/ConfigInit/configinitdialog.cpp \
+    UI/CameraManagement/cameramanagement.cpp \
     # ==================== 应用程序核心代码 ====================
     src/app/main.cpp \
     src/app/car.cpp \
@@ -107,6 +108,7 @@ HEADERS += \
     UI/VehicleInformation/vehicleinformation.h \
     UI/Register/registerdialog.h \
     UI/ConfigInit/configinitdialog.h \
+    UI/CameraManagement/cameramanagement.h \
     # ==================== 应用程序核心代码 ====================
     src/app/car.h \
     src/app/platerecognize.h \
@@ -118,6 +120,7 @@ HEADERS += \
     src/database/mysqlinit.h \
     # ==================== 摄像头相关 ====================
     src/camera/camerathread.h \
+    src/camera/camerainfo.h \
     src/camera/framequeue.h \
     # ==================== 工具和基础设施 ====================
     src/utils/initfile.h \
@@ -163,6 +166,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 UI_DIR = generated
 
 FORMS += \
+    UI/CameraManagement/cameramanagement.ui \
     UI/Login/logindialog.ui \
     UI/MainWindow/mainwindow.ui \
     UI/UserManager/usermanagement.ui \
