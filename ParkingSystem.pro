@@ -74,6 +74,7 @@ SOURCES += \
     src/app/plateconfirmtracker.cpp \
     # ==================== 数据库相关 ====================
     src/database/databasemanager.cpp \
+    src/database/dbconnectionpool.cpp \
     src/database/mysqlinit.cpp \
     # ==================== 摄像头相关 ====================
     src/camera/camerathread.cpp \
@@ -120,6 +121,7 @@ HEADERS += \
     src/app/plateconfirmtracker.h \
     # ==================== 数据库相关 ====================
     src/database/dbconfig.h \
+    src/database/dbconnectionpool.h \
     src/database/databasemanager.h \
     src/database/mysqlinit.h \
     # ==================== 摄像头相关 ====================
