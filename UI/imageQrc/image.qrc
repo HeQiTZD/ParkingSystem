@@ -24,12 +24,14 @@
         <file>photo_camera.svg</file>
         <file>pie_chart.svg</file>
         <file>play_arrow.svg</file>
+        <file>power_settings_new.svg</file>
         <file>replay_10.svg</file>
         <file>search.svg</file>
         <file alias="icon-security">security.svg</file>
         <file>settings.svg</file>
         <file>upload.svg</file>
         <file>videocam.svg</file>
+        <file>videocam_off.svg</file>
         <file alias="icon-visibility-off">visibility_off.svg</file>
         <file alias="icon-visibility">visibility.svg</file>
     </qresource>
