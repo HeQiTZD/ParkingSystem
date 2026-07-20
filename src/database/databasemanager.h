@@ -5,6 +5,7 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QDateTime>
+#include "dbconfig.h"
 #include "src/utils/messageType.h"
 
 struct ParkingStats {
@@ -32,9 +33,6 @@ public:
     //检查连接状态
     bool isConnected() const;
 
-    //执行查询
-    QSqlQuery executeQuery(const QString &sql);
-
     //验证用户登录
     bool validateUser(const QString &username, const QString &password, QString &userRole);
     //查询用户是否已存在
@@ -60,7 +58,7 @@ public:
 
     // 获取最近 N 条车辆记录（按入库时间降序）
     QList<QVariantList> getRecentRecords(int count);
-    
+
     // 获取入库时间
     QDateTime getVehicleCheckInTime(const QString &licensePlate);
 
@@ -86,8 +84,9 @@ signals:
     void parkingDataChanged();
 
 private:
-    QSqlDatabase db;
-    bool connected;
+    QSqlDatabase threadConnection();   // 取当前线程的连接
+    DbConfig m_config;
+    bool m_connected = false;
 };
 
 #endif // DATABASEMANAGER_H

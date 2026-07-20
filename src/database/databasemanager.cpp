@@ -1,11 +1,12 @@
 #include "databasemanager.h"
+#include "dbconnectionpool.h"
 #include "src/utils/utils.h"
 #include "src/utils/initfile.h"
 #include <QSqlError>
 #include <QDebug>
 #include <QTimeZone>
 
-DatabaseManager::DatabaseManager(QObject *parent): QObject(parent), connected(false){}
+DatabaseManager::DatabaseManager(QObject *parent): QObject(parent), m_connected(false){}
 
 DatabaseManager::~DatabaseManager()
 {
@@ -14,30 +15,28 @@ DatabaseManager::~DatabaseManager()
 
 bool DatabaseManager::connectDatabase(const QString &host, int port, const QString &dbName, const QString &username, const QString &password)
 {
-    //检查是否已连接
-    if(connected){
+    if(m_connected){
         disconnectDatabase();
     }
 
-    //添加数据库驱动
-    db = QSqlDatabase::addDatabase("QMYSQL");
+    DbConfig cfg;
+    cfg.host = host;
+    cfg.port = port;
+    cfg.dbName = dbName;
+    cfg.username = username;
+    cfg.password = password;
 
-    //设置连接参数
-    db.setHostName(host);
-    db.setPort(port);
-    db.setDatabaseName(dbName);
-    db.setUserName(username);
-    db.setPassword(password);
-
-    //尝试连接
-    if(!db.open()){
-        qDebug() << "数据库连接失败" << db.lastError().text();
-        connected = false;
+    DbConnectionPool::instance().setConfig(cfg);
+    QSqlDatabase testConn = DbConnectionPool::instance().connection();
+    if(!testConn.isOpen()){
+        qDebug() << "数据库连接失败" << testConn.lastError().text();
+        m_connected = false;
         emit connectionStatusChanged(false);
         return false;
     }
 
-    connected = true;
+    m_config = cfg;
+    m_connected = true;
     emit connectionStatusChanged(true);
     qDebug() << "数据库连接成功！";
     return true;
@@ -45,9 +44,9 @@ bool DatabaseManager::connectDatabase(const QString &host, int port, const QStri
 
 void DatabaseManager::disconnectDatabase()
 {
-    if(connected && db.isOpen()){
-        db.close();
-        connected = false;
+    if(m_connected){
+        DbConnectionPool::instance().closeAll();
+        m_connected = false;
         emit connectionStatusChanged(false);
         qDebug() << "数据库连接已关闭";
     }
@@ -55,16 +54,12 @@ void DatabaseManager::disconnectDatabase()
 
 bool DatabaseManager::isConnected() const
 {
-    return connected;
+    return m_connected;
 }
 
-QSqlQuery DatabaseManager::executeQuery(const QString &sql)
+QSqlDatabase DatabaseManager::threadConnection()
 {
-    QSqlQuery query(db);
-    if(!query.exec(sql)){
-        qDebug() << "sql执行失败"<<query.lastError().text();
-    }
-    return query;
+    return DbConnectionPool::instance().connection();
 }
 
 bool DatabaseManager::validateUser(const QString &username, const QString &password, QString &userRole)
@@ -75,7 +70,8 @@ bool DatabaseManager::validateUser(const QString &username, const QString &passw
     }
 
     //使用预处理语句防止sql注入
-    QSqlQuery query(db);
+    QSqlDatabase dbc = threadConnection();
+    QSqlQuery query(dbc);
     query.prepare("SELECT role FROM User WHERE username = :username AND password = :password");
     query.bindValue(":username",username);
     query.bindValue(":password",password);
@@ -96,11 +92,12 @@ bool DatabaseManager::validateUser(const QString &username, const QString &passw
 
 bool DatabaseManager::isUsernameExists(const QString &username)
 {
-    if(!connected){
+    if(!m_connected){
         qDebug() << "数据库未连接！";
         return false;
     }
-    QSqlQuery checkQuery(db);
+    QSqlDatabase dbc = threadConnection();
+    QSqlQuery checkQuery(dbc);
     checkQuery.prepare("SELECT COUNT(*) FROM User WHERE username = :username");
     checkQuery.bindValue(":username",username);
 
@@ -113,12 +110,13 @@ bool DatabaseManager::isUsernameExists(const QString &username)
 
 bool DatabaseManager::registerUser(const QString &username, const QString &password, const QString &name,const QString &phone)
 {
-    if(!connected){
+    if(!m_connected){
         qDebug() << "数据库未连接！";
         return false;
     }
 
-    QSqlQuery insertQuery(db);
+    QSqlDatabase dbc = threadConnection();
+    QSqlQuery insertQuery(dbc);
     insertQuery.prepare("INSERT INTO User (username, password, telephone, truename, role)"
                         "VALUES (:username, :password, :telephone, :name, 'user')");
     insertQuery.bindValue(":username",username);
@@ -135,13 +133,14 @@ bool DatabaseManager::registerUser(const QString &username, const QString &passw
 
 bool DatabaseManager::updateParkingConfig(const QString &name, double price, int capacity)
 {
-    if(!connected){
+    if(!m_connected){
         qDebug() << QStringLiteral("数据库未连接");
         return false;
     }
 
     // 先检查停车场是否存在
-    QSqlQuery checkQuery;
+    QSqlDatabase dbc = threadConnection();
+    QSqlQuery checkQuery(dbc);
     checkQuery.prepare("SELECT COUNT(*) FROM PARKING WHERE P_name = :name");
     checkQuery.bindValue(":name",name);
 
@@ -151,7 +150,7 @@ bool DatabaseManager::updateParkingConfig(const QString &name, double price, int
     }
 
     if(checkQuery.value(0).toInt() > 0){
-        QSqlQuery updateQuery;
+        QSqlQuery updateQuery(dbc);
         updateQuery.prepare(R"(
                 UPDATE PARKING
                 SET P_fee = :P_fee, P_all_count = :capacity
@@ -167,7 +166,7 @@ bool DatabaseManager::updateParkingConfig(const QString &name, double price, int
             return false;
         }
     }else{
-        QSqlQuery insertQuery;
+        QSqlQuery insertQuery(dbc);
         insertQuery.prepare(R"(
                 INSERT INTO PARKING (P_name, P_all_count, P_fee)
                 VALUES (:name, :capacity, :fee)
@@ -189,12 +188,13 @@ bool DatabaseManager::updateParkingConfig(const QString &name, double price, int
 
 bool DatabaseManager::isVehicleInPark(const QString &licensePlate)
 {
-    if (!connected) {
+    if (!m_connected) {
         qDebug() << "数据库未连接！";
         return false;
     }
 
-    QSqlQuery query(db);
+    QSqlDatabase dbc = threadConnection();
+    QSqlQuery query(dbc);
     query.prepare("SELECT COUNT(*) FROM CAR "
                   "WHERE license_plate = :plate AND check_out_time IS NULL");
     query.bindValue(":plate", licensePlate);
@@ -209,45 +209,46 @@ bool DatabaseManager::isVehicleInPark(const QString &licensePlate)
 
 bool DatabaseManager::checkIn(const QString &licensePlate, const QString &parkingName)
 {
-    if (!connected) {
+    if (!m_connected) {
         qDebug() << "数据库未连接！";
         return false;
     }
 
-    // 开启事务
-    if (!db.transaction()) {
-        qDebug() << "开启事务失败:" << db.lastError().text();
+    QSqlDatabase dbc = threadConnection();
+
+    if (!dbc.transaction()) {
+        qDebug() << "开启事务失败:" << dbc.lastError().text();
         return false;
     }
 
-    QSqlQuery insertQuery(db);
+    QSqlQuery insertQuery(dbc);
     insertQuery.prepare("INSERT INTO CAR (license_plate, check_in_time) "
                         "VALUES (:plate, NOW())");
     insertQuery.bindValue(":plate", licensePlate);
 
     if (!insertQuery.exec()) {
         qDebug() << "入库失败，回滚事务:" << insertQuery.lastError().text();
-        db.rollback();
+        dbc.rollback();
         return false;
     }
 
     // 同步 PARKING 表计数：P_now_count + 1
     if (!parkingName.isEmpty()) {
-        QSqlQuery countQuery(db);
+        QSqlQuery countQuery(dbc);
         countQuery.prepare("UPDATE PARKING SET P_now_count = P_now_count + 1 "
                           "WHERE P_name = :name");
         countQuery.bindValue(":name", parkingName);
         if (!countQuery.exec()) {
             qDebug() << "更新车位计数失败:" << countQuery.lastError().text();
-            db.rollback();
+            dbc.rollback();
             return false;
         }
     }
 
     // 提交事务
-    if (!db.commit()) {
-        qDebug() << "提交事务失败:" << db.lastError().text();
-        db.rollback();
+    if (!dbc.commit()) {
+        qDebug() << "提交事务失败:" << dbc.lastError().text();
+        dbc.rollback();
         return false;
     }
 
@@ -258,19 +259,20 @@ bool DatabaseManager::checkIn(const QString &licensePlate, const QString &parkin
 
 bool DatabaseManager::checkOut(const QString &licensePlate, const QString &parkingName, double fee)
 {
-    if (!connected) {
+    if (!m_connected) {
         qDebug() << "数据库未连接！";
         return false;
     }
 
-    // 开启事务
-    if (!db.transaction()) {
-        qDebug() << "开启事务失败:" << db.lastError().text();
+    QSqlDatabase dbc = threadConnection();
+
+    if (!dbc.transaction()) {
+        qDebug() << "开启事务失败:" << dbc.lastError().text();
         return false;
     }
 
     // 1. 查询未出库记录
-    QSqlQuery findQuery(db);
+    QSqlQuery findQuery(dbc);
     findQuery.prepare("SELECT id FROM CAR "
                       "WHERE license_plate = :plate AND check_out_time IS NULL "
                       "ORDER BY check_in_time DESC LIMIT 1");
@@ -278,42 +280,42 @@ bool DatabaseManager::checkOut(const QString &licensePlate, const QString &parki
 
     if (!findQuery.exec() || !findQuery.next()) {
         qDebug() << "未找到该车辆的入库记录:" << licensePlate;
-        db.rollback();
+        dbc.rollback();
         return false;
     }
 
     int recordId = findQuery.value(0).toInt();
 
     // 2. 更新出库时间及费用
-    QSqlQuery updateQuery(db);
+    QSqlQuery updateQuery(dbc);
     updateQuery.prepare("UPDATE CAR SET check_out_time = NOW(), fee = :fee WHERE id = :id");
     updateQuery.bindValue(":fee", fee);
     updateQuery.bindValue(":id", recordId);
 
     if (!updateQuery.exec()) {
         qDebug() << "出库更新失败:" << updateQuery.lastError().text();
-        db.rollback();
+        dbc.rollback();
         return false;
     }
 
     // 同步 PARKING 表计数：P_now_count - 1
     if (!parkingName.isEmpty()) {
-        QSqlQuery countQuery(db);
+        QSqlQuery countQuery(dbc);
         countQuery.prepare("UPDATE PARKING SET P_now_count = "
                           "CASE WHEN P_now_count > 0 THEN P_now_count - 1 ELSE 0 END "
                           "WHERE P_name = :name");
         countQuery.bindValue(":name", parkingName);
         if (!countQuery.exec()) {
             qDebug() << "更新车位计数失败:" << countQuery.lastError().text();
-            db.rollback();
+            dbc.rollback();
             return false;
         }
     }
 
     // 提交事务
-    if (!db.commit()) {
-        qDebug() << "提交事务失败:" << db.lastError().text();
-        db.rollback();
+    if (!dbc.commit()) {
+        qDebug() << "提交事务失败:" << dbc.lastError().text();
+        dbc.rollback();
         return false;
     }
 
@@ -324,7 +326,7 @@ bool DatabaseManager::checkOut(const QString &licensePlate, const QString &parki
 
 QSqlQuery DatabaseManager::queryVehicle(const QString &licensePlate, bool onlyInPark)
 {
-    QSqlQuery query(db);
+    QSqlQuery query(dbc);
 
     if (onlyInPark) {
         query.prepare("SELECT id, license_plate, check_in_time, check_out_time, fee "
@@ -347,12 +349,13 @@ ParkingStats DatabaseManager::getParkingStats(const QString &parkingName)
 {
     ParkingStats stats = {0, 0, 0};
 
-    if (!connected) {
+    if (!m_connected) {
         qDebug() << "数据库未连接！";
         return stats;
     }
 
-    QSqlQuery query(db);
+    QSqlDatabase dbc = threadConnection();
+    QSqlQuery query(dbc);
     query.prepare("SELECT P_all_count, P_now_count "
                   "FROM PARKING WHERE P_name = :name");
     query.bindValue(":name", parkingName);
@@ -376,7 +379,7 @@ ParkingStats DatabaseManager::getParkingStats(const QString &parkingName)
 QList<QVariantList> DatabaseManager::searchCars(const QString &plate, const QDateTime &startTime, const QDateTime &endTime, int status)
 {
     QList<QVariantList> resultList;
-    if(!connected) {
+    if(!m_connected) {
         return resultList;
     }
 
@@ -429,8 +432,9 @@ QList<QVariantList> DatabaseManager::searchCars(const QString &plate, const QDat
     }
 
     sql += " ORDER BY check_out_time DESC";
-    
-    QSqlQuery query(db);
+
+    QSqlDatabase dbc = threadConnection();
+    QSqlQuery query(dbc);
     query.prepare(sql);
 
     for(auto it = bindValues.constBegin(); it != bindValues.constEnd() ; ++it){
@@ -458,7 +462,7 @@ QList<QVariantList> DatabaseManager::searchCars(const QString &plate, const QDat
 QList<QVariantList> DatabaseManager::getRecentRecords(int count)
 {
     QList<QVariantList> resultList;
-    if (!connected || count <= 0) return resultList;
+    if (!m_connected || count <= 0) return resultList;
 
     QString sql = R"(
         SELECT id, license_plate, check_in_time, check_out_time, fee,
@@ -471,7 +475,8 @@ QList<QVariantList> DatabaseManager::getRecentRecords(int count)
         LIMIT :count
     )";
 
-    QSqlQuery query(db);
+    QSqlDatabase dbc = threadConnection();
+    QSqlQuery query(dbc);
     query.prepare(sql);
     query.bindValue(":count", count);
 
@@ -493,12 +498,13 @@ QList<QVariantList> DatabaseManager::getRecentRecords(int count)
 
 QDateTime DatabaseManager::getVehicleCheckInTime(const QString &licensePlate)
 {
-    if(!connected) {
+    if(!m_connected) {
         return QDateTime();
     }
 
     QString sql = R"(SELECT check_in_time FROM CAR WHERE license_plate = :plate AND check_out_time IS NULL)";
-    QSqlQuery query(db);
+    QSqlDatabase dbc = threadConnection();
+    QSqlQuery query(dbc);
     query.prepare(sql);
     query.bindValue(":plate", licensePlate);
 
@@ -524,7 +530,7 @@ bool DatabaseManager::deleteCarRecord(int id)
         return false;
     }
 
-    QSqlQuery searchCarId;
+    QSqlQuery searchCarId(dbc);
     QString searchCar = R"(SELECT check_out_time FROM Car WHERE id = :id)";
     searchCarId.prepare(searchCar);
     searchCarId.bindValue(":id", id);
@@ -542,35 +548,35 @@ bool DatabaseManager::deleteCarRecord(int id)
     // 获取停车场名称（通过 InitFile 单例，避免绕过封装直接读 JSON）
     QString parkingName = InitFile::instance().getParkingName();
 
-    if(!db.transaction()){
+    if(!dbc.transaction()){
             qDebug() << "数据库事务开启失败";
             return false;
         }
 
     if(checkOutTime.isNull()){
-        QSqlQuery deleteQuery;
+        QSqlQuery deleteQuery(dbc);
         QString deleteParkingP_now_count = R"(UPDATE PARKING SET P_now_count = GREATEST(P_now_count-1,0) WHERE P_name = :P_name)";
         deleteQuery.prepare(deleteParkingP_now_count);
         deleteQuery.bindValue(":P_name", parkingName);
         if(!deleteQuery.exec()){
             qDebug() << "停车场车辆数量删除失败" << deleteQuery.lastError().text();
-            db.rollback();
+            dbc.rollback();
             return false;
         }
     }
 
-    QSqlQuery deleteCarRecord;
+    QSqlQuery deleteCarRecord(dbc);
     QString deleteRecord = R"(DELETE FROM Car WHERE id = :id)";
     deleteCarRecord.prepare(deleteRecord);
     deleteCarRecord.bindValue(":id", id);
     if(!deleteCarRecord.exec()){
         qDebug() << "车辆记录删除失败" << deleteCarRecord.lastError().text();
-        db.rollback();
+        dbc.rollback();
         return false;
     }
 
-    if(!db.commit()){
-        db.rollback();
+    if(!dbc.commit()){
+        dbc.rollback();
         return false;
     }
 
@@ -587,7 +593,7 @@ bool DatabaseManager::deleteCarRecords(const QList<int> &ids)
     for (int i = 0; i < ids.size(); ++i)
         cntPl << QString(":c%1").arg(i);
 
-    QSqlQuery countQ(db);
+    QSqlQuery countQ(dbc);
     countQ.prepare(QString("SELECT COUNT(*) FROM CAR WHERE id IN (%1) AND check_out_time IS NULL")
                    .arg(cntPl.join(", ")));
     for (int i = 0; i < ids.size(); ++i)
@@ -601,26 +607,28 @@ bool DatabaseManager::deleteCarRecords(const QList<int> &ids)
     for (int i = 0; i < ids.size(); ++i)
         delPl << QString(":d%1").arg(i);
 
-    if (!db.transaction()) return false;
+    QSqlDatabase dbc = threadConnection();
+
+    if (!dbc.transaction()) return false;
 
     // 在场车辆 → 同步车位计数
     if (inParkCount > 0) {
-        QSqlQuery upQ(db);
+        QSqlQuery upQ(dbc);
         upQ.prepare("UPDATE PARKING SET P_now_count = GREATEST(P_now_count - :cnt, 0) "
                     "WHERE P_name = :name");
         upQ.bindValue(":cnt", inParkCount);
         upQ.bindValue(":name", InitFile::instance().getParkingName());
-        if (!upQ.exec()) { db.rollback(); return false; }
+        if (!upQ.exec()) { dbc.rollback(); return false; }
     }
 
     // 批量删除
-    QSqlQuery delQ(db);
+    QSqlQuery delQ(dbc);
     delQ.prepare(QString("DELETE FROM CAR WHERE id IN (%1)").arg(delPl.join(", ")));
     for (int i = 0; i < ids.size(); ++i)
         delQ.bindValue(QString(":d%1").arg(i), ids[i]);
 
-    if (!delQ.exec()) { db.rollback(); return false; }
-    if (!db.commit()) { db.rollback(); return false; }
+    if (!delQ.exec()) { dbc.rollback(); return false; }
+    if (!dbc.commit()) { dbc.rollback(); return false; }
 
     emit parkingDataChanged();
     return true;
@@ -629,7 +637,7 @@ bool DatabaseManager::deleteCarRecords(const QList<int> &ids)
 QList<QVariantList> DatabaseManager::searchUsers(const QString &keyword)
 {
     QList<QVariantList> resultList;
-    if (!connected) return resultList;
+    if (!m_connected) return resultList;
 
     QString sql = R"(
         SELECT id, username, truename, telephone, role, create_at
@@ -643,7 +651,8 @@ QList<QVariantList> DatabaseManager::searchUsers(const QString &keyword)
 
     sql += " ORDER BY create_at DESC";
 
-    QSqlQuery query(db);
+    QSqlDatabase dbc = threadConnection();
+    QSqlQuery query(dbc);
     query.prepare(sql);
 
     if (!keyword.isEmpty()) {
@@ -678,7 +687,8 @@ bool DatabaseManager::addUser(const QString &username, const QString &password, 
     }
 
     QString addUser = R"(INSERT INTO `User` (username, password, telephone, truename, role) VALUES (:username, :password, :telephone, :truename, :role))";
-    QSqlQuery add(db);
+    QSqlDatabase dbc = threadConnection();
+    QSqlQuery add(dbc);
     add.prepare(addUser);
     add.bindValue(":username", username);
     add.bindValue(":password", encryptPassword(password));
@@ -705,7 +715,8 @@ bool DatabaseManager::updateUser(int id, const QString &username, const QString 
     QVariantMap bindValues;
 
     if(!username.isEmpty()){
-        QSqlQuery check;
+        QSqlDatabase dbc = threadConnection();
+        QSqlQuery check(dbc);
         check.prepare("SELECT COUNT(*) FROM User WHERE username = :u AND id != :id");
         check.bindValue(":u",username);
         check.bindValue(":id", id);
@@ -736,7 +747,7 @@ bool DatabaseManager::updateUser(int id, const QString &username, const QString 
     QString sql = "UPDATE User SET " + setClauses.join(", ") + " WHERE id = :id";
     bindValues[":id"] = id;
 
-    QSqlQuery query(db);
+    QSqlQuery query(dbc);
     query.prepare(sql);
 
     for(auto it = bindValues.begin(); it != bindValues.end(); ++it){
@@ -759,7 +770,8 @@ bool DatabaseManager::deleteUser(int id)
     }
 
     QString sql = R"(DELETE FROM User WHERE id = :id)";
-    QSqlQuery query(db);
+    QSqlDatabase dbc = threadConnection();
+    QSqlQuery query(dbc);
     query.prepare(sql);
     query.bindValue(":id", id);
 
