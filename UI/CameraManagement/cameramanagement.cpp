@@ -11,6 +11,7 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QResizeEvent>
+#include "camerasettingsdialog.h"
 
 CameraManagement::CameraManagement(QWidget *parent)
     : QWidget(parent)
@@ -36,7 +37,10 @@ CameraManagement::CameraManagement(QWidget *parent)
         CameraManager::instance().stopAll();
     });
     connect(m_settingsBtn, &QPushButton::clicked, this, [this](){
-        // Placeholder: settings not implemented in this version
+        auto *dialog = new CameraSettingsDialog(this);
+        dialog->setModal(true);
+        dialog->exec();
+        dialog->deleteLater();
     });
 }
 
