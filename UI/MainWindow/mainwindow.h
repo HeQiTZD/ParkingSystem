@@ -13,6 +13,7 @@ class PlateConfirmTracker;
 class FrameQueue;
 class VehicleInformation;
 class UserManagement;
+class CameraManagement;
 class QTimer;
 class QLabel;
 
@@ -107,6 +108,7 @@ private:
 
     VehicleInformation *m_vehicleInfoPage  = nullptr;  // 车辆信息页面
     UserManagement *m_userManagementPage  = nullptr;    // 用户管理页面
+    CameraManagement *m_cameraManagementPage = nullptr;
 };
 
 #endif // MAINWINDOW_H

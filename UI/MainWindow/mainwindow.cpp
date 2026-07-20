@@ -12,6 +12,8 @@
 #include "src/app/plateconfirmtracker.h"
 #include "UI/VehicleInformation/vehicleinformation.h"
 #include "UI/UserManager/usermanagement.h"
+#include "UI/CameraManagement/cameramanagement.h"
+#include "src/camera/cameramanager.h"
 #include "src/app/platerecognize.h"
 #include <QFile>
 #include <QButtonGroup>
@@ -27,6 +29,7 @@ MainWindow::MainWindow(QWidget *parent, DatabaseManager *db)
     , m_db(db)
 {
     ui->setupUi(this);
+    CameraManager::instance().scanCameras();
     setWindowFlag(Qt::FramelessWindowHint);
     setMinimumSize(1200, 700);
     setMouseTracking(true);
@@ -149,14 +152,11 @@ MainWindow::MainWindow(QWidget *parent, DatabaseManager *db)
     m_videoLabel->setAlignment(Qt::AlignCenter);
     m_videoLabel->setScaledContents(false);
 
-    m_cameraThread = new CameraThread(0, this);
-    // 从配置文件读取摄像头分辨率，默认 1920×1080（兼容旧配置无此字段）
-    m_cameraThread->setResolution(
-        InitFile::instance().getCameraWidth(),
-        InitFile::instance().getCameraHeight());
-    m_cameraThread->setTargetFps(InitFile::instance().getCameraFps());
-    connect(m_cameraThread,&CameraThread::newFrameCaptured,this,&MainWindow::updateFrame);
-    m_cameraThread->start();
+    m_cameraThread = CameraManager::instance().getThread(0);
+    if(m_cameraThread){
+        connect(m_cameraThread, &CameraThread::newFrameCaptured, this, &MainWindow::updateFrame);
+        CameraManager::instance().start(0);
+    }
 
     ui->cameraViewWidget->installEventFilter(this);
 
@@ -213,6 +213,10 @@ MainWindow::MainWindow(QWidget *parent, DatabaseManager *db)
     m_userManagementPage = new UserManagement(this, m_db);
     int userMgmtIndex = ui->stackedWidget->addWidget(m_userManagementPage);
 
+    m_cameraManagementPage = new CameraManagement(this, m_db);
+    int cameraMgmtIndex = ui->stackedWidget->addWidget(m_cameraManagementPage);
+    Q_UNUSED(cameraMgmtIndex);
+
     // 导航按钮 → 切换 stackedWidget 页面
     // QButtonGroup 用信号携带按钮 ID 来区分哪个按钮被点击
      connect(navButtonGroup, &QButtonGroup::idClicked, this, [this, navButtonGroup](int id) {
@@ -230,6 +234,8 @@ MainWindow::MainWindow(QWidget *parent, DatabaseManager *db)
             ui->stackedWidget->setCurrentIndex(1);
         } else if (btn == ui->userManagementButton) {
             ui->stackedWidget->setCurrentIndex(2);
+        } else if (btn == ui->cameraManagementButton) {
+            ui->stackedWidget->setCurrentIndex(3);
         }
         // 后续页面按此规律追加：cameraManagementButton → 索引 3, etc.
     });
@@ -243,11 +249,9 @@ MainWindow::~MainWindow()
         m_recognizeThread->wait(3000);
     }
 
-    // 再停止摄像头线程
-    if(m_cameraThread){
-        m_cameraThread->quit();
-        m_cameraThread->wait();
-    }
+    // CameraThread 0 is now owned by CameraManager singleton — don't stop/wait here.
+    // CameraManager is destroyed after MainWindow (static singleton), so the pointer
+    // remains valid during ~MainWindow.
 
     // 释放帧队列（两个线程都已停止，安全释放）
     delete m_frameQueue;
