@@ -66,6 +66,7 @@ SOURCES += \
     UI/Settings/settingsdialog.cpp \
     UI/CameraManagement/cameramanagement.cpp \
     UI/CameraManagement/camerawindow.cpp \
+    UI/CameraManagement/camerasettingsdialog.cpp \
     # ==================== 业务服务层 ====================
     src/service/parkingservice.cpp \
     src/service/userservice.cpp \
@@ -119,6 +120,7 @@ HEADERS += \
     UI/Settings/settingsdialog.h \
     UI/CameraManagement/cameramanagement.h \
     UI/CameraManagement/camerawindow.h \
+    UI/CameraManagement/camerasettingsdialog.h \
     # ==================== 业务服务层 ====================
     src/service/parkingservice.h \
     src/service/userservice.h \
@@ -190,7 +192,8 @@ FORMS += \
     UI/VehicleInformation/vehicleinformation.ui \
     UI/Register/registerdialog.ui \
     UI/ConfigInit/configinitdialog.ui \
-    UI/Settings/settingsdialog.ui
+    UI/Settings/settingsdialog.ui \
+    UI/CameraManagement/camerasettingsdialog.ui
 
 # ==================== DLL 复制配置 ====================
 # 构建完成后将 DLL 复制到可执行文件目录
