@@ -83,6 +83,14 @@ public:
      void resume();
 
     /**
+     * @brief 停止线程（可复用，不析构对象）
+     *
+     * 设置退出标志、唤醒暂停的线程、等待线程结束。
+     * 由析构函数调用，也供 CameraManager 在需要临时停止摄像头时使用。
+     */
+    void stop();
+
+    /**
      * @brief 设置帧队列（用于向识别线程投递采样帧）
      *
      * 如果不设置（保持 nullptr），CameraThread 的行为与原来完全一致，

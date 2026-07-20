@@ -18,9 +18,15 @@ CameraThread::CameraThread(int cameraIndex, QObject *parent)
 
 CameraThread::~CameraThread()
 {
+    stop();
+    releaseCamera();
+}
+
+void CameraThread::stop()
+{
     // 停止线程
     m_running = false;//通知工作线程的主循环（run() 函数中的 while(m_running)）退出循环
-    m_paused = false;//避免线程处于“暂停”状态无法响应退出信号；强制取消暂停
+    m_paused = false;//避免线程处于”暂停”状态无法响应退出信号；强制取消暂停
     m_pauseCond.wakeAll(); // 唤醒暂停的线程，唤醒所有可能在条件变量 m_pauseCond 上等待的线程（例如因暂停而等待）。确保线程从等待中苏醒，立即检查 m_running 标志并退出
 
     // 等待线程结束
@@ -28,8 +34,6 @@ CameraThread::~CameraThread()
         quit();//让线程的事件循环退出（如果线程内有 exec() 或 QEventLoop）。对于自定义的非事件循环线程，通常不需要 quit()，但保留它也不会造成问题
         wait(3000);// 最多等待3秒
     }
-
-    releaseCamera();
 }
 
 //等待改进：摄像头索引不连续，性能开销，最大索引硬编码为 10，跨平台行为差异
