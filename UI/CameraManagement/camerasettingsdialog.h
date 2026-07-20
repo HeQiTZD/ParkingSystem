@@ -9,7 +9,6 @@ namespace Ui {
 class CameraSettingsDialog;
 }
 
-class QButtonGroup;
 class CameraInfo;
 
 class CameraSettingsDialog : public QDialog
@@ -35,7 +34,6 @@ private:
 
     Ui::CameraSettingsDialog *ui;
     QList<QWidget*> m_cameraRows;
-    QButtonGroup *m_roleGroup = nullptr;
     bool m_dragging = false;
     QPoint m_dragPosition;
 

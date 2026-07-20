@@ -14,7 +14,6 @@
 #include <QLineEdit>
 #include <QComboBox>
 #include <QRadioButton>
-#include <QButtonGroup>
 #include <QFrame>
 #include <QScrollArea>
 
@@ -118,8 +117,6 @@ void CameraSettingsDialog::buildCameraRows()
     CameraManager &mgr = CameraManager::instance();
     int n = mgr.count();
 
-    m_roleGroup = new QButtonGroup(this);
-
     if (n == 0) {
         QLabel *empty = new QLabel(QStringLiteral("未检测到摄像头"), ui->cameraListContainer);
         empty->setAlignment(Qt::AlignCenter);
@@ -189,8 +186,6 @@ QWidget* CameraSettingsDialog::createCameraRow(int index, const CameraInfo &info
         rbEntry->setChecked(true);
     else
         rbMonitor->setChecked(true);
-    m_roleGroup->addButton(rbEntry);
-    m_roleGroup->addButton(rbMonitor);
     roleLayout->addWidget(lblRole);
     roleLayout->addWidget(rbEntry);
     roleLayout->addWidget(rbMonitor);
