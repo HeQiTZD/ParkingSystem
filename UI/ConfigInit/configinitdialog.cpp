@@ -5,7 +5,6 @@
 #include <QFile>
 #include <QGraphicsDropShadowEffect>
 #include <QMouseEvent>
-
 ConfigInitDialog::ConfigInitDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ConfigInitDialog),
@@ -13,30 +12,25 @@ ConfigInitDialog::ConfigInitDialog(QWidget *parent) :
 {
     ui->setupUi(this);
     setFixedSize(700, 900);
-
     setupWindowFlags();
     setupShadow();
     setupTitleBar();
 
-    // 加载配置窗口样式
     QFile styleFile(":/styles/config.qss");
     if (styleFile.open(QFile::ReadOnly)) {
         setStyleSheet(styleFile.readAll());
         styleFile.close();
     }
 }
-
 ConfigInitDialog::~ConfigInitDialog()
 {
     delete ui;
 }
-
 void ConfigInitDialog::setupWindowFlags()
 {
     setWindowFlags(Qt::FramelessWindowHint | Qt::WindowMinimizeButtonHint);
     setAttribute(Qt::WA_TranslucentBackground);
 }
-
 void ConfigInitDialog::setupShadow()
 {
     QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect(this);
@@ -45,17 +39,14 @@ void ConfigInitDialog::setupShadow()
     shadow->setOffset(0, 0);
     ui->mainContainer->setGraphicsEffect(shadow);
 }
-
 void ConfigInitDialog::setupTitleBar()
 {
     ui->titleBar->installEventFilter(this);
 }
-
 bool ConfigInitDialog::eventFilter(QObject *obj, QEvent *event)
 {
     if (obj == ui->titleBar) {
         QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
-
         switch (event->type()) {
         case QEvent::MouseButtonPress:
             if (mouseEvent->button() == Qt::LeftButton) {
@@ -64,39 +55,32 @@ bool ConfigInitDialog::eventFilter(QObject *obj, QEvent *event)
                 return true;
             }
             break;
-
         case QEvent::MouseMove:
             if (m_dragging && (mouseEvent->buttons() & Qt::LeftButton)) {
                 move(mouseEvent->globalPos() - m_dragPosition);
                 return true;
             }
             break;
-
         case QEvent::MouseButtonRelease:
             if (mouseEvent->button() == Qt::LeftButton) {
                 m_dragging = false;
                 return true;
             }
             break;
-
         default:
             break;
         }
     }
-
     return QDialog::eventFilter(obj, event);
 }
-
 void ConfigInitDialog::on_btnMinimize_clicked()
 {
     showMinimized();
 }
-
 void ConfigInitDialog::on_btnClose_clicked()
 {
     close();
 }
-
 bool ConfigInitDialog::validateInputs()
 {
     if (ui->txtIP->text().isEmpty()) {
@@ -133,28 +117,22 @@ bool ConfigInitDialog::validateInputs()
     }
     return true;
 }
-
 void ConfigInitDialog::saveConfig()
 {
-    // 复用全局单例：setParkingConfig 发射的 parkingConfigChanged 信号
-    // 可被 main.cpp 中连接的 lambda 接收，自动同步到数据库。
+
     InitFile &initFile = InitFile::instance();
 
-    // 保存数据库配置
     initFile.setDbConfig(ui->txtIP->text(),
                          ui->txtPort->text().toInt(),
                          ui->txtDBName->text(),
                          ui->txtUsername->text(),
                          ui->txtPassword->text());
 
-    // 保存停车场配置
     initFile.setParkingConfig(ui->txtParkingName->text(),
                               ui->txtPrice->text().toDouble(),
                               ui->txtCapacity->text().toInt());
-
     initFile.saveConfig();
 }
-
 void ConfigInitDialog::on_btnSubmit_clicked()
 {
     if (validateInputs()) {
@@ -163,7 +141,6 @@ void ConfigInitDialog::on_btnSubmit_clicked()
         accept();
     }
 }
-
 void ConfigInitDialog::on_btnCancel_clicked()
 {
     reject();

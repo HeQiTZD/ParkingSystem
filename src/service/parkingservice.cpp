@@ -3,10 +3,8 @@
 #include "src/app/car.h"
 #include "src/utils/initfile.h"
 #include <QDateTime>
-
 ParkingService::ParkingService(DatabaseManager& db, QObject* parent)
     : QObject(parent), m_db(db) {}
-
 bool ParkingService::checkIn(const QString& rawPlate)
 {
     if(!m_db.isConnected()){
@@ -31,7 +29,6 @@ bool ParkingService::checkIn(const QString& rawPlate)
     emit parkingDataChanged();
     return true;
 }
-
 bool ParkingService::prepareCheckOut(const QString& rawPlate,
                                      QDateTime& outTime, double& cost,
                                      qint64& totalMinutes, QString& errMsg)
@@ -53,7 +50,6 @@ bool ParkingService::prepareCheckOut(const QString& rawPlate,
                              InitFile::instance().getFreeMinutes());
     return true;
 }
-
 bool ParkingService::confirmCheckOut(const QString& plate, double cost)
 {
     QString parkingName = InitFile::instance().getParkingName();
@@ -64,7 +60,6 @@ bool ParkingService::confirmCheckOut(const QString& plate, double cost)
     emit parkingDataChanged();
     return true;
 }
-
 ParkingStats ParkingService::getStats()
 {
     return m_db.getParkingStats(InitFile::instance().getParkingName());

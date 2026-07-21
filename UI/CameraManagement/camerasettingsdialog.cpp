@@ -3,7 +3,6 @@
 #include "cameracardwidget.h"
 #include "src/camera/cameramanager.h"
 #include "src/utils/initfile.h"
-
 #include <QButtonGroup>
 #include <QCloseEvent>
 #include <QFile>
@@ -12,26 +11,21 @@
 #include <QMessageBox>
 #include <QMouseEvent>
 #include <QScrollBar>
-
 CameraSettingsDialog::CameraSettingsDialog(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::CameraSettingsDialog)
 {
     ui->setupUi(this);
     setWindowFlag(Qt::FramelessWindowHint);
-
     QFile styleFile(":/styles/camerasettings.qss");
     if (styleFile.open(QFile::ReadOnly)) {
         setStyleSheet(QLatin1String(styleFile.readAll()));
         styleFile.close();
     }
-
     ui->pushButton->setIconSize(QSize(16, 16));
     ui->pushButton->setIcon(QIcon(":/icons/close"));
-
     ui->widget->installEventFilter(this);
 
-    // 取消和关闭按钮：跳过脏检查直接关闭
     auto onCancel = [this]() {
         m_dirty = false;
         reject();
@@ -39,16 +33,13 @@ CameraSettingsDialog::CameraSettingsDialog(QWidget *parent)
     connect(ui->pushButton, &QPushButton::clicked, this, onCancel);
     connect(ui->pushButton_2, &QPushButton::clicked, this, onCancel);
     connect(ui->pushButton_3, &QPushButton::clicked, this, &CameraSettingsDialog::onSave);
-
     loadGlobalParams();
     loadCameraCards();
 }
-
 CameraSettingsDialog::~CameraSettingsDialog()
 {
     delete ui;
 }
-
 void CameraSettingsDialog::loadGlobalParams()
 {
     auto &ini = InitFile::instance();
@@ -58,25 +49,20 @@ void CameraSettingsDialog::loadGlobalParams()
     if (w <= 0) w = 1920;
     if (h <= 0) h = 1080;
     if (fps <= 0) fps = 30;
-
     ui->cmbGlobalWidth->setCurrentText(QString::number(w));
     ui->cmbGlobalHeight->setCurrentText(QString::number(h));
     ui->cmbGlobalFps->setCurrentText(QString::number(fps));
 }
-
 void CameraSettingsDialog::loadCameraCards()
 {
     qDeleteAll(m_cards);
     m_cards.clear();
-
     if (m_roleGroup) {
         delete m_roleGroup;
         m_roleGroup = nullptr;
     }
-
     auto &mgr = CameraManager::instance();
     int count = mgr.count();
-
     if (count == 0) {
         auto *emptyLabel = new QLabel(QStringLiteral("未检测到摄像头"));
         emptyLabel->setAlignment(Qt::AlignCenter);
@@ -84,27 +70,21 @@ void CameraSettingsDialog::loadCameraCards()
         ui->cameraListLayout->addWidget(emptyLabel);
         return;
     }
-
     m_roleGroup = new QButtonGroup(this);
-
     for (int i = 0; i < count; ++i) {
         auto *card = new CameraCardWidget(i, this);
         card->setCameraInfo(mgr.info(i));
         ui->cameraListLayout->addWidget(card);
         m_cards.append(card);
-
         m_roleGroup->addButton(card->entryRadio());
         m_roleGroup->addButton(card->monitorRadio());
-
         connect(card, &CameraCardWidget::changed, this, [this]() {
             m_dirty = true;
         });
     }
 }
-
 void CameraSettingsDialog::onSave()
 {
-    // ── 全局参数校验 ──
     bool ok;
     int globalW = ui->cmbGlobalWidth->currentText().toInt(&ok);
     if (!ok || globalW <= 0) {
@@ -125,7 +105,6 @@ void CameraSettingsDialog::onSave()
         return;
     }
 
-    // ── 角色互斥校验 ──
     int entryCount = 0;
     for (auto *card : m_cards) {
         if (card->cameraInfo().role == "entry")
@@ -144,7 +123,6 @@ void CameraSettingsDialog::onSave()
             return;
     }
 
-    // ── 每路摄像头校验 ──
     for (auto *card : m_cards) {
         CameraInfo info = card->cameraInfo();
         if (info.width <= 0 || info.height <= 0 || info.fps <= 0) {
@@ -154,21 +132,16 @@ void CameraSettingsDialog::onSave()
         }
     }
 
-    // ── 写入 InitFile ──
     auto &ini = InitFile::instance();
     ini.setCameraConfig(0, globalW, globalH, globalFps);
-
     QJsonArray camerasJson;
     for (auto *card : m_cards) {
         CameraInfo info = card->cameraInfo();
 
-        // 名称为空自动回退
         if (info.name.trimmed().isEmpty())
             info.name = QStringLiteral("摄像头 %1").arg(info.index + 1);
-
         auto &mgr = CameraManager::instance();
         mgr.updateInfo(info.index, info);
-
         QJsonObject obj;
         obj["index"]    = info.index;
         obj["name"]     = info.name;
@@ -179,25 +152,19 @@ void CameraSettingsDialog::onSave()
         obj["fps"]      = info.fps;
         camerasJson.append(obj);
     }
-
     ini.setCameras(camerasJson);
-
     if (!ini.saveConfig()) {
         QMessageBox::warning(this, QStringLiteral("保存失败"),
                              QStringLiteral("配置保存失败"));
         return;
     }
-
     m_dirty = false;
-
     emit camerasUpdated();
     emit cameraConfigChanged();
-
     QMessageBox::information(this, QStringLiteral("保存成功"),
                              QStringLiteral("摄像头配置已保存，重启应用后生效"));
     accept();
 }
-
 void CameraSettingsDialog::closeEvent(QCloseEvent *event)
 {
     if (m_dirty) {
@@ -214,7 +181,6 @@ void CameraSettingsDialog::closeEvent(QCloseEvent *event)
     }
     QDialog::closeEvent(event);
 }
-
 bool CameraSettingsDialog::eventFilter(QObject *obj, QEvent *event)
 {
     if (obj == ui->widget) {

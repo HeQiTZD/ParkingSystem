@@ -2,7 +2,6 @@
 #include <QPainter>
 #include <QEnterEvent>
 #include <QMouseEvent>
-
 CalendarDayBtn::CalendarDayBtn(QWidget *parent)
     : QPushButton(parent)
 {
@@ -11,12 +10,10 @@ CalendarDayBtn::CalendarDayBtn(QWidget *parent)
     setFlat(true);
     setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 }
-
 void CalendarDayBtn::setDay(const QDate &date, DayType type)
 {
     m_date = date;
     m_type = type;
-
     if (type == Disabled) {
         setEnabled(false);
         setCursor(Qt::ForbiddenCursor);
@@ -28,7 +25,6 @@ void CalendarDayBtn::setDay(const QDate &date, DayType type)
     m_pressed = false;
     update();
 }
-
 void CalendarDayBtn::enterEvent(QEnterEvent *event)
 {
     Q_UNUSED(event);
@@ -37,7 +33,6 @@ void CalendarDayBtn::enterEvent(QEnterEvent *event)
         update();
     }
 }
-
 void CalendarDayBtn::leaveEvent(QEvent *event)
 {
     Q_UNUSED(event);
@@ -45,7 +40,6 @@ void CalendarDayBtn::leaveEvent(QEvent *event)
     m_pressed = false;
     update();
 }
-
 void CalendarDayBtn::mousePressEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton && m_type != Disabled) {
@@ -54,25 +48,20 @@ void CalendarDayBtn::mousePressEvent(QMouseEvent *event)
     }
     QPushButton::mousePressEvent(event);
 }
-
 void CalendarDayBtn::mouseReleaseEvent(QMouseEvent *event)
 {
     m_pressed = false;
     update();
     QPushButton::mouseReleaseEvent(event);
 }
-
 void CalendarDayBtn::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
-
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);
-
     QRect rect = this->rect();
     int radius = 5;
 
-    // 绘制背景
     switch (m_type) {
     case Selected:
         painter.setPen(Qt::NoPen);
@@ -80,7 +69,6 @@ void CalendarDayBtn::paintEvent(QPaintEvent *event)
         painter.drawRoundedRect(rect, radius, radius);
         break;
     case Today:
-        // 无背景，后面画蓝色边框
         break;
     case Weekend:
         if (m_hovered) {
@@ -105,11 +93,9 @@ void CalendarDayBtn::paintEvent(QPaintEvent *event)
         }
         break;
     case Disabled:
-        // 无背景
         break;
     }
 
-    //绘制今日边框
     if (m_type == Today) {
         painter.setPen(QPen(QColor(30, 120, 220), 1));
         painter.setBrush(Qt::NoBrush);
@@ -118,7 +104,6 @@ void CalendarDayBtn::paintEvent(QPaintEvent *event)
         painter.drawRoundedRect(borderRect, radius - 1, radius - 1);
     }
 
-    //绘制选中边框
     if (m_type == Selected) {
         painter.setPen(QPen(Qt::black, 1));
         painter.setBrush(Qt::NoBrush);
@@ -127,11 +112,9 @@ void CalendarDayBtn::paintEvent(QPaintEvent *event)
         painter.drawRoundedRect(borderRect, radius - 1, radius - 1);
     }
 
-    // 绘制文字
     QFont font = painter.font();
     font.setPointSize(9);
     QColor textColor;
-
     switch (m_type) {
     case Disabled:
         textColor = QColor(190, 190, 190);
@@ -155,7 +138,6 @@ void CalendarDayBtn::paintEvent(QPaintEvent *event)
         font.setWeight(QFont::Normal);
         break;
     }
-
     painter.setFont(font);
     painter.setPen(textColor);
     painter.drawText(rect, Qt::AlignCenter, QString::number(m_date.day()));

@@ -1,193 +1,72 @@
-﻿#ifndef CAMERATHREAD_H
+#ifndef CAMERATHREAD_H
 #define CAMERATHREAD_H
-
 #include <QThread>
 #include <QMutex>
 #include <QWaitCondition>
 #include <QImage>
 #include <opencv2/opencv.hpp>
 #include <atomic>
-//#include "framequeue.h"
-
-class FrameQueue;   // 前向声明，避免引入头文件
-
-/**
- * @brief 摄像头线程类
- *
- * 在独立线程中捕获摄像头视频帧，避免阻塞UI线程。
- * 使用OpenCV的VideoCapture进行图像捕获。
- *
- * 主要功能：
- * 1. 摄像头设备枚举
- * 2. 视频流捕获
- * 3. 帧率控制
- * 4. 图像格式转换（BGR -> RGB）
- * 5. 线程安全的帧队列
- *
- * 设计模式：
- * - 生产者-消费者模式
- * - 观察者模式（信号槽）
- */
+class FrameQueue;
 class CameraThread : public QThread
 {
     Q_OBJECT
 public:
-    /**
-     * @brief 构造函数
-     * @param cameraIndex 摄像头索引（默认为0，即第一个摄像头）
-     * @param parent 父对象
-     */
     explicit CameraThread(int cameraIndex = 0, QObject *parent = nullptr);
 
-    /**
-     * @brief 设置摄像头采集分辨率
-     * @param width 宽度（像素），默认 640
-     * @param height 高度（像素），默认 480
-     */
     void setResolution(int width, int height) { m_cameraWidth = width; m_cameraHeight = height; }
 
-    /**
-     * @brief 析构函数
-     */
     ~CameraThread();
 
-    /**
-     * @brief 获取可用摄像头数量
-     * @return 摄像头数量
-     */
     static int getCameraCount();
 
-    /**
-     * @brief 获取摄像头是否正在运行
-     */
     bool isCapturing() const {return m_running;}
 
-    /**
-     * @brief 设置目标帧率
-     * @param fps 帧率（默认30）
-     */
     void setTargetFps(int fps) {m_targetFps = fps;}
 
-    /**
-     * @brief 获取当前帧率
-     */
     int getCurrentFps() const {return m_currentFps;}
 
-    /**
-     * @brief 暂停捕获
-     */
     void pause();
 
-    /**
-     * @brief 恢复捕获
-     */
      void resume();
 
-    /**
-     * @brief 停止线程（可复用，不析构对象）
-     *
-     * 设置退出标志、唤醒暂停的线程、等待线程结束。
-     * 由析构函数调用，也供 CameraManager 在需要临时停止摄像头时使用。
-     */
     void stop();
 
-    /**
-     * @brief 设置帧队列（用于向识别线程投递采样帧）
-     *
-     * 如果不设置（保持 nullptr），CameraThread 的行为与原来完全一致，
-     * 不会向任何队列投递帧。这保证了向后兼容。
-     *
-     * @param queue 帧队列指针，生命周期由调用方管理
-     */
     void setFrameQueue(FrameQueue *queue) {m_frameQueue = queue;}
 
-    /**
-     * @brief 获取最新一帧（线程安全）
-     * @return 最新的图像帧
-     */
     cv::Mat getLatestFrame();
-
 signals:
-    /**
-     * @brief 新帧可用信号
-     * @param frame 捕获的图像帧（BGR格式）
-     *
-     * 当有新的视频帧被捕获时发射此信号。
-     * 连接到此信号的槽函数将在接收线程中执行。
-     */
     void newFrameCaptured(cv::Mat frame);
 
-    /**
-     * @brief 摄像头状态变化信号
-     * @param connected 是否连接
-     * @param message 状态信息
-     */
     void cameraStatusChanged(bool connected, const QString &message);
 
-    /**
-     * @brief 帧率更新信号
-     * @param fps 当前帧率
-     */
     void fpsUpdated(int fps);
-
 protected:
-    /**
-     * @brief 线程主函数
-     *
-     * 重写QThread的run()函数，在此实现摄像头捕获逻辑。
-     */
     void run() ;
-
 private:
-    /**
-     * @brief 初始化摄像头
-     * @return 是否成功
-     */
     bool initCamera();
 
-    /**
-     * @brief 释放摄像头资源
-     */
     void releaseCamera();
 
-    /**
-     * @brief 计算帧率
-     */
     void calculateFps();
 
-    /**
-     * @brief QImage转cv::Mat
-     * @param image QImage图像
-     * @return cv::Mat图像
-     */
     static cv::Mat QImageToMat(const QImage &image);
 
-    /**
-     * @brief cv::Mat转QImage
-     * @param mat cv::Mat图像
-     * @return QImage图像
-     */
     static QImage MatToQImage(const cv::Mat &mat);
 
-    // 成员变量
-    int m_cameraIndex; //摄像头索引
-    int m_cameraWidth  = 640;  // 采集宽度（可通过 setResolution 覆盖）
-    int m_cameraHeight = 480;  // 采集高度
-    int m_targetFps; //目标帧率
-    int m_currentFps; //当前帧率
-    std::atomic<bool> m_running{false}; //运行标志
-    std::atomic<bool> m_paused{false}; //暂停标志
+    int m_cameraIndex;
+    int m_cameraWidth  = 640;
+    int m_cameraHeight = 480;
+    int m_targetFps;
+    int m_currentFps;
+    std::atomic<bool> m_running{false};
+    std::atomic<bool> m_paused{false};
+    cv::VideoCapture m_capture;
+    cv::Mat m_latestFrame;
+    QMutex m_mutex;
+    QWaitCondition m_pauseCond;
 
-    cv::VideoCapture m_capture; //OpenCV摄像头捕获对象
-    cv::Mat m_latestFrame; //最新帧（线程安全）
-    QMutex m_mutex; //互斥锁
-    QWaitCondition m_pauseCond; //暂停条件变量
-
-    // 帧率计算相关
-    int m_frameCount; //帧计数器
-    qint64 m_lastFpsTime; //上次帧率计算时间
-
-    FrameQueue *m_frameQueue = nullptr; // 识别队列
+    int m_frameCount;
+    qint64 m_lastFpsTime;
+    FrameQueue *m_frameQueue = nullptr;
 };
-
-#endif // CAMERATHREAD_H
+#endif

@@ -9,36 +9,29 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/core/mat.hpp>
-
 CameraWindow::CameraWindow(QWidget *parent) : QFrame(parent)
 {
     setObjectName("cameraWindow");
     setAttribute(Qt::WA_StyledBackground, true);
-
     m_videoLabel = new QLabel(this);
     m_videoLabel->setAlignment(Qt::AlignCenter);
     m_videoLabel->setScaledContents(false);
     m_videoLabel->setStyleSheet("background: transparent;");
-
     m_infoLabel = new QLabel(this);
     m_infoLabel->setObjectName("cameraInfoPanel");
     m_infoLabel->raise();
-
     m_statusDot = new QLabel(this);
     m_statusDot->setObjectName("cameraStatusDot");
     m_statusDot->setFixedSize(12, 12);
     m_statusDot->raise();
 
-    // 不在这里调 showEmptyState — 等 bind() 后由 onFrame/onStatus 决定
 }
-
 CameraWindow::~CameraWindow()
 {
     if(m_thread){
         disconnect(m_thread, nullptr, this, nullptr);
     }
 }
-
 void CameraWindow::bind(CameraThread *thread, const CameraInfo &info)
 {
     if(m_thread){
@@ -46,7 +39,6 @@ void CameraWindow::bind(CameraThread *thread, const CameraInfo &info)
     }
     m_thread = thread;
     m_info = info;
-
     if(m_thread){
         connect(m_thread, &CameraThread::newFrameCaptured,
                 this, &CameraWindow::onFrame);
@@ -54,7 +46,6 @@ void CameraWindow::bind(CameraThread *thread, const CameraInfo &info)
                 this, &CameraWindow::onStatus);
         connect(m_thread, &CameraThread::fpsUpdated,
                 this, &CameraWindow::onFps);
-
         m_infoLabel->setText(QStringLiteral("%1 · %2x%3 · %4 FPS")
                                  .arg(m_info.name)
                                  .arg(m_info.width).arg(m_info.height)
@@ -65,20 +56,16 @@ void CameraWindow::bind(CameraThread *thread, const CameraInfo &info)
         m_statusDot->style()->polish(m_statusDot);
     }
 }
-
 void CameraWindow::onFrame(cv::Mat frame)
 {
     if(frame.empty()) return;
-    // 收到帧证明摄像头已在线,清空文本残留
     m_videoLabel->setText(QString());
     m_connected = true;
     m_statusDot->setProperty("status", "online");
     m_statusDot->style()->unpolish(m_statusDot);
     m_statusDot->style()->polish(m_statusDot);
-
     cv::Mat rgbFrame;
     cv::cvtColor(frame, rgbFrame, cv::COLOR_BGR2RGB);
-
     QImage img(rgbFrame.data, rgbFrame.cols, rgbFrame.rows,
                static_cast<int>(rgbFrame.step), QImage::Format_RGB888);
     QPixmap pm = QPixmap::fromImage(img);
@@ -86,7 +73,6 @@ void CameraWindow::onFrame(cv::Mat frame)
                                       Qt::KeepAspectRatio,
                                       Qt::SmoothTransformation));
 }
-
 void CameraWindow::onStatus(bool connected, const QString &msg)
 {
     Q_UNUSED(msg);
@@ -94,12 +80,10 @@ void CameraWindow::onStatus(bool connected, const QString &msg)
     m_statusDot->setProperty("status", connected ? "online" : "offline");
     m_statusDot->style()->unpolish(m_statusDot);
     m_statusDot->style()->polish(m_statusDot);
-
     if(!connected){
         showEmptyState(QStringLiteral("Signal Lost / Awaiting Connection"));
     }
 }
-
 void CameraWindow::onFps(int fps)
 {
     m_info.fps = fps;
@@ -108,7 +92,6 @@ void CameraWindow::onFps(int fps)
                              .arg(m_info.width).arg(m_info.height)
                              .arg(fps));
 }
-
 void CameraWindow::showEmptyState(const QString &text)
 {
     m_videoLabel->setText(
@@ -117,7 +100,6 @@ void CameraWindow::showEmptyState(const QString &text)
                        "<span style='color:#94A3B8; font-size:13px; letter-spacing:2px;'>%1</span>"
                        "</div>").arg(text));
 }
-
 void CameraWindow::resizeEvent(QResizeEvent *event)
 {
     QFrame::resizeEvent(event);
@@ -129,7 +111,6 @@ void CameraWindow::resizeEvent(QResizeEvent *event)
     m_infoLabel->setGeometry(8, 8, panelW, panelH);
     m_statusDot->setGeometry(s.width() - 24, 12, 12, 12);
 }
-
 void CameraWindow::mouseDoubleClickEvent(QMouseEvent *event)
 {
     Q_UNUSED(event);

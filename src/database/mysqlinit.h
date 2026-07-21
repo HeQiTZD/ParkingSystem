@@ -1,22 +1,8 @@
 #ifndef MYSQLINIT_H
 #define MYSQLINIT_H
-
 #include <QObject>
 class DatabaseManager;
 class InitFile;
-
-/**
- * @brief 数据库初始化类
- *
- * 负责创建数据库表结构、初始化数据、建立索引。
- * 在系统首次运行或数据库重置时调用。
- *
- * 主要功能：
- * 1. 创建用户表（User）
- * 2. 创建车辆记录表（CAR）
- * 3. 创建停车场信息表（PARKING）
- * 4. 初始化停车场数据
- */
 class MySQLInit : public QObject
 {
     Q_OBJECT
@@ -24,102 +10,27 @@ public:
     explicit MySQLInit(DatabaseManager* dbManager, InitFile* initFile, QObject* parent = nullptr);
     ~MySQLInit();
 
-    /**
-     * @brief 执行所有初始化操作
-     * @return 是否全部成功
-     */
     bool initAll();
 
-    /**
-     * @brief 创建用户表
-     * @return 是否成功
-     *
-     * 表结构：
-     * - id: 主键，自增
-     * - username: 用户名，唯一
-     * - password: 密码（SHA256加密）
-     * - telephone: 手机号
-     * - truename: 真实姓名
-     * - role: 角色（admin/user）
-     */
     bool createUserTable();
 
-    /**
-     * @brief 创建车辆记录表
-     * @return 是否成功
-     *
-     * 表结构：
-     * - id: 主键，自增
-     * - license_plate: 车牌号，索引
-     * - check_in_time: 入库时间
-     * - check_out_time: 出库时间
-     * - fee: 停车费用
-     */
     bool createCarTable();
 
-    /**
-     * @brief 创建停车场信息表
-     * @return 是否成功
-     *
-     * 表结构：
-     * - P_id: 主键，自增
-     * - P_name: 停车场名称，唯一
-     * - P_now_count: 现有车辆数
-     * - P_all_count: 总车位数
-     * - P_fee: 每小时费用
-     */
     bool createParkingTable();
 
-    /**
-     * @brief 初始化停车场数据
-     * @param parkingName 停车场名称
-     * @param totalSpaces 总车位数
-     * @param fee 每小时费用
-     * @return 是否成功
-     */
     bool initParkingData(const QString &parkingName, int totalSpace, double fee);
 
-    /**
-     * @brief 初始化默认管理员
-     * @details 如果User表已存在admin则跳过；否则插入默认管理员（用户名:admin, 密码:admin123）
-     *          密码经 SHA256 加密后存储
-     * @return 是否成功
-     */
     bool initAdminUser();
-
 signals:
-    /**
-     * @brief 初始化进度信号
-     * @param message 进度信息
-     * @param progress 进度百分比（0-100）
-     */
     void initProgress(const QString &message, int progress);
 
-    /**
-     * @brief 初始化完成信号
-     * @param success 是否成功
-     * @param message 结果信息
-     */
     void initFinished(bool success,const QString &message);
-
 private:
-    DatabaseManager *m_dbManager;// 数据库管理器
-    InitFile        *m_initFile; // 配置文件管理器，用于读取用户在初始化窗口填写的停车场信息
+    DatabaseManager *m_dbManager;
+    InitFile        *m_initFile;
 
-    /**
-     * @brief 检查表是否存在
-     * @param tableName 表名
-     * @return 是否存在
-     */
     bool isTableExists(const QString &tableName);
 
-    /**
-     * @brief 执行SQL语句
-     * @param sql SQL语句
-     * @param description 描述（用于日志）
-     * @return 是否成功
-     */
     bool executeSql(const QString &sql, const QString &description);
 };
-
-#endif // MYSQLINIT_H
+#endif

@@ -1,15 +1,365 @@
-/* ==================== CameraSettingsDialog 样式 ==================== */
+/* ==================== CameraSettingsDialog 浅色主题 ==================== */
 
-/* -------------------- 窗口关闭按钮 -------------------- */
+/* ── 对话框背景 ── */
+#CameraSettingsDialog {
+    background-color: #ffffff;
+    border-radius: 12px;
+}
+
+/* ── 标题栏 ── */
+#CameraSettingsDialog #label {
+    color: #1e293b;
+    font-size: 14px;
+    font-weight: 600;
+}
+
 #CameraSettingsDialog #pushButton {
+    background-color: transparent;
+    border: none;
+    border-radius: 4px;
+}
+
+#CameraSettingsDialog #pushButton:hover {
+    background-color: #fee2e2;
+}
+
+#CameraSettingsDialog #pushButton:pressed {
+    background-color: #fecaca;
+}
+
+/* ── 全局采集参数 GroupBox ── */
+#CameraSettingsDialog #globalGroup {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    margin-top: 6px;
+    padding: 12px 8px 8px 8px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+    letter-spacing: 0.05em;
+}
+
+#CameraSettingsDialog #globalGroup::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    padding: 0 6px;
+    left: 12px;
+}
+
+#CameraSettingsDialog #lblGlobalRes,
+#CameraSettingsDialog #lblX,
+#CameraSettingsDialog #lblGlobalFps {
+    color: #64748b;
+    font-size: 12px;
+    border: none;
+    background: transparent;
+}
+
+/* ── 全局下拉框 ── */
+#CameraSettingsDialog QComboBox {
+    background-color: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    padding: 0 8px;
+    font-size: 12px;
+    color: #1e293b;
+    min-height: 24px;
+}
+
+#CameraSettingsDialog QComboBox:hover {
+    border-color: #9ca3af;
+}
+
+#CameraSettingsDialog QComboBox:focus {
+    border-color: #3b82f6;
+}
+
+#CameraSettingsDialog QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 24px;
+    border: none;
+    background: transparent;
+}
+
+#CameraSettingsDialog QComboBox::down-arrow {
+    image: none;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid #6b7280;
+    width: 0;
+    height: 0;
+    margin-top: 2px;
+}
+
+#CameraSettingsDialog QComboBox::down-arrow:hover {
+    border-top-color: #374151;
+}
+
+#CameraSettingsDialog QComboBox QAbstractItemView {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    padding: 4px 0;
+    selection-background-color: #eff6ff;
+    selection-color: #1e293b;
+    outline: none;
+}
+
+#CameraSettingsDialog QComboBox QAbstractItemView::item {
+    padding: 4px 12px;
+    min-height: 24px;
+    color: #374151;
+}
+
+#CameraSettingsDialog QComboBox QAbstractItemView::item:hover {
+    background-color: #f1f5f9;
+    color: #1e293b;
+}
+
+#CameraSettingsDialog QComboBox QAbstractItemView::item:selected {
+    background-color: #eff6ff;
+    color: #1e293b;
+}
+
+/* ── 滚动区域 ── */
+#CameraSettingsDialog QScrollArea {
     background-color: transparent;
     border: none;
 }
 
-#CameraSettingsDialog #pushButton:hover {
-    background-color: #f22828;
+#CameraSettingsDialog QScrollArea > QWidget > QWidget {
+    background-color: transparent;
 }
 
-#CameraSettingsDialog #pushButton:pressed {
-    background-color: #f35c5c;
+/* ── 滚动条 ── */
+#CameraSettingsDialog QScrollBar:vertical {
+    background: transparent;
+    width: 6px;
+    margin: 0;
+}
+
+#CameraSettingsDialog QScrollBar::handle:vertical {
+    background: #cbd5e1;
+    border-radius: 3px;
+    min-height: 30px;
+}
+
+#CameraSettingsDialog QScrollBar::handle:vertical:hover {
+    background: #94a3b8;
+}
+
+#CameraSettingsDialog QScrollBar::add-line:vertical,
+#CameraSettingsDialog QScrollBar::sub-line:vertical {
+    height: 0;
+    background: none;
+    border: none;
+}
+
+#CameraSettingsDialog QScrollBar::add-page:vertical,
+#CameraSettingsDialog QScrollBar::sub-page:vertical {
+    background: none;
+}
+
+/* ── 摄像头卡片 ── */
+#CameraSettingsDialog #cameraCard {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+}
+
+#CameraSettingsDialog #cameraCard:hover {
+    border-color: #cbd5e1;
+    background-color: #f1f5f9;
+}
+
+/* ── 卡片标题 ── */
+#CameraSettingsDialog #cameraCardLabel {
+    color: #1e293b;
+    font-size: 14px;
+    font-weight: 600;
+    background: transparent;
+    border: none;
+}
+
+/* ── 表单标签 ── */
+#CameraSettingsDialog #cameraInputLabel {
+    color: #94a3b8;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    background: transparent;
+    border: none;
+}
+
+/* ── 输入框 ── */
+#CameraSettingsDialog #cameraInput {
+    background-color: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    padding: 0 10px;
+    font-size: 13px;
+    color: #1e293b;
+    min-height: 28px;
+}
+
+#CameraSettingsDialog #cameraInput:hover {
+    border-color: #9ca3af;
+}
+
+#CameraSettingsDialog #cameraInput:focus {
+    border-color: #3b82f6;
+}
+
+/* ── 卡片下拉框 ── */
+#CameraSettingsDialog #cameraCombo {
+    background-color: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    padding: 0 6px;
+    font-size: 12px;
+    color: #1e293b;
+    min-height: 28px;
+}
+
+#CameraSettingsDialog #cameraCombo:hover {
+    border-color: #9ca3af;
+}
+
+#CameraSettingsDialog #cameraCombo:focus {
+    border-color: #3b82f6;
+}
+
+#CameraSettingsDialog #cameraCombo::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 22px;
+    border: none;
+    background: transparent;
+}
+
+#CameraSettingsDialog #cameraCombo::down-arrow {
+    image: none;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid #6b7280;
+    width: 0;
+    height: 0;
+    margin-top: 3px;
+}
+
+#CameraSettingsDialog #cameraCombo::down-arrow:hover {
+    border-top-color: #374151;
+}
+
+#CameraSettingsDialog #cameraCombo QAbstractItemView {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    padding: 4px 0;
+    selection-background-color: #eff6ff;
+    selection-color: #1e293b;
+    outline: none;
+}
+
+#CameraSettingsDialog #cameraCombo QAbstractItemView::item {
+    padding: 4px 10px;
+    min-height: 24px;
+    color: #374151;
+}
+
+#CameraSettingsDialog #cameraCombo QAbstractItemView::item:hover {
+    background-color: #f1f5f9;
+    color: #1e293b;
+}
+
+#CameraSettingsDialog #cameraCombo QAbstractItemView::item:selected {
+    background-color: #eff6ff;
+    color: #1e293b;
+}
+
+/* ── 单选按钮 ── */
+#CameraSettingsDialog #cameraRadio {
+    color: #64748b;
+    spacing: 6px;
+    font-size: 13px;
+    background: transparent;
+}
+
+#CameraSettingsDialog #cameraRadio:hover {
+    color: #1e293b;
+}
+
+#CameraSettingsDialog #cameraRadio::indicator {
+    width: 14px;
+    height: 14px;
+    border: 2px solid #d1d5db;
+    border-radius: 7px;
+    background-color: #ffffff;
+}
+
+#CameraSettingsDialog #cameraRadio::indicator:hover {
+    border-color: #9ca3af;
+}
+
+#CameraSettingsDialog #cameraRadio::indicator:checked {
+    border-color: #3b82f6;
+    background-color: #3b82f6;
+    image: none;
+}
+
+#CameraSettingsDialog #cameraRadio::indicator:checked:hover {
+    border-color: #2563eb;
+    background-color: #2563eb;
+}
+
+#CameraSettingsDialog #cameraRadio::indicator:pressed {
+    border-color: #1d4ed8;
+}
+
+/* ── 底部按钮区 ── */
+#CameraSettingsDialog #pushButton_2 {
+    background-color: #ffffff;
+    color: #64748b;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    padding: 6px 16px;
+    font-size: 12px;
+    font-weight: 500;
+    min-height: 30px;
+}
+
+#CameraSettingsDialog #pushButton_2:hover {
+    background-color: #f1f5f9;
+    border-color: #9ca3af;
+    color: #1e293b;
+}
+
+#CameraSettingsDialog #pushButton_2:pressed {
+    background-color: #e2e8f0;
+}
+
+#CameraSettingsDialog #pushButton_3 {
+    background-color: #3b82f6;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    min-height: 30px;
+}
+
+#CameraSettingsDialog #pushButton_3:hover {
+    background-color: #2563eb;
+}
+
+#CameraSettingsDialog #pushButton_3:pressed {
+    background-color: #1d4ed8;
+}
+
+#CameraSettingsDialog #pushButton_3:disabled {
+    background-color: #e2e8f0;
+    color: #9ca3af;
 }

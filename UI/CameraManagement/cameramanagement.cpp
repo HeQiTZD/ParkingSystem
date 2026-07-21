@@ -13,24 +13,20 @@
 #include <QResizeEvent>
 #include <QMessageBox>
 #include "camerasettingsdialog.h"
-
 CameraManagement::CameraManagement(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::CameraManagement)
 {
     ui->setupUi(this);
-
     QFile styleFile(":/styles/cameramanagement.qss");
     if (styleFile.open(QFile::ReadOnly)) {
         setStyleSheet(QLatin1String(styleFile.readAll()));
         styleFile.close();
     }
-
     setupUI();
     buildCameraWindows();
     updateGridLayout();
     updateCountLabel();
-
     connect(m_startAllBtn, &QPushButton::clicked, this, [this](){
         CameraManager::instance().startAll();
     });
@@ -40,41 +36,34 @@ CameraManagement::CameraManagement(QWidget *parent)
     connect(m_settingsBtn, &QPushButton::clicked, this, [this](){
         auto *dialog = new CameraSettingsDialog(this);
         dialog->setModal(true);
-
         connect(dialog, &CameraSettingsDialog::camerasUpdated, this, [this]() {
             CameraManager &mgr = CameraManager::instance();
             for (int i = 0; i < m_windows.size() && i < mgr.count(); ++i)
                 m_windows[i]->bind(mgr.getThread(i), mgr.info(i));
             updateCountLabel();
         });
-
         connect(dialog, &CameraSettingsDialog::cameraConfigChanged, this, [this]() {
             QMessageBox::information(this, QStringLiteral("提示"),
                                      QStringLiteral("摄像头配置已保存，重启应用后生效"));
         });
-
         dialog->exec();
         dialog->deleteLater();
     });
 }
-
 CameraManagement::~CameraManagement()
 {
     delete ui;
 }
-
 void CameraManagement::setupUI()
 {
     QVBoxLayout *root = new QVBoxLayout(this);
     root->setContentsMargins(24, 24, 24, 24);
     root->setSpacing(16);
-
     m_videoContainer = new QFrame(this);
     m_videoContainer->setObjectName("videoContainer");
     m_gridLayout = new QGridLayout(m_videoContainer);
     m_gridLayout->setContentsMargins(8, 8, 8, 8);
     m_gridLayout->setSpacing(12);
-
     m_emptyLabel = new QLabel(m_videoContainer);
     m_emptyLabel->setAlignment(Qt::AlignCenter);
     m_emptyLabel->setStyleSheet("color:#94A3B8; font-size:14px; letter-spacing:2px;");
@@ -84,37 +73,29 @@ void CameraManagement::setupUI()
         "<span>No Cameras Detected</span>"
         "</div>"));
     m_emptyLabel->hide();
-
     root->addWidget(m_videoContainer, 1);
 
-    // Bottom control bar
     QFrame *controlBar = new QFrame(this);
     controlBar->setObjectName("controlBar");
     controlBar->setFixedHeight(64);
     QHBoxLayout *ctrlLayout = new QHBoxLayout(controlBar);
     ctrlLayout->setContentsMargins(20, 12, 20, 12);
     ctrlLayout->setSpacing(12);
-
     m_countLabel = new QLabel(controlBar);
     m_countLabel->setObjectName("countLabel");
     ctrlLayout->addWidget(m_countLabel);
     ctrlLayout->addStretch();
-
     m_startAllBtn = new QPushButton(QStringLiteral("▶ 开启所有"), controlBar);
     m_startAllBtn->setObjectName("startAllBtn");
     ctrlLayout->addWidget(m_startAllBtn);
-
     m_stopAllBtn = new QPushButton(QStringLiteral("⏻ 停止所有"), controlBar);
     m_stopAllBtn->setObjectName("stopAllBtn");
     ctrlLayout->addWidget(m_stopAllBtn);
-
     m_settingsBtn = new QPushButton(QStringLiteral("⚙ 设置"), controlBar);
     m_settingsBtn->setObjectName("settingsBtn");
     ctrlLayout->addWidget(m_settingsBtn);
-
     root->addWidget(controlBar);
 }
-
 void CameraManagement::buildCameraWindows()
 {
     CameraManager &mgr = CameraManager::instance();
@@ -134,7 +115,6 @@ void CameraManagement::buildCameraWindows()
         m_windows.append(win);
     }
 }
-
 int CameraManagement::gridCols(int count) const
 {
     switch(count){
@@ -146,14 +126,11 @@ int CameraManagement::gridCols(int count) const
         default: return 1;
     }
 }
-
 void CameraManagement::updateGridLayout()
 {
-    // Clear grid
     while(QLayoutItem *item = m_gridLayout->takeAt(0)){
-        delete item; // QLayoutItem takes ownership, widget stays with parent
+        delete item;
     }
-
     int count = m_windows.size();
     if(count == 0){
         m_emptyLabel->setGeometry(m_videoContainer->rect());
@@ -163,7 +140,6 @@ void CameraManagement::updateGridLayout()
     }
     m_emptyLabel->hide();
 
-    // Solo mode: show only one
     if(m_soloMode && m_soloIndex >= 0 && m_soloIndex < count){
         for(int i = 0; i < count; ++i) m_windows[i]->hide();
         m_gridLayout->addWidget(m_windows[m_soloIndex], 0, 0);
@@ -171,7 +147,6 @@ void CameraManagement::updateGridLayout()
         return;
     }
 
-    // Multi-grid
     int cols = gridCols(count);
     for(int i = 0; i < count; ++i){
         int row = i / cols;
@@ -180,7 +155,6 @@ void CameraManagement::updateGridLayout()
         m_windows[i]->show();
     }
 }
-
 void CameraManagement::updateCountLabel()
 {
     CameraManager &mgr = CameraManager::instance();
@@ -194,7 +168,6 @@ void CameraManagement::updateCountLabel()
                                .arg(first.width).arg(first.height)
                                .arg(first.fps));
 }
-
 void CameraManagement::resizeEvent(QResizeEvent *event)
 {
     QWidget::resizeEvent(event);

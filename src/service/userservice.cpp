@@ -1,9 +1,7 @@
 #include "userservice.h"
 #include "src/database/databasemanager.h"
-
 UserService::UserService(DatabaseManager& db, QObject* parent)
     : QObject(parent), m_db(db) {}
-
 bool UserService::authenticate(const QString& username, const QString& password,
                                QString& userRole, QString& errMsg)
 {
@@ -18,7 +16,6 @@ bool UserService::authenticate(const QString& username, const QString& password,
     }
     return true;
 }
-
 bool UserService::registerUser(const QString& username, const QString& password,
                                const QString& name, const QString& phone,
                                QString& errMsg)
@@ -39,7 +36,6 @@ bool UserService::registerUser(const QString& username, const QString& password,
     emit userDataChanged();
     return true;
 }
-
 bool UserService::addUser(const QString& username, const QString& password,
                           const QString& telephone, const QString& truename,
                           const QString& role, QString& errMsg)
@@ -60,7 +56,6 @@ bool UserService::addUser(const QString& username, const QString& password,
     emit userDataChanged();
     return true;
 }
-
 bool UserService::updateUser(int id, const QString& username, const QString& telephone,
                               const QString& truename, const QString& role, QString& errMsg)
 {
@@ -72,7 +67,6 @@ bool UserService::updateUser(int id, const QString& username, const QString& tel
     emit userDataChanged();
     return true;
 }
-
 bool UserService::deleteUser(int id, QString& errMsg)
 {
     if(!m_db.isConnected()){ errMsg = "数据库未连接"; return false; }
@@ -83,7 +77,6 @@ bool UserService::deleteUser(int id, QString& errMsg)
     emit userDataChanged();
     return true;
 }
-
 QList<QVariantList> UserService::listUsers(const QString& keyword)
 {
     return m_db.searchUsers(keyword);

@@ -1,11 +1,8 @@
 #ifndef MESSAGETYPE
 #define MESSAGETYPE
-
 #include <QObject>
-
 class MessageType : public QObject {
     Q_OBJECT
-
 public:
     enum class Type : int {
         Success      = 0,
@@ -16,8 +13,7 @@ public:
         Error        = 5,
         Confirm      = 6,
     };
-
     Q_ENUM(Type)
 };
-
-#endif // MESSAGETYPE
+#endif
+ MESSAGETYPE
