@@ -222,8 +222,12 @@ RESOURCES += \
     styles/styles.qrc
 
 # ==================== 模型文件部署 ====================
-# HyperLPR 模型已直接部署到 debug/model/
-# 此部署规则已无实际文件可复制（model/ 目录已删除）
-model.files = model/*
-model.path = $$OUT_PWD/model
-INSTALLS += model
+# 构建后将 HyperLPR 模型文件复制到可执行文件目录
+QMAKE_POST_LINK += $$quote(cmd /c if not exist \"$$shell_path($$DLL_TARGET_DIR/model)\" mkdir \"$$shell_path($$DLL_TARGET_DIR/model)\" $$escape_expand(\n\t))
+QMAKE_POST_LINK += $$quote(cmd /c copy /Y \"$$shell_path($$PWD/debug/model/mininet_ssd_v1.prototxt)\" \"$$shell_path($$DLL_TARGET_DIR/model)\" $$escape_expand(\n\t))
+QMAKE_POST_LINK += $$quote(cmd /c copy /Y \"$$shell_path($$PWD/debug/model/mininet_ssd_v1.caffemodel)\" \"$$shell_path($$DLL_TARGET_DIR/model)\" $$escape_expand(\n\t))
+QMAKE_POST_LINK += $$quote(cmd /c copy /Y \"$$shell_path($$PWD/debug/model/refinenet.prototxt)\" \"$$shell_path($$DLL_TARGET_DIR/model)\" $$escape_expand(\n\t))
+QMAKE_POST_LINK += $$quote(cmd /c copy /Y \"$$shell_path($$PWD/debug/model/refinenet.caffemodel)\" \"$$shell_path($$DLL_TARGET_DIR/model)\" $$escape_expand(\n\t))
+QMAKE_POST_LINK += $$quote(cmd /c copy /Y \"$$shell_path($$PWD/debug/model/SegmenationFree-Inception.prototxt)\" \"$$shell_path($$DLL_TARGET_DIR/model)\" $$escape_expand(\n\t))
+QMAKE_POST_LINK += $$quote(cmd /c copy /Y \"$$shell_path($$PWD/debug/model/SegmenationFree-Inception.caffemodel)\" \"$$shell_path($$DLL_TARGET_DIR/model)\" $$escape_expand(\n\t))
+QMAKE_POST_LINK += $$quote(cmd /c copy /Y \"$$shell_path($$PWD/debug/model/cascade_double.xml)\" \"$$shell_path($$DLL_TARGET_DIR/model)\" $$escape_expand(\n\t))
