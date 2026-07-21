@@ -3,13 +3,12 @@
 
 #include <QDialog>
 #include <QList>
-#include <QPoint>
 
 namespace Ui {
 class CameraSettingsDialog;
 }
 
-class CameraInfo;
+class CameraCardWidget;
 
 class CameraSettingsDialog : public QDialog
 {
@@ -19,26 +18,12 @@ public:
     explicit CameraSettingsDialog(QWidget *parent = nullptr);
     ~CameraSettingsDialog();
 
-signals:
-    void camerasUpdated();
-    void cameraConfigChanged();
-
-private slots:
+private:
+    void loadCameraCards();
     void onSave();
 
-private:
-    void setupWindow();
-    void loadSettings();
-    void buildCameraRows();
-    QWidget* createCameraRow(int index, const CameraInfo &info);
-
     Ui::CameraSettingsDialog *ui;
-    QList<QWidget*> m_cameraRows;
-    bool m_dragging = false;
-    QPoint m_dragPosition;
-
-protected:
-    bool eventFilter(QObject *obj, QEvent *event) override;
+    QList<CameraCardWidget *> m_cards;
 };
 
 #endif // CAMERASETTINGSDIALOG_H

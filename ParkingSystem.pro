@@ -16,6 +16,14 @@ TARGET = ParkingSystem
 # 作用：启用 C++11 标准，支持 auto、lambda 等特性
 CONFIG += c++11
 
+# ── 源内构建保护（强制使用影子构建） ──
+# 如果 OUT_PWD 下存在 .pro 文件，说明在源内构建
+!build_pass:exists($$OUT_PWD/ParkingSystem.pro) {
+    error("In-source build is not allowed! \
+           Please use shadow build: \
+           Qt Creator → Projects → Build Settings → enable 'Shadow build'")
+}
+
 # 生成文件归类到子目录，避免 Makefile 依赖追踪失准导致 moc 过时
 MOC_DIR     = generated/moc
 OBJECTS_DIR = generated/obj
@@ -67,6 +75,7 @@ SOURCES += \
     UI/CameraManagement/cameramanagement.cpp \
     UI/CameraManagement/camerawindow.cpp \
     UI/CameraManagement/camerasettingsdialog.cpp \
+    UI/CameraManagement/cameracardwidget.cpp \
     # ==================== 业务服务层 ====================
     src/service/parkingservice.cpp \
     src/service/userservice.cpp \
@@ -121,6 +130,7 @@ HEADERS += \
     UI/CameraManagement/cameramanagement.h \
     UI/CameraManagement/camerawindow.h \
     UI/CameraManagement/camerasettingsdialog.h \
+    UI/CameraManagement/cameracardwidget.h \
     # ==================== 业务服务层 ====================
     src/service/parkingservice.h \
     src/service/userservice.h \

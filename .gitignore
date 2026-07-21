@@ -83,6 +83,11 @@ CMakeLists.txt.user*
 /build*/
 /.qtcreator/
 
+# In-source build artifacts (use shadow build only)
+/generated/
+/debug/
+/release/
+
 # IDE cache files
 .qtc_clangd/
 .mimocode/

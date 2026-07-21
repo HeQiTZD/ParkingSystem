@@ -1,6 +1,15 @@
 /* ==================== CameraSettingsDialog 样式 ==================== */
 
-/* 对话框容器 */
-#CameraSettingsDialog {
-    background-color: #ffffff;
+/* -------------------- 窗口关闭按钮 -------------------- */
+#CameraSettingsDialog #pushButton {
+    background-color: transparent;
+    border: none;
+}
+
+#CameraSettingsDialog #pushButton:hover {
+    background-color: #f22828;
+}
+
+#CameraSettingsDialog #pushButton:pressed {
+    background-color: #f35c5c;
 }
