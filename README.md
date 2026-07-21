@@ -75,7 +75,6 @@
 ```
 ParkingSystem/
 ├── ParkingSystem.pro          # qmake 主工程文件
-├── CLAUDE.md                  # 项目级 Claude 指令
 │
 ├── src/
 │   ├── app/                   # 应用核心：主入口、车牌识别、识别线程
