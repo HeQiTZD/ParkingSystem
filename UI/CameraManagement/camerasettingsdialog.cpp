@@ -6,7 +6,6 @@
 
 #include <QFile>
 #include <QMessageBox>
-#include <QGraphicsDropShadowEffect>
 #include <QMouseEvent>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -16,6 +15,7 @@
 #include <QRadioButton>
 #include <QFrame>
 #include <QScrollArea>
+#include <QPushButton>
 
 CameraSettingsDialog::CameraSettingsDialog(QWidget *parent)
     : QDialog(parent)
@@ -26,39 +26,31 @@ CameraSettingsDialog::CameraSettingsDialog(QWidget *parent)
     loadSettings();
     buildCameraRows();
 
-    connect(ui->btnClose, &QPushButton::clicked, this, &QDialog::reject);
-    connect(ui->btnSubmit, &QPushButton::clicked, this, &CameraSettingsDialog::onSave);
-    connect(ui->btnCancel, &QPushButton::clicked, this, &QDialog::reject);
-}
-
-CameraSettingsDialog::~CameraSettingsDialog()
-{
-    delete ui;
-}
-
-void CameraSettingsDialog::setupWindow()
-{
-    setWindowFlags(Qt::FramelessWindowHint | Qt::WindowMinimizeButtonHint);
-    setAttribute(Qt::WA_TranslucentBackground);
-
     QFile styleFile(":/styles/camerasettings.qss");
     if (styleFile.open(QFile::ReadOnly)) {
         setStyleSheet(styleFile.readAll());
         styleFile.close();
     }
 
-    QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect(this);
-    shadow->setBlurRadius(20);
-    shadow->setColor(QColor(0, 0, 0, 80));
-    shadow->setOffset(0, 0);
-    ui->mainContainer->setGraphicsEffect(shadow);
+    connect(ui->pushButton, &QPushButton::clicked, this, &QDialog::reject);
+    connect(ui->pushButton_3, &QPushButton::clicked, this, &CameraSettingsDialog::onSave);
+    connect(ui->pushButton_2, &QPushButton::clicked, this, &QDialog::reject);
+}
 
-    ui->titleBar->installEventFilter(this);
+CameraSettingsDialog::~CameraSettingsDialog()
+{
+    delete ui;
+}
+void CameraSettingsDialog::setupWindow()
+{
+    setWindowFlags(Qt::FramelessWindowHint | Qt::WindowMinimizeButtonHint);
+
+    ui->widget->installEventFilter(this);
 }
 
 bool CameraSettingsDialog::eventFilter(QObject *obj, QEvent *event)
 {
-    if (obj == ui->titleBar) {
+    if (obj == ui->widget) {
         switch (event->type()) {
         case QEvent::MouseButtonPress: {
             QMouseEvent *me = static_cast<QMouseEvent *>(event);
@@ -120,7 +112,6 @@ void CameraSettingsDialog::buildCameraRows()
     if (n == 0) {
         QLabel *empty = new QLabel(QStringLiteral("未检测到摄像头"), ui->cameraListContainer);
         empty->setAlignment(Qt::AlignCenter);
-        empty->setStyleSheet("color:#94A3B8; font-size:13px; padding:20px;");
         ui->cameraListLayout->addWidget(empty);
         return;
     }
@@ -143,7 +134,7 @@ QWidget* CameraSettingsDialog::createCameraRow(int index, const CameraInfo &info
     outer->setSpacing(8);
 
     // Title
-    QLabel *title = new QLabel(QStringLiteral("📷 摄像头 %1").arg(index + 1), frame);
+    QLabel *title = new QLabel(QStringLiteral("摄像头 %1").arg(index + 1), frame);
     title->setObjectName(QStringLiteral("cam_title_%1").arg(index));
     outer->addWidget(title);
 
@@ -248,7 +239,6 @@ QWidget* CameraSettingsDialog::createCameraRow(int index, const CameraInfo &info
 
     QLabel *lblFpsUnit = new QLabel("FPS", frame);
     lblFpsUnit->setObjectName(QStringLiteral("cam_lbl_fpsunit_%1").arg(index));
-    lblFpsUnit->setStyleSheet("color:#94A3B8; font-size:12px;");
 
     fpsLayout->addWidget(lblFps);
     fpsLayout->addWidget(cmbFps);

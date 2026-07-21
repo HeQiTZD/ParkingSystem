@@ -25,188 +25,418 @@
   <property name="windowTitle">
    <string>摄像头设置</string>
   </property>
-  <layout class="QVBoxLayout" name="outerLayout">
-   <property name="spacing"><number>0</number></property>
-   <property name="leftMargin"><number>10</number></property>
-   <property name="topMargin"><number>10</number></property>
-   <property name="rightMargin"><number>10</number></property>
-   <property name="bottomMargin"><number>10</number></property>
-   <item>
-    <widget class="QWidget" name="mainContainer">
-     <layout class="QVBoxLayout" name="containerLayout">
-      <property name="spacing"><number>0</number></property>
-      <property name="leftMargin"><number>0</number></property>
-      <property name="topMargin"><number>0</number></property>
-      <property name="rightMargin"><number>0</number></property>
-      <property name="bottomMargin"><number>0</number></property>
+  <layout class="QGridLayout" name="gridLayout">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item row="0" column="0">
+    <widget class="QWidget" name="widget" native="true">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>50</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>50</height>
+      </size>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>18</number>
+      </property>
       <item>
-       <!-- ===== 标题栏 ===== -->
-       <widget class="QWidget" name="titleBar">
-        <property name="minimumSize"><size><width>0</width><height>40</height></size></property>
-        <property name="maximumSize"><size><width>16777215</width><height>40</height></size></property>
-        <layout class="QHBoxLayout" name="titleBarLayout">
-         <property name="spacing"><number>8</number></property>
-         <property name="leftMargin"><number>0</number></property>
-         <property name="topMargin"><number>0</number></property>
-         <property name="rightMargin"><number>16</number></property>
-         <property name="bottomMargin"><number>0</number></property>
+       <widget class="QLabel" name="label">
+        <property name="minimumSize">
+         <size>
+          <width>70</width>
+          <height>31</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>70</width>
+          <height>31</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>摄像头设置</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Orientation::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>388</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton">
+        <property name="minimumSize">
+         <size>
+          <width>40</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>40</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>关闭</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QWidget" name="widget_2" native="true">
+     <layout class="QVBoxLayout" name="contentLayout">
+      <property name="spacing">
+       <number>8</number>
+      </property>
+      <item>
+       <widget class="QGroupBox" name="globalGroup">
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>50</height>
+         </size>
+        </property>
+        <property name="title">
+         <string>全局采集参数</string>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
          <item>
-          <spacer name="titleSpacer">
-           <property name="orientation"><enum>Qt::Horizontal</enum></property>
-           <property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property>
-          </spacer>
+          <widget class="QLabel" name="lblGlobalRes">
+           <property name="minimumSize">
+            <size>
+             <width>50</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>50</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>分辨率</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignCenter</set>
+           </property>
+          </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="btnClose">
-           <property name="minimumSize"><size><width>36</width><height>28</height></size></property>
-           <property name="maximumSize"><size><width>36</width><height>28</height></size></property>
-           <property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property>
-           <property name="text"><string>×</string></property>
+          <widget class="QComboBox" name="cmbGlobalWidth">
+           <property name="minimumSize">
+            <size>
+             <width>60</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>80</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="editable">
+            <bool>true</bool>
+           </property>
+           <item>
+            <property name="text">
+             <string>640</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>800</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>1280</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>1920</string>
+            </property>
+           </item>
           </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="lblX">
+           <property name="maximumSize">
+            <size>
+             <width>30</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>×</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="cmbGlobalHeight">
+           <property name="minimumSize">
+            <size>
+             <width>60</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>80</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="editable">
+            <bool>true</bool>
+           </property>
+           <item>
+            <property name="text">
+             <string>480</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>720</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>1080</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="lblGlobalFps">
+           <property name="minimumSize">
+            <size>
+             <width>50</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>50</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>帧率</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="cmbGlobalFps">
+           <property name="minimumSize">
+            <size>
+             <width>40</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>60</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="editable">
+            <bool>true</bool>
+           </property>
+           <item>
+            <property name="text">
+             <string>15</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>20</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>25</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>30</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_3">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
          </item>
         </layout>
        </widget>
       </item>
       <item>
-       <!-- ===== 内容滚动区 ===== -->
-       <widget class="QScrollArea" name="scrollArea">
-        <property name="widgetResizable"><bool>true</bool></property>
-        <property name="frameShape"><enum>QFrame::NoFrame</enum></property>
-        <widget class="QWidget" name="scrollContent">
-         <layout class="QVBoxLayout" name="scrollLayout">
-          <property name="spacing"><number>15</number></property>
-          <property name="leftMargin"><number>30</number></property>
-          <property name="topMargin"><number>20</number></property>
-          <property name="rightMargin"><number>30</number></property>
-          <property name="bottomMargin"><number>20</number></property>
-          <!-- ===== 全局采集参数区 ===== -->
-          <item>
-           <widget class="QLabel" name="globalSectionLabel">
-            <property name="text">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=" font-size:12pt; font-weight:600;"&gt;全局采集参数&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="globalWidthLayout">
-            <property name="spacing"><number>10</number></property>
-            <item>
-             <widget class="QLabel" name="lblGlobalWidth">
-              <property name="minimumSize"><size><width>80</width><height>0</height></size></property>
-              <property name="maximumSize"><size><width>80</width><height>16777215</height></size></property>
-              <property name="text">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align="right"&gt;&lt;span style=" font-size:10pt;"&gt;分辨率&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-              <property name="alignment"><set>Qt::AlignRight|Qt::AlignVCenter</set></property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QComboBox" name="cmbGlobalWidth">
-              <property name="editable"><bool>true</bool></property>
-              <item><property name="text"><string>480</string></property></item>
-              <item><property name="text"><string>640</string></property></item>
-              <item><property name="text"><string>800</string></property></item>
-              <item><property name="text"><string>1024</string></property></item>
-              <item><property name="text"><string>1280</string></property></item>
-              <item><property name="text"><string>1920</string></property></item>
-              <item><property name="text"><string>2560</string></property></item>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="lblMultiply">
-              <property name="text"><string>×</string></property>
-              <property name="alignment"><set>Qt::AlignCenter</set></property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QComboBox" name="cmbGlobalHeight">
-              <property name="editable"><bool>true</bool></property>
-              <item><property name="text"><string>480</string></property></item>
-              <item><property name="text"><string>640</string></property></item>
-              <item><property name="text"><string>800</string></property></item>
-              <item><property name="text"><string>1024</string></property></item>
-              <item><property name="text"><string>1280</string></property></item>
-              <item><property name="text"><string>1920</string></property></item>
-              <item><property name="text"><string>2560</string></property></item>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="globalFpsLayout">
-            <property name="spacing"><number>10</number></property>
-            <item>
-             <widget class="QLabel" name="lblGlobalFps">
-              <property name="minimumSize"><size><width>80</width><height>0</height></size></property>
-              <property name="maximumSize"><size><width>80</width><height>16777215</height></size></property>
-              <property name="text">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align="right"&gt;&lt;span style=" font-size:10pt;"&gt;帧率&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-              <property name="alignment"><set>Qt::AlignRight|Qt::AlignVCenter</set></property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QComboBox" name="cmbGlobalFps">
-              <property name="editable"><bool>true</bool></property>
-              <item><property name="text"><string>15</string></property></item>
-              <item><property name="text"><string>20</string></property></item>
-              <item><property name="text"><string>25</string></property></item>
-              <item><property name="text"><string>30</string></property></item>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <!-- ===== 摄像头列表区（动态填充） ===== -->
-          <item>
-           <widget class="QLabel" name="cameraListSectionLabel">
-            <property name="text">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=" font-size:12pt; font-weight:600;"&gt;摄像头列表&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QWidget" name="cameraListContainer">
-            <layout class="QVBoxLayout" name="cameraListLayout">
-             <property name="spacing"><number>10</number></property>
-             <property name="leftMargin"><number>0</number></property>
-             <property name="topMargin"><number>0</number></property>
-             <property name="rightMargin"><number>0</number></property>
-             <property name="bottomMargin"><number>0</number></property>
-            </layout>
-           </widget>
-          </item>
-          <!-- ===== 弹簧 + 按钮 ===== -->
-          <item>
-           <spacer name="buttonTopSpacer">
-            <property name="orientation"><enum>Qt::Vertical</enum></property>
-            <property name="sizeType"><enum>QSizePolicy::Expanding</enum></property>
-           </spacer>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="buttonLayout">
-            <property name="spacing"><number>20</number></property>
-            <item>
-             <spacer name="buttonLeftSpacer">
-              <property name="orientation"><enum>Qt::Horizontal</enum></property>
-              <property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property>
-             </spacer>
-            </item>
-            <item>
-             <widget class="QPushButton" name="btnCancel">
-              <property name="minimumSize"><size><width>0</width><height>40</height></size></property>
-              <property name="text"><string>取消</string></property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="btnSubmit">
-              <property name="minimumSize"><size><width>0</width><height>40</height></size></property>
-              <property name="text"><string>保存</string></property>
-             </widget>
-            </item>
-           </layout>
-          </item>
+       <widget class="QScrollArea" name="cameraScrollArea">
+        <property name="widgetResizable">
+         <bool>true</bool>
+        </property>
+        <widget class="QWidget" name="cameraListContainer">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>606</width>
+           <height>365</height>
+          </rect>
+         </property>
+         <layout class="QVBoxLayout" name="cameraListLayout">
+          <property name="spacing">
+           <number>8</number>
+          </property>
          </layout>
         </widget>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QWidget" name="widget_3" native="true">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>50</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>50</height>
+      </size>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <property name="spacing">
+       <number>13</number>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <spacer name="horizontalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Orientation::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>367</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_2">
+        <property name="minimumSize">
+         <size>
+          <width>60</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>60</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>取消</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_3">
+        <property name="minimumSize">
+         <size>
+          <width>60</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>60</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>保存</string>
+        </property>
        </widget>
       </item>
      </layout>

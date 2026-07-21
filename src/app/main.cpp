@@ -44,14 +44,12 @@ bool loadConfigWithRetry(InitFile *initFile){
 
 int main(int argc, char *argv[])
 {
-    QApplication app(argc, argv);
-    // 关键：关闭"最后一个窗口关闭即退出应用"的默认行为。
-    // ApplicationManager 靠 LoginDialog/MainWindow 轮流显示切换窗口，
-    // 关闭主窗口回到登录框时，会瞬间没有任何可见顶层窗口，
-    // 若保留默认值，Qt 会发出 lastWindowClosed → app 退出，
-    // 导致 loop.exec() 退出后 LoginDialog::exec() 再也起不来 → 程序卡死。
-    app.setQuitOnLastWindowClosed(false);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0) && QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling, true);
+#endif
 
+    QApplication app(argc, argv);
+    app.setQuitOnLastWindowClosed(false);
     InitFile &initFile = InitFile::instance();
     DatabaseManager dbManager;
 
