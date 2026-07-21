@@ -15,6 +15,11 @@ public:
 
     void setCameraInfo(const CameraInfo &info);
     CameraInfo cameraInfo() const;
+    QRadioButton *entryRadio() const { return m_entryRadio; }
+    QRadioButton *monitorRadio() const { return m_monitorRadio; }
+
+signals:
+    void changed();
 
 private:
     int m_cameraIndex;
@@ -22,7 +27,8 @@ private:
     QLineEdit *m_locationEdit;
     QRadioButton *m_entryRadio;
     QRadioButton *m_monitorRadio;
-    QComboBox *m_resolutionCombo;
+    QComboBox *m_widthCombo;
+    QComboBox *m_heightCombo;
     QComboBox *m_fpsCombo;
 };
 

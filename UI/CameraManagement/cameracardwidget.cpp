@@ -12,110 +12,123 @@ CameraCardWidget::CameraCardWidget(int index, QWidget *parent)
     : QWidget(parent)
     , m_cameraIndex(index)
 {
-    auto *mainLayout = new QVBoxLayout(this);
-    mainLayout->setContentsMargins(0, 0, 0, 0);
-    mainLayout->setSpacing(8);
+    setObjectName("cameraCard");
 
+    auto *root = new QVBoxLayout(this);
+    root->setContentsMargins(16, 12, 16, 14);
+    root->setSpacing(10);
+
+    // ── Header ──
     auto *header = new QHBoxLayout;
+    header->setContentsMargins(0, 0, 0, 0);
     header->setSpacing(6);
     auto *iconLabel = new QLabel;
     QPixmap iconPix(":/icons/videocam");
     iconLabel->setPixmap(iconPix.scaled(18, 18, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     iconLabel->setFixedSize(18, 18);
     auto *title = new QLabel(QString("摄像头 %1").arg(index + 1));
-    title->setStyleSheet("font-weight: 600; font-size: 15px;");
+    title->setObjectName("cameraCardLabel");
     header->addWidget(iconLabel);
     header->addWidget(title);
     header->addStretch();
-    mainLayout->addLayout(header);
+    root->addLayout(header);
 
+    // ── Form grid: 2 columns, 2 rows ──
     auto *grid = new QGridLayout;
-    grid->setHorizontalSpacing(24);
-    grid->setVerticalSpacing(12);
+    grid->setContentsMargins(0, 0, 0, 0);
+    grid->setHorizontalSpacing(16);
+    grid->setVerticalSpacing(10);
 
-    auto makeField = [](const QString &labelText, QWidget *input) -> QWidget* {
-        auto *container = new QWidget;
-        auto *layout = new QVBoxLayout(container);
-        layout->setContentsMargins(0, 0, 0, 0);
-        layout->setSpacing(4);
-        auto *label = new QLabel(labelText);
-        label->setStyleSheet("font-size: 11px; color: #94A3B8; letter-spacing: 0.05em;");
-        layout->addWidget(label);
-        layout->addWidget(input);
-        return container;
-    };
-
+    // Row 0 ─ 名称 / 位置
     m_nameEdit = new QLineEdit;
+    m_nameEdit->setObjectName("cameraInput");
     m_nameEdit->setFixedHeight(32);
-    m_nameEdit->setStyleSheet(
-        "QLineEdit { background: #0F172A; border: 1px solid #434655;"
-        "  border-radius: 4px; padding: 0 8px; font-size: 13px; color: #d8e3fb; }"
-        "QLineEdit:focus { border-color: #b4c5ff; }"
-    );
-    grid->addWidget(makeField(QStringLiteral("名称"), m_nameEdit), 0, 0);
 
     m_locationEdit = new QLineEdit;
+    m_locationEdit->setObjectName("cameraInput");
     m_locationEdit->setFixedHeight(32);
-    m_locationEdit->setStyleSheet(m_nameEdit->styleSheet());
-    grid->addWidget(makeField(QStringLiteral("位置"), m_locationEdit), 0, 1);
 
-    auto *roleContainer = new QWidget;
-    auto *roleLayout = new QHBoxLayout(roleContainer);
-    roleLayout->setContentsMargins(0, 0, 0, 0);
-    roleLayout->setSpacing(12);
+    auto makeLabel = [](const QString &text) -> QLabel* {
+        auto *l = new QLabel(text);
+        l->setObjectName("cameraInputLabel");
+        return l;
+    };
 
+    auto wrapV = [&](QLabel *label, QWidget *ctrl) -> QWidget* {
+        auto *w = new QWidget;
+        auto *lay = new QVBoxLayout(w);
+        lay->setContentsMargins(0, 0, 0, 0);
+        lay->setSpacing(4);
+        lay->addWidget(label);
+        lay->addWidget(ctrl);
+        return w;
+    };
+
+    grid->addWidget(wrapV(makeLabel(QStringLiteral("名称")), m_nameEdit), 0, 0);
+    grid->addWidget(wrapV(makeLabel(QStringLiteral("位置")), m_locationEdit), 0, 1);
+
+    // Row 1 ─ 角色 / 分辨率·帧率
     auto *group = new QButtonGroup(this);
     m_entryRadio = new QRadioButton(QStringLiteral("入口"));
     m_monitorRadio = new QRadioButton(QStringLiteral("监控"));
+    m_entryRadio->setObjectName("cameraRadio");
+    m_monitorRadio->setObjectName("cameraRadio");
     group->addButton(m_entryRadio);
     group->addButton(m_monitorRadio);
     m_entryRadio->setChecked(true);
-    roleLayout->addWidget(m_entryRadio);
-    roleLayout->addWidget(m_monitorRadio);
-    roleLayout->addStretch();
 
-    auto *roleField = new QWidget;
-    auto *roleFieldLayout = new QVBoxLayout(roleField);
-    roleFieldLayout->setContentsMargins(0, 0, 0, 0);
-    roleFieldLayout->setSpacing(4);
-    auto *roleLabel = new QLabel(QStringLiteral("角色"));
-    roleLabel->setStyleSheet("font-size: 11px; color: #94A3B8; letter-spacing: 0.05em;");
-    roleFieldLayout->addWidget(roleLabel);
-    roleFieldLayout->addWidget(roleContainer);
-    grid->addWidget(roleField, 1, 0);
+    auto *roleContainer = new QWidget;
+    auto *roleRow = new QHBoxLayout(roleContainer);
+    roleRow->setContentsMargins(0, 0, 0, 0);
+    roleRow->setSpacing(16);
+    roleRow->addWidget(m_entryRadio);
+    roleRow->addWidget(m_monitorRadio);
+    roleRow->addStretch();
 
-    m_resolutionCombo = new QComboBox;
-    m_resolutionCombo->addItems({"1080P", "720P"});
-    m_resolutionCombo->setFixedHeight(32);
-    m_resolutionCombo->setStyleSheet(
-        "QComboBox { background: #0F172A; border: 1px solid #434655;"
-        "  border-radius: 4px; padding: 0 4px; font-size: 11px; color: #d8e3fb; }"
-    );
+    grid->addWidget(wrapV(makeLabel(QStringLiteral("角色")), roleContainer), 1, 0);
+
+    m_widthCombo = new QComboBox;
+    m_widthCombo->setObjectName("cameraCombo");
+    m_widthCombo->setEditable(true);
+    m_widthCombo->addItems({"480", "640", "800", "1024", "1280", "1920", "2560"});
+    m_widthCombo->setFixedHeight(32);
+
+    m_heightCombo = new QComboBox;
+    m_heightCombo->setObjectName("cameraCombo");
+    m_heightCombo->setEditable(true);
+    m_heightCombo->addItems({"480", "640", "800", "1024", "1280", "1920", "2560"});
+    m_heightCombo->setFixedHeight(32);
 
     m_fpsCombo = new QComboBox;
+    m_fpsCombo->setObjectName("cameraCombo");
+    m_fpsCombo->setEditable(true);
     m_fpsCombo->addItems({"15", "20", "25", "30"});
     m_fpsCombo->setFixedHeight(32);
-    m_fpsCombo->setFixedWidth(64);
-    m_fpsCombo->setStyleSheet(m_resolutionCombo->styleSheet());
+    m_fpsCombo->setMinimumWidth(72);
 
     auto *resContainer = new QWidget;
-    auto *resLayout = new QHBoxLayout(resContainer);
-    resLayout->setContentsMargins(0, 0, 0, 0);
-    resLayout->setSpacing(6);
-    resLayout->addWidget(m_resolutionCombo);
-    resLayout->addWidget(m_fpsCombo);
+    auto *resRow = new QHBoxLayout(resContainer);
+    resRow->setContentsMargins(0, 0, 0, 0);
+    resRow->setSpacing(8);
+    resRow->addWidget(m_widthCombo, 1);
+    resRow->addWidget(m_heightCombo, 1);
+    resRow->addWidget(m_fpsCombo, 0);
 
-    auto *resField = new QWidget;
-    auto *resFieldLayout = new QVBoxLayout(resField);
-    resFieldLayout->setContentsMargins(0, 0, 0, 0);
-    resFieldLayout->setSpacing(4);
-    auto *resLabel = new QLabel(QStringLiteral("分辨率/帧率"));
-    resLabel->setStyleSheet("font-size: 11px; color: #94A3B8; letter-spacing: 0.05em;");
-    resFieldLayout->addWidget(resLabel);
-    resFieldLayout->addWidget(resContainer);
-    grid->addWidget(resField, 1, 1);
+    grid->addWidget(wrapV(makeLabel(QStringLiteral("分辨率/帧率")), resContainer), 1, 1);
 
-    mainLayout->addLayout(grid);
+    // 两列等宽
+    grid->setColumnStretch(0, 1);
+    grid->setColumnStretch(1, 1);
+
+    root->addLayout(grid);
+
+    // 转发所有控件的变更信号，供父级追踪脏状态
+    connect(m_nameEdit, &QLineEdit::textChanged, this, &CameraCardWidget::changed);
+    connect(m_locationEdit, &QLineEdit::textChanged, this, &CameraCardWidget::changed);
+    connect(m_entryRadio, &QRadioButton::toggled, this, &CameraCardWidget::changed);
+    connect(m_widthCombo, &QComboBox::currentTextChanged, this, &CameraCardWidget::changed);
+    connect(m_heightCombo, &QComboBox::currentTextChanged, this, &CameraCardWidget::changed);
+    connect(m_fpsCombo, &QComboBox::currentTextChanged, this, &CameraCardWidget::changed);
 }
 
 void CameraCardWidget::setCameraInfo(const CameraInfo &info)
@@ -127,12 +140,9 @@ void CameraCardWidget::setCameraInfo(const CameraInfo &info)
     else
         m_entryRadio->setChecked(true);
 
-    QString resStr = QString("%1P").arg(info.height);
-    int resIdx = m_resolutionCombo->findText(resStr);
-    if (resIdx >= 0) m_resolutionCombo->setCurrentIndex(resIdx);
-
-    int fpsIdx = m_fpsCombo->findText(QString::number(info.fps));
-    if (fpsIdx >= 0) m_fpsCombo->setCurrentIndex(fpsIdx);
+    m_widthCombo->setCurrentText(QString::number(info.width));
+    m_heightCombo->setCurrentText(QString::number(info.height));
+    m_fpsCombo->setCurrentText(QString::number(info.fps));
 }
 
 CameraInfo CameraCardWidget::cameraInfo() const
@@ -143,10 +153,8 @@ CameraInfo CameraCardWidget::cameraInfo() const
     info.location = m_locationEdit->text();
     info.role = m_entryRadio->isChecked() ? "entry" : "monitor";
 
-    QString resText = m_resolutionCombo->currentText();
-    if (resText == "1080P") { info.width = 1920; info.height = 1080; }
-    else if (resText == "720P") { info.width = 1280; info.height = 720; }
-
+    info.width = m_widthCombo->currentText().toInt();
+    info.height = m_heightCombo->currentText().toInt();
     info.fps = m_fpsCombo->currentText().toInt();
     return info;
 }
