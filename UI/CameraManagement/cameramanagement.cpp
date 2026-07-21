@@ -11,6 +11,7 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QResizeEvent>
+#include <QMessageBox>
 #include "camerasettingsdialog.h"
 
 CameraManagement::CameraManagement(QWidget *parent)
@@ -39,6 +40,19 @@ CameraManagement::CameraManagement(QWidget *parent)
     connect(m_settingsBtn, &QPushButton::clicked, this, [this](){
         auto *dialog = new CameraSettingsDialog(this);
         dialog->setModal(true);
+
+        connect(dialog, &CameraSettingsDialog::camerasUpdated, this, [this]() {
+            CameraManager &mgr = CameraManager::instance();
+            for (int i = 0; i < m_windows.size() && i < mgr.count(); ++i)
+                m_windows[i]->bind(mgr.getThread(i), mgr.info(i));
+            updateCountLabel();
+        });
+
+        connect(dialog, &CameraSettingsDialog::cameraConfigChanged, this, [this]() {
+            QMessageBox::information(this, QStringLiteral("提示"),
+                                     QStringLiteral("摄像头配置已保存，重启应用后生效"));
+        });
+
         dialog->exec();
         dialog->deleteLater();
     });
