@@ -87,6 +87,7 @@ CMakeLists.txt.user*
 /generated/
 /debug/
 /release/
+/CLAUDE.md
 
 # IDE cache files
 .qtc_clangd/
@@ -94,3 +95,10 @@ CMakeLists.txt.user*
 .superpowers/
 .codegraph/
 .vs/
+.reasonix/
+.zcode/
+.vscode/
+.claude/
+
+# Documentation
+docs/
